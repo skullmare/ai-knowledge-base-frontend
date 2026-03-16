@@ -3,7 +3,6 @@ import { authService } from '../services/authService'
 import { handleError } from '../utils/handleError'
 
 const useAuthStore = create((set) => ({
-  user: null,
   isLoading: false,
   error: null,
 
@@ -11,7 +10,6 @@ const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null })
     try {
       await authService.login(login, password)
-      set({ user: { login } })
     } catch (err) {
       set({ error: handleError(err) })
     } finally {

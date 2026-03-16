@@ -32,9 +32,12 @@ const useTopicStore = create((set, get) => ({
                 });
             } else {
                 set({ error: message });
+                throw new Error(message);
             }
         } catch (err) {
-            set({ error: handleError(err) });
+            const errorMessage = handleError(err);
+            set({ error: errorMessage });
+            throw new Error(errorMessage);
         } finally {
             set({ isLoading: false });
         }
@@ -51,8 +54,9 @@ const useTopicStore = create((set, get) => ({
                 throw new Error(message);
             }
         } catch (err) {
-            set({ error: handleError(err) });
-            throw err;
+            const errorMessage = handleError(err);
+            set({ error: errorMessage });
+            throw new Error(errorMessage);
         } finally {
             set({ isLoading: false });
         }
@@ -72,8 +76,9 @@ const useTopicStore = create((set, get) => ({
                 throw new Error(message);
             }
         } catch (err) {
-            set({ error: handleError(err) });
-            throw err;
+            const errorMessage = handleError(err);
+            set({ error: errorMessage });
+            throw new Error(errorMessage);
         } finally {
             set({ isLoading: false });
         }
@@ -93,8 +98,9 @@ const useTopicStore = create((set, get) => ({
                 throw new Error(message);
             }
         } catch (err) {
-            set({ error: handleError(err) });
-            throw err;
+            const errorMessage = handleError(err);
+            set({ error: errorMessage });
+            throw new Error(errorMessage);
         } finally {
             set({ isLoading: false });
         }
@@ -113,8 +119,9 @@ const useTopicStore = create((set, get) => ({
                 throw new Error(message);
             }
         } catch (err) {
-            set({ error: handleError(err) });
-            throw err;
+            const errorMessage = handleError(err);
+            set({ error: errorMessage });
+            throw new Error(errorMessage);
         } finally {
             set({ isLoading: false });
         }
@@ -133,8 +140,9 @@ const useTopicStore = create((set, get) => ({
                 throw new Error(message);
             }
         } catch (err) {
-            set({ error: handleError(err) });
-            throw err;
+            const errorMessage = handleError(err);
+            set({ error: errorMessage });
+            throw new Error(errorMessage);
         } finally {
             set({ isLoading: false });
         }
