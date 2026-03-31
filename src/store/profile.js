@@ -1,6 +1,8 @@
+// stores/useProfileStore.js
 import { create } from 'zustand';
-import { profileService } from '../services/profileService';
+import { profileService } from '../services/profile';
 import { handleError } from '../utils/handleError';
+import { storeRegistry } from '../utils/storeRegistry';
 
 const useProfileStore = create((set, get) => ({
     profile: null,
@@ -9,6 +11,23 @@ const useProfileStore = create((set, get) => ({
     isLoading: false,
     error: null,
     isInitialized: false,
+
+    updateEntityInStore: (entityType, entityId, updatedEntity) => {
+        if (entityType !== 'platformRole') return;
+        
+        const { profile } = get();
+        
+        if (profile?.role?._id === entityId) {
+            set({
+                profile: {
+                    ...profile,
+                    role: updatedEntity
+                },
+                permissions: updatedEntity.permissions || [],
+                isSystem: profile.isSystem || updatedEntity.isSystem || false,
+            });
+        }
+    },
 
     fetchProfile: async () => {
         set({ isLoading: true, error: null });
@@ -39,7 +58,9 @@ const useProfileStore = create((set, get) => ({
             const { success, message, data } = await profileService.updateProfile(payload);
             if (success) {
                 set({
-                    profile: data
+                    profile: data,
+                    permissions: data.role?.permissions || [],
+                    isSystem: data.isSystem || data.role?.isSystem || false,
                 });
             } else {
                 set({ error: message });
@@ -66,5 +87,7 @@ const useProfileStore = create((set, get) => ({
 
     clearProfile: () => set({ profile: null, permissions: [], isSystem: false, isInitialized: false })
 }));
+
+storeRegistry.register('platformRole', useProfileStore);
 
 export default useProfileStore;

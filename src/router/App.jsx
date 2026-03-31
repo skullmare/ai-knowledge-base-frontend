@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import ProtectedRoute from './ProtectedRoute'
-import LoginPage from '../pages/LoginPage'
-import TopicPage from '../pages/TopicPage'
-import TopicsPage from '../pages/TopicsPage'
+import ProtectedRoute from './Protected'
+import LoginPage from '../pages/Login'
+import TopicPage from '../pages/Topic'
+import TopicsPage from '../pages/Topics'
 import NotFound from '../pages/NotFound'
-import IndexPage from '../pages/IndexPage'
-import AccessDenied from '../pages/AccessDeniedPage'
+import IndexPage from '../pages/Index'
+import AccessDenied from '../pages/AccessDenied'
 
 export default function AppRouter() {
     return (

@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import useProfileStore from '../store/profileStore';
+import useProfileStore from '../store/profile';
 
 export default function ProtectedRoute({ children, permission }) {
   const token = localStorage.getItem('accessToken');

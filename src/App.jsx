@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import useProfileStore from './store/profileStore';
-import AppRouter from './router/AppRouter';
+import useProfileStore from './store/profile';
+import AppRouter from './router/App';
 
 function App() {
   const fetchProfile = useProfileStore((state) => state.fetchProfile);

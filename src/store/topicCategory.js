@@ -1,34 +1,24 @@
+// stores/useTopicCategoryStore.js
 import { create } from 'zustand';
-import { topicService } from '../services/topicService';
+import { topicCategoryService } from '../services/topicCategory';
 import { handleError } from '../utils/handleError';
+import { syncEntityUpdate } from '../utils/syncStores';
 
-const useTopicStore = create((set, get) => ({
-    topics: [],
-    currentTopic: null,
+const useTopicCategoryStore = create((set, get) => ({
+    categories: [],
+    currentCategory: null,
     isLoading: false,
     error: null,
-    pagination: {
-        total: 0,
-        pages: 1,
-        current: 1,
-        limit: 10,
-    },
 
-    fetchTopics: async (queryParams = {}) => {
+    fetchCategories: async (queryParams = {}) => {
         set({ isLoading: true, error: null });
         try {
-            const response = await topicService.getAll(queryParams);
-            const { success, message, data, pagination } = response;
+            const response = await topicCategoryService.getAll(queryParams);
+            const { success, message, data } = response;
 
             if (success) {
                 set({
-                    topics: data,
-                    pagination: {
-                        total: Number(pagination.total),
-                        pages: Number(pagination.pages),
-                        current: Number(pagination.current),
-                        limit: Number(pagination.limit),
-                    }
+                    categories: data
                 });
             } else {
                 set({ error: message });
@@ -43,12 +33,12 @@ const useTopicStore = create((set, get) => ({
         }
     },
 
-    fetchOneTopic: async (id) => {
+    fetchOneCategory: async (id) => {
         set({ isLoading: true, error: null });
         try {
-            const { success, message, data } = await topicService.getOne(id);
+            const { success, message, data } = await topicCategoryService.getOne(id);
             if (success) {
-                set({ currentTopic: data });
+                set({ currentCategory: data });
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -62,15 +52,15 @@ const useTopicStore = create((set, get) => ({
         }
     },
 
-    createTopic: async (data) => {
+    createCategory: async (data) => {
         set({ isLoading: true, error: null });
         try {
-            const { success, message, data: newTopic } = await topicService.create(data);
+            const { success, message, data: newCategory } = await topicCategoryService.create(data);
             if (success) {
                 set((state) => ({
-                    topics: [newTopic, ...state.topics]
+                    categories: [newCategory, ...state.categories]
                 }));
-                return newTopic;
+                return newCategory;
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -84,15 +74,16 @@ const useTopicStore = create((set, get) => ({
         }
     },
 
-    updateTopic: async (id, data) => {
+    updateCategory: async (id, data) => {
         set({ isLoading: true, error: null });
         try {
-            const { success, message, data: updatedTopic } = await topicService.update(id, data);
+            const { success, message, data: updatedCategory } = await topicCategoryService.update(id, data);
             if (success) {
                 set((state) => ({
-                    topics: state.topics.map((t) => (t._id === id ? updatedTopic : t)),
-                    currentTopic: state.currentTopic?._id === id ? updatedTopic : state.currentTopic,
+                    categories: state.categories.map((c) => (c._id === id ? updatedCategory : c)),
+                    currentCategory: state.currentCategory?._id === id ? updatedCategory : state.currentCategory,
                 }));
+                syncEntityUpdate('topicCategory', id, updatedCategory);
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -106,34 +97,14 @@ const useTopicStore = create((set, get) => ({
         }
     },
 
-    deleteTopic: async (id) => {
+    deleteCategory: async (id) => {
         set({ isLoading: true, error: null });
         try {
-            const { success, message } = await topicService.delete(id);
+            const { success, message } = await topicCategoryService.delete(id);
             if (success) {
                 set((state) => ({
-                    topics: state.topics.filter((t) => t._id !== id)
-                }));
-            } else {
-                set({ error: message });
-                throw new Error(message);
-            }
-        } catch (err) {
-            const errorMessage = handleError(err);
-            set({ error: errorMessage });
-            throw new Error(errorMessage);
-        } finally {
-            set({ isLoading: false });
-        }
-    },
-
-    approveTopic: async (id) => {
-        set({ isLoading: true, error: null });
-        try {
-            const { success, message, data } = await topicService.approve(id);
-            if (success) {
-                set((state) => ({
-                    topics: state.topics.map((t) => (t._id === id ? data : t))
+                    categories: state.categories.filter((c) => c._id !== id),
+                    currentCategory: state.currentCategory?._id === id ? null : state.currentCategory,
                 }));
             } else {
                 set({ error: message });
@@ -148,7 +119,28 @@ const useTopicStore = create((set, get) => ({
         }
     },
 
-    clearCurrentTopic: () => set({ currentTopic: null }),
+    deleteManyCategories: async (ids) => {
+        set({ isLoading: true, error: null });
+        try {
+            const { success, message } = await topicCategoryService.deleteMany(ids);
+            if (success) {
+                set((state) => ({
+                    categories: state.categories.filter((c) => !ids.includes(c._id))
+                }));
+            } else {
+                set({ error: message });
+                throw new Error(message);
+            }
+        } catch (err) {
+            const errorMessage = handleError(err);
+            set({ error: errorMessage });
+            throw new Error(errorMessage);
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    clearCurrentCategory: () => set({ currentCategory: null }),
 }));
 
-export default useTopicStore;
+export default useTopicCategoryStore;

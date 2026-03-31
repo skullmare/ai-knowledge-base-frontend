@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { authService } from '../services/authService'
+import { authService } from '../services/auth'
 import { handleError } from '../utils/handleError'
 
 const useAuthStore = create((set) => ({

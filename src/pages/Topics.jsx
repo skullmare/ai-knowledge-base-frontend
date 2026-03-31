@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import topicStore from '../store/topicStore'
+import topicStore from '../store/topic'
+
 
 export default function TopicsPage() {
   const [page, setPage] = useState('')
