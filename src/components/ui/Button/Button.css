@@ -1,0 +1,141 @@
+/* Базовые стили */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-none);
+  cursor: pointer;
+  transition: all var(--transition-base) ease;
+  border-radius: var(--radius-sm);
+}
+
+/* Размеры (объединение повторяющихся свойств) */
+.button--login,
+.button--interface,
+.button--modal {
+  width: 100%;
+  height: 44px;
+  min-width: 108px;
+}
+
+.button--login {
+  height: 52px; /* Переопределяем только высоту */
+}
+
+.button--logout {
+  width: 100%;
+  height: 36px;
+  min-width: 78px;
+  gap: var(--spacing-xs);
+  border-radius: var(--radius-full);
+}
+
+/* Базовые стили для всех типов кнопок */
+.button--primary,
+.button--secondary,
+.button--logout {
+  transition: all var(--transition-fast) ease;
+}
+
+.button--primary:active:not(.button--disabled),
+.button--secondary:active:not(.button--disabled),
+.button--logout:active:not(.button--disabled) {
+  transform: scale(0.99);
+}
+
+/* Primary кнопка */
+.button--primary {
+  background-color: var(--color-gold-100);
+  color: var(--color-white);
+  border: none;
+}
+
+.button--primary:hover:not(.button--disabled) {
+  background-color: var(--color-gold-200);
+}
+
+/* Secondary кнопка */
+.button--secondary {
+  background-color: var(--color-gray-600);
+  color: var(--color-white);
+  border: 1px solid var(--color-gray-400);
+}
+
+.button--secondary:hover:not(.button--disabled) {
+  border-color: var(--color-gold-300);
+}
+
+/* Logout кнопка */
+.button--logout {
+  background-color: transparent;
+  color: var(--color-gray-200);
+  border: 1px solid var(--color-gray-200);
+}
+
+.button--logout:hover:not(.button--disabled) {
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+/* Disabled состояния (группировка) */
+.button--disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.button--disabled.button--primary,
+.button--disabled.button--secondary {
+  background-color: var(--color-gray-700);
+  color: var(--color-gray-200);
+}
+
+.button--disabled.button--secondary {
+  border-color: var(--color-gray-500);
+}
+
+.button--disabled.button--logout {
+  opacity: 0.5;
+}
+
+/* Утилиты */
+.button--full-width {
+  width: 100%;
+}
+
+/* Loading состояние */
+.button--loading {
+  position: relative;
+  cursor: wait;
+}
+
+.button--loading::after {
+  content: '';
+  position: absolute;
+  width: var(--spacing-md);
+  height: var(--spacing-md);
+  margin-left: var(--spacing-sm);
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: var(--radius-full);
+  animation: button-spin var(--transition-slow) linear infinite;
+}
+
+@keyframes button-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Accessibility: reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button--primary:not(.button--disabled),
+  .button--secondary:not(.button--disabled),
+  .button--logout:not(.button--disabled),
+  .button--loading::after {
+    transition: none;
+    animation: none;
+  }
+}

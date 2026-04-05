@@ -1,21 +1,15 @@
 import { useEffect } from 'react';
-import useProfileStore from './store/profile';
-import AppRouter from './router/App';
+import useProfileStore from '@store/profile';
+import AppRouter from '@router/App';
 
 function App() {
   const fetchProfile = useProfileStore((state) => state.fetchProfile);
-  const token = localStorage.getItem('accessToken');
-
+  const accessToken = localStorage.getItem('accessToken');
   useEffect(() => {
-    if (token) {
-      fetchProfile().catch((err) => {
-        console.error("Ошибка при инициализации профиля:", err);
-      });
-    } else {
-      useProfileStore.setState({ isInitialized: true });
+    if (accessToken) {
+      fetchProfile()
     }
-  }, [fetchProfile, token]);
-
+  }, []);
   return <AppRouter />;
 }
 

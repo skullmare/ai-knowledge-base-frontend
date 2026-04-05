@@ -1,21 +1,20 @@
 import { Navigate } from 'react-router-dom';
-import useProfileStore from '../store/profile';
+import useProfileStore from '@store/profile';
 
-export default function ProtectedRoute({ children, permission }) {
+const ProtectedRoute = ({ children, requiredPermission = null }) => {
   const token = localStorage.getItem('accessToken');
-  const { isInitialized, isLoading, checkPermission, profile } = useProfileStore();
-
-  if (!token) return <Navigate to="/login" replace />;
-
-  if (!isInitialized || isLoading) {
-    return <div>Загрузка профиля...</div>;
+  const { permissions, isInitialized } = useProfileStore();
+  
+  if (!token) {
+    return <Navigate to="/login" replace />;
   }
-
-  if (!profile) return <Navigate to="/login" replace />;
-
-  if (permission && !checkPermission(permission)) {
-    return <Navigate to="/403" replace />;
+  
+  if (requiredPermission && isInitialized) {
+    const hasPermission = permissions.includes(requiredPermission);
+    if (!hasPermission) return <Navigate to="/login" replace />;
   }
-
+  
   return children;
-}
+};
+
+export default ProtectedRoute;

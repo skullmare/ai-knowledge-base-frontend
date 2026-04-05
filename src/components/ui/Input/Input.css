@@ -1,0 +1,228 @@
+/* Input Container */
+.input-component__container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+/* Label */
+.input-component__label {
+  font-size: var(--text-base);
+  font-weight: var(--font-normal);
+  color: var(--color-gray-200);
+  line-height: var(--leading-tight);
+}
+
+.input-component__label[data-required="true"] {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.input-component__required-star {
+  color: var(--color-red);
+  font-size: var(--text-sm);
+}
+
+/* Wrapper for input and icons */
+.input-component__wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Base Input Styles */
+.input-component {
+  width: 100%;
+  padding: 0 12px;
+  font-weight: var(--font-normal);
+  line-height: var(--leading-normal);
+  color: var(--color-white);
+  background-color: transparent;
+  border: 1px solid var(--color-gray-400);
+  border-radius: 4px;
+  outline: none;
+  transition: all var(--transition-base) ease;
+}
+
+/* Size variants */
+.input-component--medium {
+  height: 44px;
+}
+
+.input-component--large {
+  height: 52px;
+}
+
+/* Variants */
+.input-component--default,
+.input-component--search {
+  font-size: var(--text-base);
+}
+
+.input-component--default {
+  background-color: transparent;
+  border-color: var(--color-gray-400);
+}
+
+.input-component--search {
+  background-color: var(--color-gray-600);
+  border-color: var(--color-gray-500);
+}
+
+.input-component--search::placeholder {
+  color: var(--color-gray-200);
+}
+
+/* Interactive States */
+.input-component:hover:not(:disabled):not(.input-component--readonly) {
+  border-color: var(--color-gold-200);
+}
+
+.input-component--focused:not(:disabled):not(.input-component--readonly) {
+  border-color: var(--color-gold-100);
+}
+
+.input-component--error {
+  border-color: var(--color-red) !important;
+}
+
+.input-component:disabled,
+.input-component--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--color-gray-700);
+  border-color: var(--color-gray-500);
+}
+
+.input-component--readonly {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.input-component::placeholder {
+  color: var(--color-gray-200);
+}
+
+/* ============================================ */
+/* ICON PADDING SOLUTIONS - Dynamic by count    */
+/* ============================================ */
+
+/* Default padding for inputs with icons (1 icon) */
+.input-component--has-one-icon {
+  padding-right: 40px !important;
+}
+
+/* Padding for 2 icons */
+.input-component--has-two-icons {
+  padding-right: 80px !important;
+}
+
+/* Padding for 3 or more icons */
+.input-component--has-three-icons,
+.input-component--has-multiple-icons {
+  padding-right: 120px !important;
+}
+
+/* Icons container */
+.input-component__icons {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Icon buttons */
+.input-component__icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  color: var(--color-gray-200);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-base) ease;
+}
+
+.input-component__icon-button:hover:not(:disabled) {
+  color: var(--color-gold-100);
+}
+
+.input-component__icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.input-component__icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================ */
+/* MOBILE OPTIMIZATION                          */
+/* ============================================ */
+
+@media (max-width: 768px) {
+  .input-component--medium {
+    height: 40px;
+  }
+  
+  .input-component--large {
+    height: 48px;
+  }
+  
+  .input-component--default,
+  .input-component--search {
+    font-size: var(--text-sm);
+  }
+  
+  /* Mobile padding for 1 icon */
+  .input-component--has-one-icon {
+    padding-right: 35px !important;
+  }
+  
+  /* Mobile padding for 2 icons */
+  .input-component--has-two-icons {
+    padding-right: 65px !important;
+  }
+  
+  /* Mobile padding for 3+ icons */
+  .input-component--has-three-icons,
+  .input-component--has-multiple-icons {
+    padding-right: 100px !important;
+  }
+  
+  .input-component__icons {
+    right: 10px;
+    gap: 6px;
+  }
+  
+  .input-component__icon-button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Mobile tap highlight removal */
+.input-component__icon-button--password {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Message (Error / Info) */
+.input-component__message {
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+}
+
+.input-component__message--error {
+  color: var(--color-red);
+}
+
+.input-component__message--info {
+  color: var(--color-gray-200);
+}

@@ -7,7 +7,9 @@ export const authService = {
     return data
   },
 
-  logout: () => {
+  logout: async () => {
     localStorage.removeItem('accessToken')
+    const { data } = await api.post('/auth/logout', {}, { skipAuthRefresh: true })
+    return data
   },
 }
