@@ -81,7 +81,7 @@ export default function LoginPage() {
             </Button>
 
             {error && <p className="login-error">{error}</p>}
-            {isLoading && <Spinner />}
+
           </form>
         </main>
       </div>
@@ -91,6 +91,7 @@ export default function LoginPage() {
         className="login-image-side"
         style={{ backgroundImage: `url(${Background})` }}
       />
+      {isLoading && <Spinner />}
     </div>
   );
 }

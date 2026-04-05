@@ -27,7 +27,6 @@
 }
 
 .button--logout {
-  width: 100%;
   height: 36px;
   min-width: 78px;
   gap: var(--spacing-xs);

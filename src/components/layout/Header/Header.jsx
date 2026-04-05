@@ -1,91 +1,89 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import './Header.css';
 import Button from '@ui/Button/Button';
-import HasPermission from '@guards/Protected'
+import HasPermission from '@guards/Protected';
+import More from '@assets/icons/more-vertical-16.svg';
+import List from '@assets/icons/list-16.svg';
+import './Header.css';
 
-/**
- * @param {{ 
- *   navLinks: { to: string, label: string, desktopLabel?: string, permission?: string | string[], permissionMode?: string }[],
- *   activeLink: string,
- *   onLogout: () => void,
- *   userLogin: string,
- *   userRole: string
- * }} props
- */
-const Header = ({ navLinks = [], activeLink, onLogout, userLogin, userRole }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const menuRef = useRef(null);
-    const dotsBtnRef = useRef(null);
+const Header = ({ navLinks = [], activeLink, onLogout, userLogin, userRole, onOpenNavbar }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const dotsBtnRef = useRef(null);
 
-    const closeMenu = () => setIsMenuOpen(false);
+  const closeMenu = () => setIsMenuOpen(false);
 
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (isMenuOpen &&
-                menuRef.current && !menuRef.current.contains(e.target) &&
-                dotsBtnRef.current && !dotsBtnRef.current.contains(e.target)) {
-                closeMenu();
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isMenuOpen]);
+  useEffect(() => {
+    const handleClickOutside = ({ target }) => {
+      if (
+        isMenuOpen &&
+        !menuRef.current?.contains(target) &&
+        !dotsBtnRef.current?.contains(target)
+      ) closeMenu();
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMenuOpen]);
 
-    useEffect(() => {
-        const handleResize = () => { if (window.innerWidth > 1000) closeMenu(); };
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+  useEffect(() => {
+    const handleResize = () => { if (window.innerWidth > 1000) closeMenu(); };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-    const renderLinks = (mobile = false) =>
-        navLinks.map(({ to, label, desktopLabel, permission, permissionMode }) => {
-            const link = (
-                <Link
-                    key={to}
-                    to={to}
-                    className={`${mobile ? 'mobile-nav-link' : 'nav-link'}${activeLink === to ? ' active' : ''}`}
-                    onClick={mobile ? closeMenu : undefined}
-                >
-                    {mobile ? label : (desktopLabel ?? label)}
-                </Link>
-            )
+  const renderLinks = (mobile = false) =>
+    navLinks.map(({ to, label, desktopLabel, permission, permissionMode }) => {
+      const link = (
+        <Link
+          key={to}
+          to={to}
+          className={`${mobile ? 'mobile-nav-link' : 'nav-link'}${activeLink === to ? ' active' : ''}`}
+          onClick={mobile ? closeMenu : undefined}
+        >
+          {mobile ? label : (desktopLabel ?? label)}
+        </Link>
+      );
 
-            return permission
-                ? <HasPermission key={to} permission={permission} mode={permissionMode}>{link}</HasPermission>
-                : link
-        })
+      return permission
+        ? <HasPermission key={to} permission={permission} mode={permissionMode}>{link}</HasPermission>
+        : link;
+    });
 
-    return (
-        <header>
-            <nav>{renderLinks()}</nav>
+  return (
+    <header className="header-component">
+      <nav>{renderLinks()}</nav>
 
-            <div className="profile-block">
-                <Link to="/profile" className="user-data-block">
-                    <span className="login">{userLogin}</span>
-                    <span className="role">{userRole}</span>
-                </Link>
-                <Button size="logout" onClick={onLogout}>Выйти</Button>
-            </div>
+      <div className="profile-block">
+        <Link to="/profile" className="user-data-block">
+          <span className="login">{userLogin}</span>
+          <span className="role">{userRole}</span>
+        </Link>
+        <Button size="logout" onClick={onLogout}>Выйти</Button>
+      </div>
 
-            <button ref={dotsBtnRef} className="menu-dots-btn" onClick={() => setIsMenuOpen(v => !v)} aria-label="Меню">
-                <span /><span /><span />
-            </button>
+      <div className="header-mobile-actions">
+        <button className="navbar__hamburger-inline" onClick={onOpenNavbar} aria-label="Открыть меню">
+          <List width="20px" height="20px" />
+        </button>
+        <button ref={dotsBtnRef} className="menu-dots-btn" onClick={() => setIsMenuOpen(v => !v)} aria-label="Меню">
+          <More width="20px" height="20px" />
+        </button>
+      </div>
 
-            <div className={`mobile-menu-widget ${isMenuOpen ? 'active' : ''}`} ref={menuRef}>
-                <div className="mobile-profile">
-                    <Link to="/profile">
-                        <span className="mobile-login">{userLogin}</span>
-                        <span className="mobile-role">{userRole}</span>
-                    </Link>
-                    <Button size="logout" onClick={onLogout}>Выйти</Button>
-                </div>
-                <div className="mobile-nav-links">{renderLinks(true)}</div>
-            </div>
+      <div className={`mobile-menu-widget${isMenuOpen ? ' active' : ''}`} ref={menuRef}>
+        <div className="mobile-profile">
+          <Link to="/profile">
+            <span className="mobile-login">{userLogin}</span>
+            <span className="mobile-role">{userRole}</span>
+          </Link>
+          <Button size="logout" onClick={onLogout}>Выйти</Button>
+        </div>
+        <div className="mobile-nav-links">{renderLinks(true)}</div>
+      </div>
 
-            <div className={`menu-overlay ${isMenuOpen ? 'active' : ''}`} onClick={closeMenu} />
-        </header>
-    );
+      <div className={`menu-overlay${isMenuOpen ? ' active' : ''}`} onClick={closeMenu} />
+    </header>
+  );
 };
 
 export default Header;
