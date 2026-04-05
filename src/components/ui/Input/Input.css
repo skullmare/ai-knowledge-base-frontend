@@ -168,14 +168,6 @@
 /* ============================================ */
 
 @media (max-width: 768px) {
-  .input-component--medium {
-    height: 40px;
-  }
-  
-  .input-component--large {
-    height: 48px;
-  }
-  
   .input-component--default,
   .input-component--search {
     font-size: var(--text-sm);

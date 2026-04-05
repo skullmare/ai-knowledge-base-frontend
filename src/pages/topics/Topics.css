@@ -1,0 +1,94 @@
+/* Topics.css */
+
+.topics-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* ── Toolbar ── */
+
+.topics-page__toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.topics-page__controls          { display: flex; gap: var(--spacing-sm); }
+.topics-page__controls-search  { flex: 7; min-width: 200px;}
+.topics-page__controls-btn     { flex: 2; min-width: 200px;}
+
+.topics-page__title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-semibold);
+    color: var(--color-white);
+}
+
+/* ── Meta ── */
+
+.topics-page__meta {
+    font-size: var(--text-sm);
+    color: var(--color-gray-200);
+}
+
+/* ── Grid ── */
+
+.topics-page__grid {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.topics-page__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    
+}
+
+.topics-page__group-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-medium);
+    color: var(--color-white);
+}
+
+.topics-page__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.topics-page__item {
+    font-size: var(--text-base);
+    color: var(--color-gold-200);
+    cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.topics-page__item:hover {
+    color: var(--color-gold-100);
+}
+
+/* ── Адаптив ── */
+
+@media (max-width: 512px) {
+    .topics-page__grid {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 720px) {
+
+    .topics-page__toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .topics-page__controls {
+        flex-wrap: wrap;
+    }
+
+    .topics-page__group {
+        width: 100%;
+    }
+}

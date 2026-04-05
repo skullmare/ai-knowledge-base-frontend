@@ -17,9 +17,7 @@ const useTopicCategoryStore = create((set, get) => ({
             const { success, message, data } = response;
 
             if (success) {
-                set({
-                    categories: data
-                });
+                set({ categories: data.categories ?? data })
             } else {
                 set({ error: message });
                 throw new Error(message);

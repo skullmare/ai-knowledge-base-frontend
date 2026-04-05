@@ -1,8 +1,8 @@
 import React, { useState, useRef, useCallback } from 'react';
 import './Input.css';
-import HideIcon from '../../../assets/icons/hide-16.svg';
-import CloseIcon from '../../../assets/icons/close-16.svg';
-import SearchIcon from '../../../assets/icons/search-16.svg';
+import HideIcon from '@assets/icons/hide-16.svg';
+import CloseIcon from '@assets/icons/close-16.svg';
+import SearchIcon from '@assets/icons/search-16.svg';
 
 const Input = ({
     type = 'text',

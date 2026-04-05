@@ -6,15 +6,27 @@ import Modal from '@layout/Modal/Modal';
 import Layout from '@layout/Layout/Layout';
 import Navbar from '@layout/Navbar/Navbar';
 import Header from '@layout/Header/Header';
+import Dropdown from '@ui/Dropdown/Dropdown';
 
 const SECTIONS = [
   { id: 'buttons', label: 'Кнопки' },
   { id: 'inputs', label: 'Поля ввода' },
   { id: 'modals', label: 'Модальные окна' },
+  { id: 'dropdowns', label: 'Выпадающие списки' },
 ];
 
 const NAV_LINKS = [
   { to: '/set-components', label: 'Компоненты' },
+];
+
+const ROLES = [
+  { value: 'all', label: 'Все роли' },
+  { value: 'operator-admin', label: 'Админ оператора' },
+  { value: 'project-manager', label: 'Менеджер проекта' },
+  { value: 'project-lead', label: 'Руководитель проекта' },
+  { value: 'developer-rep', label: 'Представитель застройщика' },
+  { value: 'partner-admin', label: 'Админ партнёра' },
+  { value: 'partner-manager', label: 'Менеджер партнёра' },
 ];
 
 export default function SetComponents() {
@@ -22,6 +34,7 @@ export default function SetComponents() {
   const [activeId, setActiveId] = useState('buttons');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sectionName, setSectionName] = useState('');
+  const [role, setRole] = useState('all');
 
   const closeModal = () => { setIsModalOpen(false); setSectionName(''); };
 
@@ -70,6 +83,13 @@ export default function SetComponents() {
           <Button size="interface" variant="primary" onClick={() => setIsModalOpen(true)}>
             Открыть модалку
           </Button>
+        </div>
+
+        <h1>Выпадающие списки</h1>
+        <div className="inputs-list">
+          <Dropdown options={ROLES} value={role} onChange={setRole} />
+          <Dropdown options={ROLES} value={null} placeholder="Выберите роль" onChange={setRole} />
+          <Dropdown options={[]} placeholder="Нет вариантов" />
         </div>
 
         {isModalOpen && (

@@ -24,7 +24,7 @@
 .layout__content {
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
 }
 
 @media (max-width: 999px) {
