@@ -145,6 +145,7 @@ export default function TopicsPage() {
         ...(search && { search }),
         ...(selectedRole && { role: selectedRole }),
         ...(activeCategory !== 'all' && { category: activeCategory }),
+        limit: pagination.limit,
         ...overrides,
     })
 

@@ -7,7 +7,7 @@ import DropdownIcon from '@assets/icons/dropdown-16.svg'
 import DropdownFlippedIcon from '@assets/icons/dropdown-flipped-16.svg'
 import './Table.css'
 
-const LIMIT_OPTIONS = [10, 25, 50, 100]
+const LIMIT_OPTIONS = [5, 10, 25, 50, 100]
 
 function Pagination({ page, limit, total, onPageChange, onLimitChange }) {
     const [isLimitOpen, setIsLimitOpen] = useState(false)
