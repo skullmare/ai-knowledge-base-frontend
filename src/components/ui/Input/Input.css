@@ -150,7 +150,7 @@
 }
 
 .input-component__icon-button:hover:not(:disabled) {
-  color: var(--color-gold-100);
+  color: var(--color-white);
 }
 
 .input-component__icon-button:disabled {
