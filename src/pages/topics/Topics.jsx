@@ -8,18 +8,48 @@ import useAuthStore from '@store/auth'
 import Header from '@layout/Header/Header'
 import Navbar from '@layout/Navbar/Navbar'
 import Layout from '@layout/Layout/Layout'
+import Table from '@layout/Table/Table'
 import Button from '@ui/Button/Button'
 import Input from '@ui/Input/Input'
 import Protected from '@guards/Protected'
 import Dropdown from '@ui/Dropdown/Dropdown'
 import Modal from '@layout/Modal/Modal'
-import './Topics.css'
+import Catalogue from '@assets/icons/catalogue-16.svg'
+import List from '@assets/icons/list-16.svg'
 import Plus from '@assets/icons/plus-16.svg'
+import './Topics.css'
 
 const NAV_LINKS = [
     { to: '/topics', label: 'Управление данными', permission: 'topics.read' },
     { to: '/users', label: 'Управление пользователями', permission: ['platformUsers.read', 'agentUsers.read'], permissionMode: 'some' },
     { to: '/logs', label: 'Лента событий', permission: 'logs.read' },
+]
+
+const TOPIC_COLUMNS = [
+    { key: 'name', label: 'Название' },
+    {
+        key: 'status', label: 'Статус',
+        render: (value) => (
+            <span className="topic-status">
+                <span className={`topic-status__dot topic-status__dot--${value}`} />
+                {value === 'approved' ? 'Одобрено' : value === 'review' ? 'На проверке' : 'В архиве'}
+            </span>
+        )
+    },
+    { key: 'category', label: 'Раздел', render: (value) => value?.name ?? '—' },
+    { key: 'roles', label: 'Роли', render: (value) => value?.length ? value.map((r) => r.name).join(', ') : '—' },
+    {
+        key: 'createdBy', label: 'Автор',
+        render: (value) => value ? (
+            <span className="topic-author">
+                {value.photoUrl
+                    ? <img className="topic-author__avatar" src={value.photoUrl} alt="" />
+                    : <span className="topic-author__avatar topic-author__avatar--placeholder" />
+                }
+                {value.firstName} {value.lastName}
+            </span>
+        ) : '—'
+    },
 ]
 
 export default function TopicsPage() {
@@ -30,9 +60,11 @@ export default function TopicsPage() {
 
     const fetchTopics = useTopicStore((s) => s.fetchTopics)
     const topics = useTopicStore((s) => s.topics)
+    const pagination = useTopicStore((s) => s.pagination)
 
     const fetchCategories = useTopicCategoryStore((s) => s.fetchCategories)
-    const categories = useTopicCategoryStore((s) => s.categories)
+    const categoriesRaw = useTopicCategoryStore((s) => s.categories)
+    const categories = Array.isArray(categoriesRaw) ? categoriesRaw : (categoriesRaw?.categories ?? [])
     const createCategory = useTopicCategoryStore((s) => s.createCategory)
 
     const fetchRoles = useAgentRoleStore((s) => s.fetchRoles)
@@ -41,6 +73,7 @@ export default function TopicsPage() {
     const [activeCategory, setActiveCategory] = useState('all')
     const [search, setSearch] = useState('')
     const [selectedRole, setSelectedRole] = useState(null)
+    const [viewMode, setViewMode] = useState('catalogue')
 
     const [isCreateCategoryModalOpen, setIsCreateCategoryModalOpen] = useState(false)
     const [categoryName, setCategoryName] = useState('')
@@ -57,8 +90,9 @@ export default function TopicsPage() {
         if (search) params.search = search
         if (selectedRole) params.role = selectedRole
         if (activeCategory !== 'all') params.category = activeCategory
+        if (viewMode === 'catalogue') params.limit = 100
         fetchTopics(params)
-    }, [fetchTopics, search, selectedRole, activeCategory])
+    }, [fetchTopics, search, selectedRole, activeCategory, viewMode])
 
     const navSections = useMemo(() => [
         { id: 'all', label: 'Все' },
@@ -81,6 +115,12 @@ export default function TopicsPage() {
         return Array.from(map.values())
     }, [topics])
 
+    const tableData = useMemo(() => topics.map((t) => ({
+        ...t,
+        category: t.metadata?.category,
+        roles: t.metadata?.accessibleByRoles,
+    })), [topics])
+
     const handleLogout = async () => {
         try { await logout() } finally { window.location.href = '/login' }
     }
@@ -100,6 +140,13 @@ export default function TopicsPage() {
             setIsCreatingCategory(false)
         }
     }
+
+    const buildParams = (overrides = {}) => ({
+        ...(search && { search }),
+        ...(selectedRole && { role: selectedRole }),
+        ...(activeCategory !== 'all' && { category: activeCategory }),
+        ...overrides,
+    })
 
     return (
         <Layout
@@ -147,33 +194,59 @@ export default function TopicsPage() {
                                 variant="secondary"
                                 onClick={() => setIsCreateCategoryModalOpen(true)}
                             >
-                                <Plus color="white"></Plus>Создать раздел
+                                <Plus />Создать раздел
                             </Button>
                         </div>
                         <div className="topics-page__controls-btn">
                             <Protected permission="topics.create" mode="some">
                                 <Button size="interface" variant="primary">
-                                    <Plus color="white"></Plus>Создать тему
+                                    <Plus />Создать тему
                                 </Button>
                             </Protected>
+                        </div>
+                        <div className="topics-page__controls-btn-mode-container">
+                            <button
+                                className={`topics-page__controls-btn-mode ${viewMode === 'catalogue' ? 'topics-page__controls-btn-mode--active' : ''}`}
+                                onClick={() => setViewMode('catalogue')}
+                            >
+                                <Catalogue width="20px" height="20px" />
+                            </button>
+                            <button
+                                className={`topics-page__controls-btn-mode ${viewMode === 'list' ? 'topics-page__controls-btn-mode--active' : ''}`}
+                                onClick={() => setViewMode('list')}
+                            >
+                                <List width="20px" height="20px" />
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div className="topics-page__grid">
-                    {groupedTopics.map(({ category, topics: catTopics }) => (
-                        <div key={category._id} className="topics-page__group">
-                            <h2 className="topics-page__group-title">{category.name}</h2>
-                            <ul className="topics-page__list">
-                                {catTopics.map((topic) => (
-                                    <li key={topic._id} className="topics-page__item">
-                                        {topic.name}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                </div>
+                {viewMode === 'catalogue' ? (
+                    <div className="topics-page__grid">
+                        {groupedTopics.map(({ category, topics: catTopics }) => (
+                            <div key={category._id} className="topics-page__group">
+                                <h2 className="topics-page__group-title">{category.name}</h2>
+                                <ul className="topics-page__list">
+                                    {catTopics.map((topic) => (
+                                        <li key={topic._id} className="topics-page__item">
+                                            {topic.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <Table
+                        columns={TOPIC_COLUMNS}
+                        data={tableData}
+                        page={pagination.current}
+                        limit={pagination.limit}
+                        total={pagination.total}
+                        onPageChange={(p) => fetchTopics(buildParams({ page: p }))}
+                        onLimitChange={(l) => fetchTopics(buildParams({ page: 1, limit: l }))}
+                    />
+                )}
             </div>
 
             {isCreateCategoryModalOpen && (

@@ -76,6 +76,15 @@
   z-index: 1001;
 }
 
+.menu-dots-btn-icon {
+  color: var(--color-gray-200);
+  transition: color var(--transition-base) ease;
+}
+
+.menu-dots-btn-icon:hover {
+  color: var(--color-white);
+}
+
 .menu-dots-btn:hover span {
   background-color: var(--color-white);
 }
@@ -217,6 +226,15 @@
   background: transparent;
   color: var(--color-gray-100);
   cursor: pointer;
+}
+
+.navbar__hamburger-inline-icon {
+  color: var(--color-gray-200);
+  transition: color var(--transition-base) ease;
+}
+
+.navbar__hamburger-inline-icon:hover {
+  color: var(--color-white);
 }
 
 /* ── Breakpoints ──────────────────────────────────────────────────────── */

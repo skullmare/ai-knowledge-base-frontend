@@ -4,6 +4,7 @@ import Button from '@ui/Button/Button';
 import Input from '@ui/Input/Input';
 import Modal from '@layout/Modal/Modal';
 import Layout from '@layout/Layout/Layout';
+import Table from '@layout/Table/Table';
 import Navbar from '@layout/Navbar/Navbar';
 import Header from '@layout/Header/Header';
 import Dropdown from '@ui/Dropdown/Dropdown';
@@ -29,12 +30,61 @@ const ROLES = [
   { value: 'partner-manager', label: 'Менеджер партнёра' },
 ];
 
+const columns = [
+  { key: 'date', label: 'Дата, время' },
+  { key: 'name', label: 'Имя и фамилия' },
+  { key: 'object', label: 'Изменённый объект' },
+  { key: 'action', label: 'Действие' },
+  {
+    key: 'status',
+    label: 'Результат',
+    render: (value) => (
+      <Button size="interface" variant="primary">Сохранить</Button>
+    )
+  },
+]
+
+const LOGS = [
+  { _id: '1', date: '12.04.2026 11:30:43', name: 'Алексей Морозов', object: 'Тема «Инструкция для новых пользователей»', action: 'Добавлены роли', status: 'success' },
+  { _id: '2', date: '06.02.2026 12:58:07', name: 'Екатерина Соколова', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'error' },
+  { _id: '3', date: '23.05.2026 23:11:52', name: 'Дмитрий Лебедев', object: 'Роль «Менеджер»', action: 'Изменены доступы', status: 'success' },
+  { _id: '4', date: '11.05.2026 10:56:31', name: 'Мария Кузнецова', object: 'Роль «Оператор»', action: 'Изменено описание', status: 'success' },
+  { _id: '5', date: '10.05.2026 16:27:37', name: 'Илья Орлов', object: 'Тема «Статусы и уведомления»', action: 'Отредактирована статья, добавлены файлы', status: 'success' },
+  { _id: '6', date: '12.12.2025 18:34:09', name: 'Анна Волкова', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'success' },
+  { _id: '7', date: '30.05.2025 03:16:02', name: 'Сергей Никитин', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'error' },
+  { _id: '8', date: '14.03.2026 07:14:23', name: 'Анна Волкова', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'error' },
+  { _id: '9', date: '12.12.2025 18:34:09', name: 'Сергей Никитин', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'success' },
+  { _id: '10', date: '14.03.2026 07:14:23', name: 'Ольга Петрова', object: 'Статус пользователя', action: 'Заблокирован пользователь', status: 'success' },
+  { _id: '1', date: '12.04.2026 11:30:43', name: 'Алексей Морозов', object: 'Тема «Инструкция для новых пользователей»', action: 'Добавлены роли', status: 'success' },
+  { _id: '2', date: '06.02.2026 12:58:07', name: 'Екатерина Соколова', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'error' },
+  { _id: '3', date: '23.05.2026 23:11:52', name: 'Дмитрий Лебедев', object: 'Роль «Менеджер»', action: 'Изменены доступы', status: 'success' },
+  { _id: '4', date: '11.05.2026 10:56:31', name: 'Мария Кузнецова', object: 'Роль «Оператор»', action: 'Изменено описание', status: 'success' },
+  { _id: '5', date: '10.05.2026 16:27:37', name: 'Илья Орлов', object: 'Тема «Статусы и уведомления»', action: 'Отредактирована статья, добавлены файлы', status: 'success' },
+  { _id: '6', date: '12.12.2025 18:34:09', name: 'Анна Волкова', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'success' },
+  { _id: '7', date: '30.05.2025 03:16:02', name: 'Сергей Никитин', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'error' },
+  { _id: '8', date: '14.03.2026 07:14:23', name: 'Анна Волкова', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'error' },
+  { _id: '9', date: '12.12.2025 18:34:09', name: 'Сергей Никитин', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'success' },
+  { _id: '10', date: '14.03.2026 07:14:23', name: 'Ольга Петрова', object: 'Статус пользователя', action: 'Заблокирован пользователь', status: 'success' },
+  { _id: '1', date: '12.04.2026 11:30:43', name: 'Алексей Морозов', object: 'Тема «Инструкция для новых пользователей»', action: 'Добавлены роли', status: 'success' },
+  { _id: '2', date: '06.02.2026 12:58:07', name: 'Екатерина Соколова', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'error' },
+  { _id: '3', date: '23.05.2026 23:11:52', name: 'Дмитрий Лебедев', object: 'Роль «Менеджер»', action: 'Изменены доступы', status: 'success' },
+  { _id: '4', date: '11.05.2026 10:56:31', name: 'Мария Кузнецова', object: 'Роль «Оператор»', action: 'Изменено описание', status: 'success' },
+  { _id: '5', date: '10.05.2026 16:27:37', name: 'Илья Орлов', object: 'Тема «Статусы и уведомления»', action: 'Отредактирована статья, добавлены файлы', status: 'success' },
+  { _id: '6', date: '12.12.2025 18:34:09', name: 'Анна Волкова', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'success' },
+  { _id: '7', date: '30.05.2025 03:16:02', name: 'Сергей Никитин', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'error' },
+  { _id: '8', date: '14.03.2026 07:14:23', name: 'Анна Волкова', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'error' },
+  { _id: '9', date: '12.12.2025 18:34:09', name: 'Сергей Никитин', object: 'Статус пользователя', action: 'Активирован пользователь', status: 'success' },
+  { _id: '10', date: '14.03.2026 07:14:23', name: 'Ольга Петрова', object: 'Статус пользователя', action: 'Заблокирован пользователь', status: 'success' },
+]
+
 export default function SetComponents() {
   const { pathname } = useLocation();
   const [activeId, setActiveId] = useState('buttons');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sectionName, setSectionName] = useState('');
   const [role, setRole] = useState('all');
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
 
   const closeModal = () => { setIsModalOpen(false); setSectionName(''); };
 
@@ -51,7 +101,7 @@ export default function SetComponents() {
         <Header
           navLinks={NAV_LINKS}
           activeLink={pathname}
-          onLogout={() => {}}
+          onLogout={() => { }}
           userLogin="Developer"
           userRole="Разработчик"
         />
@@ -91,7 +141,16 @@ export default function SetComponents() {
           <Dropdown options={ROLES} value={null} placeholder="Выберите роль" onChange={setRole} />
           <Dropdown options={[]} placeholder="Нет вариантов" />
         </div>
-
+        <h1>Таблица</h1>
+        <Table
+          columns={columns}
+          data={LOGS}
+          page={page}
+          limit={limit}
+          total={LOGS.length}
+          onPageChange={setPage}
+          onLimitChange={setLimit}
+        />
         {isModalOpen && (
           <Modal
             title="Создание раздела"

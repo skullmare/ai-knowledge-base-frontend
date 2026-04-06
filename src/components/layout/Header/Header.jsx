@@ -63,10 +63,10 @@ const Header = ({ navLinks = [], activeLink, onLogout, userLogin, userRole, onOp
 
       <div className="header-mobile-actions">
         <button className="navbar__hamburger-inline" onClick={onOpenNavbar} aria-label="Открыть меню">
-          <List width="20px" height="20px" />
+          <List className="navbar__hamburger-inline-icon" width="20px" height="20px" />
         </button>
         <button ref={dotsBtnRef} className="menu-dots-btn" onClick={() => setIsMenuOpen(v => !v)} aria-label="Меню">
-          <More width="20px" height="20px" />
+          <More className="menu-dots-btn-icon" width="20px" height="20px" />
         </button>
       </div>
 

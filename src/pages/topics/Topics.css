@@ -14,9 +14,86 @@
     gap: var(--spacing-md);
 }
 
-.topics-page__controls          { display: flex; gap: var(--spacing-sm); }
-.topics-page__controls-search  { flex: 7; min-width: 200px;}
-.topics-page__controls-btn     { flex: 2; min-width: 200px;}
+.topics-page__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.topics-page__controls-filter {
+    flex: 1;
+}
+
+.topics-page__controls-search {
+    flex: 7;
+    min-width: 200px;
+}
+
+.topics-page__controls-btn {
+    flex: 2;
+    min-width: 200px;
+}
+
+.topics-page__controls-btn-mode-container {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-sm);
+    align-items: center;
+    justify-content: center;
+}
+
+.topics-page__controls-btn-mode {
+    background-color: transparent;
+    border: none;
+    color: var(--color-gray-200);
+}
+
+.topics-page__controls-btn-mode:hover {
+    color: var(--color-gold-200);
+    cursor: pointer;
+}
+
+.topics-page__controls-btn-mode--active {
+    color: var(--color-gold-200);
+}
+
+/* Статус */
+.topic-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.topic-status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.topic-status__dot--approved { background: var(--color-green); }
+.topic-status__dot--review   { background: var(--color-gold-100); }
+.topic-status__dot--archived { background: var(--color-gray-200); }
+
+/* Автор */
+.topic-author {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.topic-author__avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.topic-author__avatar--placeholder {
+    background: var(--color-gray-400);
+}
 
 .topics-page__title {
     font-size: var(--text-2xl);
@@ -42,7 +119,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
-    
+
 }
 
 .topics-page__group-title {
@@ -62,11 +139,12 @@
     font-size: var(--text-base);
     color: var(--color-gold-200);
     cursor: pointer;
-    transition: color var(--transition-fast);
+    transition: all var(--transition-fast);
 }
 
 .topics-page__item:hover {
     color: var(--color-gold-100);
+    text-decoration: underline;
 }
 
 /* ── Адаптив ── */
