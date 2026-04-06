@@ -10,6 +10,7 @@ import Navbar from '@layout/Navbar/Navbar'
 import Layout from '@layout/Layout/Layout'
 import Button from '@ui/Button/Button'
 import Input from '@ui/Input/Input'
+import Protected from '@guards/Protected'
 import Dropdown from '@ui/Dropdown/Dropdown'
 import Modal from '@layout/Modal/Modal'
 import './Topics.css'
@@ -150,9 +151,11 @@ export default function TopicsPage() {
                             </Button>
                         </div>
                         <div className="topics-page__controls-btn">
-                            <Button size="interface" variant="primary">
-                                <Plus color="white"></Plus>Создать тему
-                            </Button>
+                            <Protected permission="topics.create" mode="some">
+                                <Button size="interface" variant="primary">
+                                    <Plus color="white"></Plus>Создать тему
+                                </Button>
+                            </Protected>
                         </div>
                     </div>
                 </div>

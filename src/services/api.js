@@ -1,39 +1,68 @@
 import axios from 'axios';
-import { createAuthRefresh } from 'axios-auth-refresh';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL + '/api/v1',
   withCredentials: true,
 });
 
-const refreshAuthLogic = (failedRequest) =>
-  api.post('/auth/refresh', {}, { skipAuthRefresh: true })
-    .then((response) => {
-      const newToken = response.data.data.accessToken;
-      localStorage.setItem('accessToken', newToken);
-      
-      failedRequest.response.config.headers['Authorization'] = `Bearer ${newToken}`;
-      
-      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-      
-      return Promise.resolve();
-    })
-    .catch((err) => {
-      localStorage.removeItem('accessToken');
-      if (window.location.pathname !== '/login') {
-        window.location.replace('/login');
-      }
-      return Promise.reject(err);
-    });
+let accessToken = localStorage.getItem('accessToken') || null;
+let refreshPromise = null; // ключевая штука — один промис на всех
 
-createAuthRefresh(api, refreshAuthLogic);
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
+export const setAccessToken = (token) => {
+  accessToken = token;
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    localStorage.setItem('accessToken', token);
+  } else {
+    localStorage.removeItem('accessToken');
+  }
+};
+
+// Request interceptor
+api.interceptors.request.use((config) => {
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
+
+// Response interceptor
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status !== 401 || originalRequest.url.includes('/auth/refresh')) {
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true;
+
+    // Если refresh уже идёт — все ждут один и тот же промис
+    if (!refreshPromise) {
+      refreshPromise = api
+        .post('/auth/refresh', {})
+        .then((res) => {
+          const newToken = res.data.data.accessToken;
+          setAccessToken(newToken);
+          return newToken;
+        })
+        .catch((err) => {
+          setAccessToken(null);
+          if (window.location.pathname !== '/login') {
+            window.location.replace('/login');
+          }
+          return Promise.reject(err);
+        })
+        .finally(() => {
+          refreshPromise = null; // сбрасываем после завершения
+        });
+    }
+
+    // Все запросы ждут refresh и повторяются с новым токеном
+    const newToken = await refreshPromise;
+    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+    return api(originalRequest); // повторяем КАЖДЫЙ запрос
+  }
+);
 
 export default api;

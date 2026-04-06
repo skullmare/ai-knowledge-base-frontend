@@ -99,6 +99,8 @@ body {
   
   /* Опционально: сглаживание */
   font-synthesis: none;
+  max-width: 1512px;
+  margin: 0px auto;
 }
 
 a {
