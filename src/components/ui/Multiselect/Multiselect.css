@@ -29,6 +29,8 @@
 
 .multiselect__trigger-large {
     min-height: 52px;
+    display: flex;
+    align-items: stretch;
 }
 
 
@@ -37,6 +39,7 @@
 .multiselect__tags {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--spacing-xs);
     flex: 1;
     min-width: 0;
@@ -81,10 +84,8 @@
 /* ── Actions ── */
 
 .multiselect__actions {
-    position: absolute;
-    top: 40px;
-    right: 10px;
     display: flex;
+    align-items: start;
     gap: var(--spacing-sm);
 }
 
@@ -117,7 +118,7 @@
     border: 1px solid var(--color-gray-400);
     border-radius: var(--radius-sm);
     overflow-y: auto;
-    max-height: 320px;
+    max-height: calc(100vh / 4);
     z-index: 100;
 }
 

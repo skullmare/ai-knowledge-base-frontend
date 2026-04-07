@@ -17,15 +17,15 @@
 
 /* ── Modal ────────────────────────────────────────────────────────────── */
 .modal {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 400;
   margin: auto;
   width: 480px;
   max-width: calc(100vw - 32px);
   height: fit-content;
-  padding: var(--spacing-xl);
-  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-gray-500);
   background: var(--color-black);
   display: flex;
