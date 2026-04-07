@@ -13,6 +13,7 @@ import { TopicsToolbar } from './components/TopicsToolbar'
 import { TopicsCatalogue } from './components/TopicsCatalogue'
 import { CreateCategoryModal } from './components/CreateCategoryModal'
 import { EditCategoryModal } from './components/EditCategoryModal'
+import { TopicsNavbar } from './components/TopicsNavbar'
 import { NAV_LINKS, TOPIC_COLUMNS } from './Topics.constants'
 import { useCreateTopicModal } from './hooks/useCreateTopicModal'
 import { CreateTopicModal } from './components/CreateTopicModal'
@@ -58,11 +59,14 @@ export default function TopicsPage() {
     return (
         <Layout
             navbar={
-                <Navbar
-                    sections={navSections}
-                    activeSection={filters.activeCategory}
-                    onSelect={filters.setActiveCategory}
-                />}
+                <Navbar>
+                    <TopicsNavbar
+                        sections={navSections}
+                        activeSection={filters.activeCategory}
+                        onSelect={filters.setActiveCategory}
+                    />
+                </Navbar>
+            }
             header={
                 <Header
                     navLinks={NAV_LINKS}

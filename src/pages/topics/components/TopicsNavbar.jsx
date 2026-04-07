@@ -1,33 +1,21 @@
-import { useState, useEffect } from 'react';
-import Logo from '@assets/images/logo.svg';
-import Close from '@assets/icons/close-16.svg';
-import './Navbar.css';
+import { useNavbar } from '@layout/Navbar/Navbar';
+import '../Topics.css';
 
-const BREAKPOINT = 1000;
-const isMobile = () => window.innerWidth < BREAKPOINT;
-
-export default function Navbar({ sections = [], activeSection, onSelect, onOpen }) {
-    const [isOpen, setIsOpen] = useState(() => !isMobile());
-
-    useEffect(() => {
-        onOpen?.(() => setIsOpen(true));
-    }, [onOpen]);
-
+export function TopicsNavbar({ sections = [], activeSection, onSelect }) {
+    const { setIsOpen, isMobile } = useNavbar();
     const handleClose = () => isMobile() && setIsOpen(false);
-
     const handleSelect = (id) => {
         onSelect?.(id);
         handleClose();
     };
-
     return (
         <>
-            <p className="navbar__label">РАЗДЕЛЫ</p>
-            <ul className="navbar__list" role="list">
+            <p className="topics-page__navbar__label">РАЗДЕЛЫ</p>
+            <ul className="topics-page__navbar__list" role="list">
                 {sections.map(({ id, label }) => (
                     <li key={id}>
                         <button
-                            className={`navbar__item${activeSection === id ? ' navbar__item--active' : ''}`}
+                            className={`topics-page__navbar__item${activeSection === id ? ' topics-page__navbar__item--active' : ''}`}
                             onClick={() => handleSelect(id)}
                             aria-current={activeSection === id ? 'page' : undefined}
                         >
