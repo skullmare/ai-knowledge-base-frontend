@@ -44,9 +44,12 @@
 }
 
 .topics-page__controls-btn-mode {
+    width: 20px;
+    height: 20px;
     background-color: transparent;
     border: none;
     color: var(--color-gray-200);
+    transition: all var(--transition-fast);
 }
 
 .topics-page__controls-btn-mode:hover {
@@ -111,15 +114,17 @@
 /* ── Grid ── */
 
 .topics-page__grid {
-    display: flex;
-    gap: var(--spacing-md);
+    columns: 3;
+    column-width: 280px; /* минимальная ширина колонки */
+    column-gap: var(--spacing-xl);
 }
 
 .topics-page__group {
+    break-inside: avoid;
+    margin-bottom: var(--spacing-md);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
-
 }
 
 .topics-page__group-title {
@@ -169,4 +174,26 @@
     .topics-page__group {
         width: 100%;
     }
+}
+
+.topics-page__group-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.topics-page__group-edit-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-gray-200);
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.topics-page__group-edit-btn:hover {
+    color: var(--color-white);
 }

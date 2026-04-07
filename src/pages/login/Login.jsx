@@ -5,11 +5,11 @@ import Input from '@ui/Input/Input.jsx';
 import Logo from '@assets/images/logo.svg';
 import Background from '@assets/images/login-background.png';
 import './Login.css';
-import Spinner from '@ui/Spinner/Spinner';
 
 export default function LoginPage() {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [touched, setTouched] = useState({ login: false, password: false });
 
   const doLogin = useAuthStore((state) => state.login);
   const isLoading = useAuthStore((state) => state.isLoading);
@@ -24,6 +24,8 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setTouched({ login: true, password: true });
+    if (!login.trim() || !password.trim()) return;
     await doLogin(login, password);
   };
 
@@ -46,6 +48,7 @@ export default function LoginPage() {
                 size="large"
                 showClearButton
                 value={login}
+                error={touched.login && !login.trim() ? "Введите логин" : undefined}
                 onChange={e => setLogin(e.target.value)}
                 placeholder="username"
               />
@@ -60,6 +63,7 @@ export default function LoginPage() {
                 showPasswordToggle
                 type="password"
                 value={password}
+                error={touched.password && !password.trim() ? "Введите пароль" : undefined}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="··········"
               />
@@ -75,9 +79,9 @@ export default function LoginPage() {
               type="submit"
               size="login"
               variant="primary"
-              disabled={isLoading}
+              isLoading={isLoading}
             >
-              {isLoading && "Загрузка" || "Войти"}
+              Войти
             </Button>
 
             {error && <p className="login-error">{error}</p>}
@@ -91,7 +95,6 @@ export default function LoginPage() {
         className="login-image-side"
         style={{ backgroundImage: `url(${Background})` }}
       />
-      {isLoading && <Spinner />}
     </div>
   );
 }

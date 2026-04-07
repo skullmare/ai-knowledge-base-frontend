@@ -8,7 +8,7 @@ import ChevronUp from '@assets/icons/dropdown-16.svg'
 import ChevronDown from '@assets/icons/dropdown-flipped-16.svg'
 import './Multiselect.css'
 
-export default function Multiselect({ options = [], value = [], onChange, placeholder = 'Выберите...', label, required }) {
+export default function Multiselect({ options = [], value = [], onChange, placeholder = 'Выберите...', label, required, error, size="medium" }) {
     const [isOpen, setIsOpen] = useState(false)
     const containerRef = useRef(null)
 
@@ -64,9 +64,10 @@ export default function Multiselect({ options = [], value = [], onChange, placeh
 
             {/* Trigger */}
             <div
-                className={`multiselect__trigger ${isOpen ? 'multiselect__trigger--open' : ''}`}
+                className={`multiselect__trigger ${'multiselect__trigger-'+size.trim()} ${isOpen ? 'multiselect__trigger--open' : ''} ${error ? 'multiselect__trigger--error' : ''}`}
                 onClick={() => setIsOpen((v) => !v)}
             >
+                
                 <div className="multiselect__tags">
                     {selectedOptions.length === 0 && (
                         <span className="multiselect__placeholder">{placeholder}</span>
@@ -90,11 +91,11 @@ export default function Multiselect({ options = [], value = [], onChange, placeh
                         </button>
                     )}
                     <button className="multiselect__chevron">
-                        {isOpen ? <ChevronUp width="16px" height="16px" /> : <ChevronDown width="16px" height="16px" />}
+                        {isOpen ?  <ChevronDown width="16px" height="16px" /> : <ChevronUp width="16px" height="16px" />}
                     </button>
                 </div>
             </div>
-
+            {error && <span className="multiselect__error">{error}</span>}
             {/* Dropdown */}
             {isOpen && (
                 <div className="multiselect__dropdown">

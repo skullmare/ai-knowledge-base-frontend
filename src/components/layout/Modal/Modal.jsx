@@ -4,7 +4,7 @@ import Input from '@ui/Input/Input';
 import Close from '@assets/icons/close-16.svg';
 import './Modal.css';
 
-export default function Modal({ title, onClose, onConfirm, confirmLabel = 'Создать', children }) {
+export default function Modal({ title, onClose, onConfirm, confirmLabel = 'Создать', children, isLoading=false }) {
   useEffect(() => {
     const handleKeyDown = ({ key }) => { if (key === 'Escape') onClose?.(); };
     document.addEventListener('keydown', handleKeyDown);
@@ -22,7 +22,7 @@ export default function Modal({ title, onClose, onConfirm, confirmLabel = 'Со�
         <div className="modal__body">{children}</div>
         <div className="modal__footer">
           <Button size="modal" variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button size="modal" variant="primary" onClick={onConfirm}>
+          <Button size="modal" variant="primary" onClick={onConfirm} isLoading={isLoading}>
             {confirmLabel}
           </Button>
         </div>

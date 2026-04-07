@@ -8,10 +8,14 @@ import Table from '@layout/Table/Table'
 import { useTopicsFilters } from './hooks/useTopicsFilters'
 import { useTopicsData } from './hooks/useTopicsData'
 import { useCreateCategoryModal } from './hooks/useCreateCategoryModal'
+import { useEditCategoryModal } from './hooks/useEditCategoryModal'
 import { TopicsToolbar } from './components/TopicsToolbar'
 import { TopicsCatalogue } from './components/TopicsCatalogue'
 import { CreateCategoryModal } from './components/CreateCategoryModal'
+import { EditCategoryModal } from './components/EditCategoryModal'
 import { NAV_LINKS, TOPIC_COLUMNS } from './Topics.constants'
+import { useCreateTopicModal } from './hooks/useCreateTopicModal'
+import { CreateTopicModal } from './components/CreateTopicModal'
 import './Topics.css'
 
 export default function TopicsPage() {
@@ -20,13 +24,32 @@ export default function TopicsPage() {
     const { logout } = useAuthStore()
 
     const filters = useTopicsFilters()
-    const { navSections, roleOptions, groupedTopics, tableData, pagination, createCategory, fetchTopics, buildParams } = useTopicsData({
+    const {
+        navSections,
+        roleOptions,
+        createTopic,
+        isLoadingCreateTopic,
+        groupedTopics,
+        rolesForSelect,
+        tableData,
+        pagination,
+        createCategory,
+        updateCategory,
+        fetchTopics,
+        fetchCategories,
+        buildParams,
+        categories
+    } = useTopicsData({
         debouncedSearch: filters.debouncedSearch,
         selectedRole: filters.selectedRole,
         activeCategory: filters.activeCategory,
         viewMode: filters.viewMode,
     })
     const categoryModal = useCreateCategoryModal(createCategory)
+    const editModal = useEditCategoryModal(updateCategory, fetchTopics, buildParams, fetchCategories)
+    const topicModal = useCreateTopicModal(createTopic)
+
+    const categoryOptions = categories.map((c) => ({ value: c._id, label: c.name }))
 
     const handleLogout = async () => {
         try { await logout() } finally { window.location.href = '/login' }
@@ -34,7 +57,12 @@ export default function TopicsPage() {
 
     return (
         <Layout
-            navbar={<Navbar sections={navSections} activeSection={filters.activeCategory} onSelect={filters.setActiveCategory} />}
+            navbar={
+                <Navbar
+                    sections={navSections}
+                    activeSection={filters.activeCategory}
+                    onSelect={filters.setActiveCategory}
+                />}
             header={
                 <Header
                     navLinks={NAV_LINKS}
@@ -55,11 +83,15 @@ export default function TopicsPage() {
                     viewMode={filters.viewMode}
                     onViewModeChange={filters.setViewMode}
                     onCreateCategory={categoryModal.open}
-                    onCreateTopic={() => {}}
+                    onCreateTopic={topicModal.open}
                 />
 
                 {filters.viewMode === 'catalogue' ? (
-                    <TopicsCatalogue groupedTopics={groupedTopics} />
+                    <TopicsCatalogue
+                        groupedTopics={groupedTopics}
+                        categories={categories}
+                        onEditCategory={editModal.open}
+                    />
                 ) : (
                     <Table
                         columns={TOPIC_COLUMNS}
@@ -83,6 +115,35 @@ export default function TopicsPage() {
                     isCreating={categoryModal.isCreating}
                     onConfirm={categoryModal.handleCreate}
                     onClose={categoryModal.close}
+                />
+            )}
+            {editModal.isOpen && (
+                <EditCategoryModal
+                    name={editModal.name}
+                    onNameChange={editModal.setName}
+                    description={editModal.description}
+                    onDescriptionChange={editModal.setDescription}
+                    touched={editModal.touched}
+                    isSaving={editModal.isSaving}
+                    onConfirm={editModal.handleSave}
+                    onClose={editModal.close}
+                />
+            )}
+            {topicModal.isOpen && (
+                <CreateTopicModal
+                    name={topicModal.name}
+                    onNameChange={topicModal.setName}
+                    categoryOptions={categoryOptions}
+                    selectedCategory={topicModal.selectedCategory}
+                    onCategoryChange={topicModal.setSelectedCategory}
+                    roleOptions={rolesForSelect}
+                    selectedRoles={topicModal.selectedRoles}
+                    onRolesChange={topicModal.setSelectedRoles}
+                    touched={topicModal.touched}
+                    isCreating={topicModal.isCreating}
+                    onConfirm={topicModal.handleCreate}
+                    onClose={topicModal.close}
+                    isLoading={isLoadingCreateTopic}
                 />
             )}
         </Layout>

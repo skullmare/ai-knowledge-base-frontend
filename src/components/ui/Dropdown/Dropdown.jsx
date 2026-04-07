@@ -3,7 +3,7 @@ import DropdownIcon from '@assets/icons/dropdown-16.svg';
 import DropdownFlippedIcon from '@assets/icons/dropdown-flipped-16.svg';
 import './Dropdown.css';
 
-export default function Dropdown({ options = [], value, onChange, placeholder = 'Выбрать', menuWidth }) {
+export default function Dropdown({ options = [], value, onChange, placeholder = 'Выбрать', menuWidth, label, required, labelClassName, size = "medium", error }) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
@@ -26,8 +26,14 @@ export default function Dropdown({ options = [], value, onChange, placeholder = 
 
   return (
     <div className={`dropdown${isOpen ? ' dropdown--open' : ''}`} ref={ref}>
+      {label && (
+        <label className={`input-component__label ${labelClassName}`} data-required={required}>
+          {label}
+          {required && <span className="input-component__required-star">*</span>}
+        </label>
+      )}
       <button
-        className="dropdown__trigger"
+        className={`dropdown__trigger dropdown__trigger-${size}${error ? ' dropdown__trigger--error' : ''}`}
         onClick={() => setIsOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -35,9 +41,9 @@ export default function Dropdown({ options = [], value, onChange, placeholder = 
         <span className={`dropdown__label${selected ? ' dropdown__label--selected' : ''}`}>
           {selected?.label ?? placeholder}
         </span>
-        <ChevronIcon width="10px" height="10px" color="white" className="dropdown__chevron" />
+        <ChevronIcon width="16px" height="16px" color="white" className="dropdown__chevron" />
       </button>
-
+      {error && <span className="dropdown__error">{error}</span>}
       {isOpen && (
         <ul
           className="dropdown__menu"

@@ -7,11 +7,14 @@ export function useTopicsData({ debouncedSearch, selectedRole, activeCategory, v
     const fetchTopics = useTopicStore((s) => s.fetchTopics)
     const topics = useTopicStore((s) => s.topics)
     const pagination = useTopicStore((s) => s.pagination)
+    const createTopic = useTopicStore((s) => s.createTopic)
+    const isLoadingCreateTopic = useTopicStore((s) => s.isLoadingCreateTopic)
 
     const fetchCategories = useTopicCategoryStore((s) => s.fetchCategories)
     const categoriesRaw = useTopicCategoryStore((s) => s.categories)
     const categories = Array.isArray(categoriesRaw) ? categoriesRaw : (categoriesRaw?.categories ?? [])
     const createCategory = useTopicCategoryStore((s) => s.createCategory)
+    const updateCategory = useTopicCategoryStore((s) => s.updateCategory)
 
     const fetchRoles = useAgentRoleStore((s) => s.fetchRoles)
     const roles = useAgentRoleStore((s) => s.roles)
@@ -40,16 +43,29 @@ export function useTopicsData({ debouncedSearch, selectedRole, activeCategory, v
         ...roles.map((r) => ({ value: r._id, label: r.name })),
     ], [roles])
 
+    const rolesForSelect = useMemo(() => roles.map((r) => ({ value: r._id, label: r.name })), [roles])
+
     const groupedTopics = useMemo(() => {
         const map = new Map()
+
         for (const topic of topics) {
             const cat = topic.metadata?.category
             if (!cat) continue
-            if (!map.has(cat._id)) map.set(cat._id, { category: cat, topics: [] })
+
+            const fullCategory = categories.find(c => c._id === cat._id)
+            if (!fullCategory) continue
+
+            if (!map.has(cat._id)) {
+                map.set(cat._id, {
+                    category: fullCategory,
+                    topics: []
+                })
+            }
             map.get(cat._id).topics.push(topic)
         }
+
         return Array.from(map.values())
-    }, [topics])
+    }, [topics, categories])
 
     const tableData = useMemo(() => topics.map((t) => ({
         ...t,
@@ -67,14 +83,19 @@ export function useTopicsData({ debouncedSearch, selectedRole, activeCategory, v
 
     return {
         topics,
+        createTopic,
         pagination,
         categories,
         navSections,
         roleOptions,
         groupedTopics,
+        rolesForSelect,
         tableData,
         createCategory,
+        updateCategory,
         fetchTopics,
+        fetchCategories,
+        isLoadingCreateTopic,
         buildParams,
     }
 }

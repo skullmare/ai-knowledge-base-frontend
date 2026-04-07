@@ -10,7 +10,7 @@ export function TopicsToolbar({
     roleOptions, selectedRole, onRoleChange,
     search, onSearchChange,
     viewMode, onViewModeChange,
-    onCreateCategory, onCreateTopic,
+    onCreateCategory, onCreateTopic
 }) {
     return (
         <div className="topics-page__toolbar">
@@ -24,6 +24,7 @@ export function TopicsToolbar({
                         variant="search"
                         size="medium"
                         placeholder="Поиск по темам"
+                        showClearButton={true}
                         showSearchButton
                         value={search}
                         onChange={(e) => onSearchChange(e.target.value)}

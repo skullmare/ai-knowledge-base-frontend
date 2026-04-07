@@ -1,5 +1,6 @@
 import React from 'react';
 import './Button.css';
+import Spinner from '@ui/Spinner/Spinner';
 
 const Button = ({ 
   children, 
@@ -10,8 +11,10 @@ const Button = ({
   disabled = false,
   fullWidth = false,
   className = '',
+  isLoading = false,
   ...rest 
 }) => {
+  isLoading ? disabled = true : disabled
   const buttonClasses = [
     'button',
     `button--${size}`,
@@ -29,7 +32,7 @@ const Button = ({
       disabled={disabled}
       {...rest}
     >
-      {children}
+      {isLoading ? <Spinner></Spinner> : children}
     </button>
   );
 };

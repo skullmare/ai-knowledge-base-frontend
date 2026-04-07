@@ -48,6 +48,7 @@
 .table__td {
     height: 52px;
     min-width: 150px;
+    padding-right: var(--spacing-md);
     font-size: var(--text-base);
     font-weight: var(--font-normal);
     color: var(--color-white);

@@ -36,7 +36,7 @@
 /* Base Input Styles */
 .input-component {
   width: 100%;
-  padding: 0 12px;
+  padding: 0 var(--spacing-sm);
   font-weight: var(--font-normal);
   line-height: var(--leading-normal);
   color: var(--color-white);

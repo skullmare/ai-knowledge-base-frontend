@@ -5,6 +5,8 @@ const api = axios.create({
   withCredentials: true,
 });
 
+const SKIP_REFRESH_URLS = ['/auth/refresh', '/auth/login', '/auth/logout'];
+
 let accessToken = localStorage.getItem('accessToken') || null;
 let refreshPromise = null; // ключевая штука — один промис на всех
 
@@ -31,9 +33,13 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status !== 401 || originalRequest.url.includes('/auth/refresh')) {
+    if (
+      error.response?.status !== 401 ||
+      SKIP_REFRESH_URLS.some((url) => originalRequest.url.includes(url))
+    ) {
       return Promise.reject(error);
     }
+
 
     originalRequest._retry = true;
 

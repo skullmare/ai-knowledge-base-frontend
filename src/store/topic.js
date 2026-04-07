@@ -9,6 +9,7 @@ const useTopicStore = create((set, get) => ({
     topics: [],
     currentTopic: null,
     isLoading: false,
+    isLoadingCreateTopic: false,
     error: null,
     pagination: {
         total: 0,
@@ -107,7 +108,7 @@ const useTopicStore = create((set, get) => ({
     },
 
     createTopic: async (data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingCreateTopic: true, error: null });
         try {
             const { success, message, data: newTopic } = await topicService.create(data);
             if (success) {
@@ -124,7 +125,7 @@ const useTopicStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingCreateTopic: false });
         }
     },
 

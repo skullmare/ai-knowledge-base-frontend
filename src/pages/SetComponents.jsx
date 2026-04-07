@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Button from '@ui/Button/Button';
 import Input from '@ui/Input/Input';
@@ -73,6 +73,7 @@ export default function SetComponents() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [selectedPermissions, setSelectedPermissions] = useState([])
+
 
   const closeModal = () => { setIsModalOpen(false); setSectionName(''); };
 
