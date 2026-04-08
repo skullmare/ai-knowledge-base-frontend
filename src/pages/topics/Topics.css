@@ -245,3 +245,7 @@
 .topics-page__navbar__item--active {
   font-weight: var(--font-medium);
 }
+
+.topics-page__item-link {
+    color: currentColor;
+}

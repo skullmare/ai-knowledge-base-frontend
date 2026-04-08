@@ -70,7 +70,7 @@
   background: var(--color-black);
   z-index: 200;
   overflow-y: auto;
-  max-height: 280px;
+  max-height: calc(100vh / 4);
 }
 
 /* ── Option ───────────────────────────────────────────────────────────── */

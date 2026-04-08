@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom'
 import Edit from '@assets/icons/edit-16.svg'
+
 export function TopicsCatalogue({ groupedTopics, categories, onEditCategory }) {
     return (
         <div className="topics-page__grid">
@@ -20,7 +22,9 @@ export function TopicsCatalogue({ groupedTopics, categories, onEditCategory }) {
                     <ul className="topics-page__list">
                         {topics.map((topic) => (
                             <li key={topic._id} className="topics-page__item">
-                                {topic.name}
+                                <Link to={`/topic/${topic._id}`} className="topics-page__item-link">
+                                    {topic.name}
+                                </Link>
                             </li>
                         ))}
                     </ul>
