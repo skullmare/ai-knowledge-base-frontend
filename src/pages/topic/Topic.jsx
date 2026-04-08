@@ -36,16 +36,20 @@ export default function TopicPage() {
     collaboration: {
       provider,
       fragment: ydoc.getXmlFragment('document-store'),
-      user: {
-        name: profile?.login ?? profile?.email ?? 'Аноним',
-        color: generateColor(profile?._id),
-      },
     },
     uploadFile: async (file) => {
       const data = await fileService.upload(file)
       return data.data.url
     },
   })
+
+  useEffect(() => {
+    if (profile && collaborationRef.current?.provider) {
+      collaborationRef.current.provider.setAwarenessField('user', {
+        name: profile.login ?? profile.email ?? 'Аноним'
+      })
+    }
+  }, [profile])
 
   const handleLogout = async () => {
     try { await logout() } finally { window.location.href = '/login' }
@@ -70,13 +74,4 @@ export default function TopicPage() {
       </div>
     </Layout>
   )
-}
-
-function generateColor(id) {
-  if (!id) return '#94a3b8'
-  let hash = 0
-  for (let i = 0; i < id.length; i++) {
-    hash = id.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return `hsl(${Math.abs(hash) % 360}, 65%, 55%)`
 }
