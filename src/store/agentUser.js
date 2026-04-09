@@ -7,7 +7,10 @@ import { storeRegistry } from '../utils/storeRegistry';
 const useAgentUserStore = create((set, get) => ({
     users: [],
     currentUser: null,
-    isLoading: false,
+    isLoadingFetchUsers: false,
+    isLoadingFetchOneUser: false,
+    isLoadingUpdateUser: false,
+    isLoadingDeleteUser: false,
     error: null,
     pagination: {
         total: 0,
@@ -29,7 +32,7 @@ const useAgentUserStore = create((set, get) => ({
     },
 
     fetchUsers: async (queryParams = {}) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchUsers: true, error: null });
         try {
             const response = await agentUserService.getAll(queryParams);
             const { success, message, data, pagination } = response;
@@ -53,12 +56,12 @@ const useAgentUserStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchUsers: false });
         }
     },
 
     fetchOneUser: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchOneUser: true, error: null });
         try {
             const { success, message, data } = await agentUserService.getOne(id);
             if (success) {
@@ -72,12 +75,12 @@ const useAgentUserStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchOneUser: false });
         }
     },
 
     updateUser: async (id, data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingUpdateUser: true, error: null });
         try {
             const { success, message, data: updatedUser } = await agentUserService.update(id, data);
             if (success) {
@@ -95,12 +98,12 @@ const useAgentUserStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingUpdateUser: false });
         }
     },
 
     deleteUser: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingDeleteUser: true, error: null });
         try {
             const { success, message } = await agentUserService.delete(id);
             if (success) {
@@ -117,14 +120,13 @@ const useAgentUserStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingDeleteUser: false });
         }
     },
 
     clearCurrentUser: () => set({ currentUser: null }),
 }));
 
-// Регистрируем стор в реестре, так как он использует роли
 storeRegistry.register('agentRole', useAgentUserStore);
 
 export default useAgentUserStore;

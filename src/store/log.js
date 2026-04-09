@@ -6,7 +6,8 @@ import { handleError } from '../utils/handleError';
 const useLogStore = create((set, get) => ({
     logs: [],
     currentLog: null,
-    isLoading: false,
+    isLoadingFetchLogs: false,
+    isLoadingFetchOneLog: false,
     error: null,
     pagination: {
         total: 0,
@@ -30,7 +31,7 @@ const useLogStore = create((set, get) => ({
      * @param {string} queryParams.endDate - конечная дата (ISO)
      */
     fetchLogs: async (queryParams = {}) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchLogs: true, error: null });
         try {
             const response = await logService.getAll(queryParams);
             const { success, message, data, pagination } = response;
@@ -54,7 +55,7 @@ const useLogStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchLogs: false });
         }
     },
 
@@ -63,7 +64,7 @@ const useLogStore = create((set, get) => ({
      * @param {string} id - ID лога
      */
     fetchOneLog: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchOneLog: true, error: null });
         try {
             const { success, message, data } = await logService.getOne(id);
             if (success) {
@@ -77,7 +78,7 @@ const useLogStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchOneLog: false });
         }
     },
 

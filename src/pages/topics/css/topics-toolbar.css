@@ -1,0 +1,54 @@
+/* topics-toolbar.css — панель инструментов и элементы управления */
+
+.topics-page__toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.topics-page__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.topics-page__controls-filter {
+    flex: 1;
+}
+
+.topics-page__controls-search {
+    flex: 7;
+    min-width: 200px;
+}
+
+.topics-page__controls-btn {
+    flex: 2;
+    min-width: 200px;
+}
+
+.topics-page__controls-btn-mode-container {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-sm);
+    align-items: center;
+    justify-content: center;
+}
+
+.topics-page__controls-btn-mode {
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: none;
+    color: var(--color-gray-200);
+    transition: all var(--transition-fast);
+}
+
+.topics-page__controls-btn-mode:hover {
+    color: var(--color-gold-200);
+    cursor: pointer;
+}
+
+.topics-page__controls-btn-mode--active {
+    color: var(--color-gold-200);
+}

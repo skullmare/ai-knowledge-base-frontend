@@ -7,11 +7,16 @@ import { syncEntityUpdate } from '../utils/syncStores';
 const usePlatformRoleStore = create((set, get) => ({
     roles: [],
     currentRole: null,
-    isLoading: false,
+    isLoadingFetchRoles: false,
+    isLoadingFetchOneRole: false,
+    isLoadingCreateRole: false,
+    isLoadingUpdateRole: false,
+    isLoadingDeleteRole: false,
+    isLoadingDeleteManyRoles: false,
     error: null,
 
     fetchRoles: async (queryParams = {}) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchRoles: true, error: null });
         try {
             const response = await platformRoleService.getAll(queryParams);
             const { success, message, data } = response;
@@ -29,12 +34,12 @@ const usePlatformRoleStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchRoles: false });
         }
     },
 
     fetchOneRole: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchOneRole: true, error: null });
         try {
             const { success, message, data } = await platformRoleService.getOne(id);
             if (success) {
@@ -48,12 +53,12 @@ const usePlatformRoleStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchOneRole: false });
         }
     },
 
     createRole: async (data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingCreateRole: true, error: null });
         try {
             const { success, message, data: newRole } = await platformRoleService.create(data);
             if (success) {
@@ -70,12 +75,12 @@ const usePlatformRoleStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingCreateRole: false });
         }
     },
 
     updateRole: async (id, data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingUpdateRole: true, error: null });
         try {
             const { success, message, data: updatedRole } = await platformRoleService.update(id, data);
             if (success) {
@@ -93,12 +98,12 @@ const usePlatformRoleStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingUpdateRole: false });
         }
     },
 
     deleteRole: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingDeleteRole: true, error: null });
         try {
             const { success, message } = await platformRoleService.delete(id);
             if (success) {
@@ -115,19 +120,18 @@ const usePlatformRoleStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingDeleteRole: false });
         }
     },
 
     deleteManyRoles: async (ids) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingDeleteManyRoles: true, error: null });
         try {
             const { success, message } = await platformRoleService.deleteMany(ids);
             if (success) {
                 set((state) => ({
                     roles: state.roles.filter((r) => !ids.includes(r._id))
                 }));
-                // syncEntityDelete не нужен
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -137,7 +141,7 @@ const usePlatformRoleStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingDeleteManyRoles: false });
         }
     },
 

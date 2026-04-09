@@ -1,0 +1,38 @@
+/* topics-badges.css — бейджи статуса и автора */
+
+/* Статус */
+.topic-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.topic-status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.topic-status__dot--approved { background: var(--color-green); }
+.topic-status__dot--review   { background: var(--color-gold-100); }
+.topic-status__dot--archived { background: var(--color-gray-200); }
+
+/* Автор */
+.topic-author {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.topic-author__avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.topic-author__avatar--placeholder {
+    background: var(--color-gray-400);
+}

@@ -1,5 +1,4 @@
 import { useNavbar } from '@layout/Navbar/Navbar';
-import '../Topics.css';
 
 export function TopicsNavbar({ sections = [], activeSection, onSelect }) {
     const { setIsOpen, isMobile } = useNavbar();

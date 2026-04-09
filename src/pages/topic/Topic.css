@@ -1,16 +1,12 @@
 .topic-page {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    isolation: isolate;
+    background-color: #1f1f1f;
+    border-radius: var(--radius-sm);
 }
 
 .topic-page__editor {
-    flex: 1;
-    overflow-y: auto;
-    padding: 40px 0;
-}
-
-/* Растягиваем редактор на всю ширину контейнера */
-.topic-page__editor .bn-container {
-    height: 100%;
+    position: relative;
+    z-index: 0;
 }

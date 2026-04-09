@@ -3,12 +3,13 @@ import { authService } from '@services/auth'
 import { handleError } from '@utils/handleError'
 
 const useAuthStore = create((set) => ({
-  isLoading: false,
+  isLoadingLogin: false,
+  isLoadingLogout: false,
   error: null,
   isAuthenticated: false,
 
   login: async (login, password) => {
-    set({ isLoading: true, error: null })
+    set({ isLoadingLogin: true, error: null })
     try {
       await authService.login(login, password)
       set({ isAuthenticated: true, error: null })
@@ -17,19 +18,19 @@ const useAuthStore = create((set) => ({
       set({ error: handleError(err), isAuthenticated: false })
       return false
     } finally {
-      set({ isLoading: false })
+      set({ isLoadingLogin: false })
     }
   },
 
   logout: async () => {
-    set({ isLoading: true, error: null })
+    set({ isLoadingLogout: true, error: null })
     try {
       await authService.logout()
     } catch (err) {
       console.error('Logout error:', err)
     } finally {
       set({ 
-        isLoading: false, 
+        isLoadingLogout: false, 
         isAuthenticated: false,
         error: null 
       })

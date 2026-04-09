@@ -7,11 +7,16 @@ import { syncEntityUpdate } from '../utils/syncStores';
 const useTopicCategoryStore = create((set, get) => ({
     categories: [],
     currentCategory: null,
-    isLoading: false,
+    isLoadingFetchCategories: false,
+    isLoadingFetchOneCategory: false,
+    isLoadingCreateCategory: false,
+    isLoadingUpdateCategory: false,
+    isLoadingDeleteCategory: false,
+    isLoadingDeleteManyCategories: false,
     error: null,
 
     fetchCategories: async (queryParams = {}) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchCategories: true, error: null });
         try {
             const response = await topicCategoryService.getAll(queryParams);
             const { success, message, data } = response;
@@ -27,12 +32,12 @@ const useTopicCategoryStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchCategories: false });
         }
     },
 
     fetchOneCategory: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchOneCategory: true, error: null });
         try {
             const { success, message, data } = await topicCategoryService.getOne(id);
             if (success) {
@@ -46,12 +51,12 @@ const useTopicCategoryStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchOneCategory: false });
         }
     },
 
     createCategory: async (data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingCreateCategory: true, error: null });
         try {
             const { success, message, data: newCategory } = await topicCategoryService.create(data);
             if (success) {
@@ -68,12 +73,12 @@ const useTopicCategoryStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingCreateCategory: false });
         }
     },
 
     updateCategory: async (id, data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingUpdateCategory: true, error: null });
         try {
             const { success, message, data: updatedCategory } = await topicCategoryService.update(id, data);
             if (success) {
@@ -91,12 +96,12 @@ const useTopicCategoryStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingUpdateCategory: false });
         }
     },
 
     deleteCategory: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingDeleteCategory: true, error: null });
         try {
             const { success, message } = await topicCategoryService.delete(id);
             if (success) {
@@ -113,12 +118,12 @@ const useTopicCategoryStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingDeleteCategory: false });
         }
     },
 
     deleteManyCategories: async (ids) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingDeleteManyCategories: true, error: null });
         try {
             const { success, message } = await topicCategoryService.deleteMany(ids);
             if (success) {
@@ -134,7 +139,7 @@ const useTopicCategoryStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingDeleteManyCategories: false });
         }
     },
 

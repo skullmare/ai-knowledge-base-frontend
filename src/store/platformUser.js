@@ -7,7 +7,11 @@ import { storeRegistry } from '../utils/storeRegistry';
 const usePlatformUserStore = create((set, get) => ({
     users: [],
     currentUser: null,
-    isLoading: false,
+    isLoadingFetchUsers: false,
+    isLoadingFetchOneUser: false,
+    isLoadingCreateUser: false,
+    isLoadingUpdateUser: false,
+    isLoadingDeleteUser: false,
     error: null,
     pagination: {
         total: 0,
@@ -31,7 +35,7 @@ const usePlatformUserStore = create((set, get) => ({
     },
 
     fetchUsers: async (queryParams = {}) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchUsers: true, error: null });
         try {
             const response = await userService.getAll(queryParams);
             const { success, message, data, pagination } = response;
@@ -55,12 +59,12 @@ const usePlatformUserStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchUsers: false });
         }
     },
 
     fetchOneUser: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchOneUser: true, error: null });
         try {
             const { success, message, data } = await userService.getOne(id);
             if (success) {
@@ -74,12 +78,12 @@ const usePlatformUserStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchOneUser: false });
         }
     },
 
     createUser: async (data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingCreateUser: true, error: null });
         try {
             const { success, message, data: newUser } = await userService.create(data);
             if (success) {
@@ -96,12 +100,12 @@ const usePlatformUserStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingCreateUser: false });
         }
     },
 
     updateUser: async (id, data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingUpdateUser: true, error: null });
         try {
             const { success, message, data: updatedUser } = await userService.update(id, data);
             if (success) {
@@ -119,12 +123,12 @@ const usePlatformUserStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingUpdateUser: false });
         }
     },
 
     deleteUser: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingDeleteUser: true, error: null });
         try {
             const { success, message } = await userService.delete(id);
             if (success) {
@@ -141,7 +145,7 @@ const usePlatformUserStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingDeleteUser: false });
         }
     },
 

@@ -1,13 +1,16 @@
 import { useLocation, useParams } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
-import { useCreateBlockNote } from '@blocknote/react'
+import { useCreateBlockNote, useEditorChange } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/mantine'
+import { ru } from '@blocknote/core/locales'
 import useProfileStore from '@store/profile'
+import useTopicStore from '@store/topic'
 import useAuthStore from '@store/auth'
 import Header from '@layout/Header/Header'
 import Layout from '@layout/Layout/Layout'
 import { collaborationService } from '@services/collaboration'
 import { fileService } from '@services/file'
+import { topicService } from '@services/topic'
 import { NAV_LINKS } from './Topic.constants'
 import '@blocknote/mantine/style.css'
 import './Topic.css'
@@ -16,6 +19,8 @@ export default function TopicPage() {
   const { pathname } = useLocation()
   const { id } = useParams()
   const { profile } = useProfileStore()
+  const { currentTopic } = useTopicStore()
+  const fetchOneTopic = useTopicStore((s) => s.fetchOneTopic)
   const { logout } = useAuthStore()
 
   const collaborationRef = useRef(null)
@@ -23,8 +28,13 @@ export default function TopicPage() {
     collaborationRef.current = collaborationService.createProvider(id)
   }
 
+  const saveTimerRef = useRef(null)
+  const lastMarkdownRef = useRef('')
+
   useEffect(() => {
+    fetchOneTopic(id)
     return () => {
+      clearTimeout(saveTimerRef.current)
       collaborationService.destroyProvider(collaborationRef.current?.provider)
       collaborationRef.current = null
     }
@@ -33,6 +43,7 @@ export default function TopicPage() {
   const { provider, ydoc } = collaborationRef.current
 
   const editor = useCreateBlockNote({
+    dictionary: ru,
     collaboration: {
       provider,
       fragment: ydoc.getXmlFragment('document-store'),
@@ -43,10 +54,22 @@ export default function TopicPage() {
     },
   })
 
+  useEditorChange(() => {
+    clearTimeout(saveTimerRef.current)
+    saveTimerRef.current = setTimeout(async () => {
+      const markdown = await editor.blocksToMarkdownLossy(editor.document)
+      if (markdown !== lastMarkdownRef.current) {
+        lastMarkdownRef.current = markdown
+        await topicService.update(id, { markdownContent: markdown })
+      }
+    }, 3000)
+  }, editor)
+
   useEffect(() => {
     if (profile && collaborationRef.current?.provider) {
       collaborationRef.current.provider.setAwarenessField('user', {
-        name: profile.login ?? profile.email ?? 'Аноним'
+        name: profile.login ?? profile.email ?? 'Аноним',
+        color: "#DDB364",
       })
     }
   }, [profile])

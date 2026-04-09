@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [touched, setTouched] = useState({ login: false, password: false });
 
   const doLogin = useAuthStore((state) => state.login);
-  const isLoading = useAuthStore((state) => state.isLoading);
+  const isLoadingLogin = useAuthStore((state) => state.isLoadingLogin);
   const error = useAuthStore((state) => state.error);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
@@ -79,7 +79,7 @@ export default function LoginPage() {
               type="submit"
               size="login"
               variant="primary"
-              isLoading={isLoading}
+              isLoading={isLoadingLogin}
             >
               Войти
             </Button>

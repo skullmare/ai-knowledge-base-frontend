@@ -8,7 +8,8 @@ const useProfileStore = create((set, get) => ({
     profile: null,
     permissions: [],
     isSystem: false,
-    isLoading: false,
+    isLoadingFetchProfile: false,
+    isLoadingUpdateProfile: false,
     error: null,
     isInitialized: false,
 
@@ -30,7 +31,7 @@ const useProfileStore = create((set, get) => ({
     },
 
     fetchProfile: async () => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchProfile: true, error: null });
         try {
             const { success, message, data } = await profileService.getProfile();
             if (success) {
@@ -48,12 +49,12 @@ const useProfileStore = create((set, get) => ({
             const errorMessage = handleError(err);
             set({ profile: null, permissions: [], isSystem: false, isInitialized: true, error: errorMessage });
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchProfile: false });
         }
     },
 
     updateProfile: async (payload) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingUpdateProfile: true, error: null });
         try {
             const { success, message, data } = await profileService.updateProfile(payload);
             if (success) {
@@ -71,7 +72,7 @@ const useProfileStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingUpdateProfile: false });
         }
     },
 

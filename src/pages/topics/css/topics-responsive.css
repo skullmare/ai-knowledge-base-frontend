@@ -1,0 +1,22 @@
+/* topics-responsive.css — адаптивные стили */
+
+@media (max-width: 512px) {
+    .topics-page__grid {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 720px) {
+    .topics-page__toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .topics-page__controls {
+        flex-wrap: wrap;
+    }
+
+    .topics-page__group {
+        width: 100%;
+    }
+}

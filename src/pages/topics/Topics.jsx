@@ -17,7 +17,7 @@ import { TopicsNavbar } from './components/TopicsNavbar'
 import { NAV_LINKS, TOPIC_COLUMNS } from './Topics.constants'
 import { useCreateTopicModal } from './hooks/useCreateTopicModal'
 import { CreateTopicModal } from './components/CreateTopicModal'
-import './Topics.css'
+import './css/topics.css'
 
 export default function TopicsPage() {
     const { pathname } = useLocation()

@@ -8,8 +8,12 @@ import { storeRegistry } from '../utils/storeRegistry';
 const useTopicStore = create((set, get) => ({
     topics: [],
     currentTopic: null,
-    isLoading: false,
+    isLoadingFetchTopics: false,
+    isLoadingFetchOneTopic: false,
     isLoadingCreateTopic: false,
+    isLoadingUpdateTopic: false,
+    isLoadingDeleteTopic: false,
+    isLoadingApproveTopic: false,
     error: null,
     pagination: {
         total: 0,
@@ -60,7 +64,7 @@ const useTopicStore = create((set, get) => ({
     },
 
     fetchTopics: async (queryParams = {}) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchTopics: true, error: null });
         try {
             const response = await topicService.getAll(queryParams);
             const { success, message, data, pagination } = response;
@@ -84,12 +88,12 @@ const useTopicStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchTopics: false });
         }
     },
 
     fetchOneTopic: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingFetchOneTopic: true, error: null });
         try {
             const { success, message, data } = await topicService.getOne(id);
             if (success) {
@@ -103,7 +107,7 @@ const useTopicStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingFetchOneTopic: false });
         }
     },
 
@@ -130,7 +134,7 @@ const useTopicStore = create((set, get) => ({
     },
 
     updateTopic: async (id, data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingUpdateTopic: true, error: null });
         try {
             const { success, message, data: updatedTopic } = await topicService.update(id, data);
             if (success) {
@@ -147,12 +151,12 @@ const useTopicStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingUpdateTopic: false });
         }
     },
 
     deleteTopic: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingDeleteTopic: true, error: null });
         try {
             const { success, message } = await topicService.delete(id);
             if (success) {
@@ -168,12 +172,12 @@ const useTopicStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingDeleteTopic: false });
         }
     },
 
     approveTopic: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoadingApproveTopic: true, error: null });
         try {
             const { success, message, data } = await topicService.approve(id);
             if (success) {
@@ -189,7 +193,7 @@ const useTopicStore = create((set, get) => ({
             set({ error: errorMessage });
             throw new Error(errorMessage);
         } finally {
-            set({ isLoading: false });
+            set({ isLoadingApproveTopic: false });
         }
     },
 
