@@ -1,16 +1,25 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import useTopicStore from '@store/topic'
 import useAgentRoleStore from '@store/agentRole'
 import useTopicCategoryStore from '@store/topicCategory'
 
 export const useTopicData = (id) => {
-  const { currentTopic, isLoadingUpdateTopic, fetchOneTopic, updateTopic } = useTopicStore()
+  const { 
+    currentTopic, 
+    isLoadingUpdateTopic, 
+    fetchOneTopic, 
+    updateTopic 
+  } = useTopicStore()
   const roles = useAgentRoleStore((state) => state.roles)
   const fetchRoles = useAgentRoleStore((state) => state.fetchRoles)
   const categories = useTopicCategoryStore((state) => state.categories)
   const fetchCategories = useTopicCategoryStore((state) => state.fetchCategories)
   
   const [isPageLoading, setIsPageLoading] = useState(true)
+
+  const refreshTopic = useCallback(async () => {
+    await fetchOneTopic(id)
+  }, [fetchOneTopic, id])
 
   useEffect(() => {
     const loadData = async () => {
@@ -41,11 +50,10 @@ export const useTopicData = (id) => {
   return {
     currentTopic,
     updateTopic,
-    roles,
-    categories,
     roleOptions,
     categoryOptions,
     isPageLoading,
     isSaving,
+    refreshTopic
   }
 }

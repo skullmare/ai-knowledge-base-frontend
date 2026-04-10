@@ -29,7 +29,7 @@ export const topicService = {
   },
 
   approve: async (id) => {
-    const { data } = await api.patch(`/topics/${id}`, { status: 'approved' });
+    const { data } = await api.post(`/topics/${id}/approve`);
     return data;
   }
 }

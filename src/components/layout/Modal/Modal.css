@@ -41,6 +41,18 @@
 }
 
 .modal__title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.modal__title-icon {
+  color: var(--color-gold-200);
+  display: flex;
+  align-items: center;
+}
+
+.modal__title-text {
   font-size: var(--text-2xl);
   font-weight: var(--font-semibold);
   color: var(--color-white);

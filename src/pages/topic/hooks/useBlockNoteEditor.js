@@ -1,29 +1,26 @@
-import { useRef, useState, useEffect, useMemo } from 'react'
-import { useCreateBlockNote, useEditorChange } from '@blocknote/react'
+import { useRef, useEffect, useMemo } from 'react'
+import { useCreateBlockNote } from '@blocknote/react'
 import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core'
 import { ru } from '@blocknote/core/locales'
 import { collaborationService } from '@services/collaboration'
 import { fileService } from '@services/file'
-import { topicService } from '@services/topic'
 
-const EDITOR_SAVE_DELAY = 3000
 const DEFAULT_USER_COLOR = '#DDB364'
 
 export const useBlockNoteEditor = (id, profile) => {
   const collaborationRef = useRef(null)
-  const editorSaveTimerRef = useRef(null)
-  const lastMarkdownRef = useRef('')
-  const [isEditorSaving, setIsEditorSaving] = useState(false)
 
+  // Инициализация collaboration
   if (!collaborationRef.current) {
     collaborationRef.current = collaborationService.createProvider(id)
   }
 
+  // Схема редактора (мемоизирована)
   const schema = useMemo(() => {
     const { paragraph, heading, image, video, audio, file, numberedListItem, bulletListItem } = defaultBlockSpecs
     return BlockNoteSchema.create({
-      blockSpecs: { 
-        paragraph, heading, image, video, audio, file, numberedListItem, bulletListItem 
+      blockSpecs: {
+        paragraph, heading, image, video, audio, file, numberedListItem, bulletListItem
       },
     })
   }, [])
@@ -41,20 +38,7 @@ export const useBlockNoteEditor = (id, profile) => {
     },
   })
 
-  useEditorChange(() => {
-    setIsEditorSaving(true)
-    clearTimeout(editorSaveTimerRef.current)
-    
-    editorSaveTimerRef.current = setTimeout(async () => {
-      const markdown = await editor.blocksToMarkdownLossy(editor.document)
-      if (markdown !== lastMarkdownRef.current) {
-        lastMarkdownRef.current = markdown
-        await topicService.update(id, { markdownContent: markdown })
-      }
-      setIsEditorSaving(false)
-    }, EDITOR_SAVE_DELAY)
-  }, editor)
-
+  // Настройка awareness
   useEffect(() => {
     if (profile && collaborationRef.current?.provider) {
       collaborationRef.current.provider.setAwarenessField('user', {
@@ -64,13 +48,13 @@ export const useBlockNoteEditor = (id, profile) => {
     }
   }, [profile])
 
+  // Очистка при размонтировании
   useEffect(() => {
     return () => {
-      clearTimeout(editorSaveTimerRef.current)
       collaborationService.destroyProvider(collaborationRef.current?.provider)
       collaborationRef.current = null
     }
   }, [id])
 
-  return { editor, isEditorSaving }
+  return { editor, isEditorSaving: false } // isEditorSaving всегда false, т.к. автосохранение убрано
 }
