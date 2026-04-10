@@ -13,7 +13,9 @@ export default function Layout({ navbar, header, children }) {
       {navbar && cloneElement(navbar, { onOpen: handleNavbarReady })}
       <div className="layout__right">
         <div className="layout__header">
-          {header && cloneElement(header, { onOpenNavbar: () => openNavbarRef.current?.() })}
+          {header && cloneElement(header, {
+            ...(navbar ? { onOpenNavbar: () => openNavbarRef.current?.() } : {})
+          })}
         </div>
         <main className="layout__content">{children}</main>
       </div>

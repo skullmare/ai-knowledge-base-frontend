@@ -4,9 +4,10 @@ import Button from '@ui/Button/Button';
 import HasPermission from '@guards/Protected';
 import More from '@assets/icons/more-vertical-16.svg';
 import List from '@assets/icons/list-16.svg';
+import Logo from '@assets/images/logo.svg';
 import './Header.css';
 
-const Header = ({ navLinks = [], activeLink, onLogout, userLogin, userRole, onOpenNavbar }) => {
+const Header = ({ navLinks = [], activeLink, onLogout, userLogin, userRole, onOpenNavbar, logo = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const dotsBtnRef = useRef(null);
@@ -51,6 +52,9 @@ const Header = ({ navLinks = [], activeLink, onLogout, userLogin, userRole, onOp
 
   return (
     <header className="header-component">
+
+      {logo ? <Logo width="87px" /> : undefined}
+
       <nav>{renderLinks()}</nav>
 
       <div className="profile-block">
@@ -62,9 +66,12 @@ const Header = ({ navLinks = [], activeLink, onLogout, userLogin, userRole, onOp
       </div>
 
       <div className="header-mobile-actions">
-        <button className="navbar__hamburger-inline" onClick={onOpenNavbar} aria-label="Открыть меню">
-          <List className="navbar__hamburger-inline-icon" width="20px" height="20px" />
-        </button>
+        {
+          onOpenNavbar ? <button className="navbar__hamburger-inline" onClick={onOpenNavbar} aria-label="Открыть меню">
+            <List className="navbar__hamburger-inline-icon" width="20px" height="20px" />
+          </button> : undefined
+        }
+
         <button ref={dotsBtnRef} className="menu-dots-btn" onClick={() => setIsMenuOpen(v => !v)} aria-label="Меню">
           <More className="menu-dots-btn-icon" width="20px" height="20px" />
         </button>
