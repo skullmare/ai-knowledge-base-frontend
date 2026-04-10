@@ -64,7 +64,7 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--spacing-lg) 0px;
+  padding: var(--spacing-md) 0px;
   gap: var(--spacing-md);
 }
 
