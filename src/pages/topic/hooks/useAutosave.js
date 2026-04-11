@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-const AUTOSAVE_DELAY = 2000
+const AUTOSAVE_DELAY = 1000
 
 export const useAutosave = (id, currentTopic, updateTopic) => {
   const [name, setName] = useState('')

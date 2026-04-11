@@ -83,27 +83,6 @@ export default function TopicPage() {
     canUpdate
   })
 
-  if (isPageLoading) {
-    return (
-      <Layout
-        navbar={<Navbar>{navbarFields}</Navbar>}
-        header={
-          <Header
-            navLinks={NAV_LINKS}
-            activeLink={pathname}
-            onLogout={openLogoutModal} // Передаем openLogoutModal вместо handleLogout
-            userLogin={profile?.login ?? profile?.email}
-            userRole={profile?.role?.name ?? 'Role'}
-          />
-        }
-      >
-        <div className="topic-page__loading">
-          <div className='topic-page__loading-indicator'><Spinner size="large" />Загрузка...</div>
-        </div>
-      </Layout>
-    )
-  }
-
   return (
     <>
       <Layout
