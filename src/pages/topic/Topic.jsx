@@ -16,7 +16,8 @@ import { useDeleteTopic } from './hooks/useDeleteTopic'
 import { useApproveTopic } from './hooks/useApproveTopic'
 import TopicSidebar from './components/TopicSidebar'
 import TopicToolbar from './components/TopicToolbar'
-import ConfirmModal from './components/ConfirmModal'
+import ConfirmModal from '@layout/Modal/ConfirmModal' // только один импорт
+import { useLogout } from '@hooks/useLogout'
 import './Topic.css'
 
 export default function TopicPage() {
@@ -27,6 +28,15 @@ export default function TopicPage() {
   const logout = useAuthStore((state) => state.logout)
 
   const canUpdate = checkPermission('topics.update')
+
+  // Используем хук выхода
+  const {
+    handleLogout,
+    openLogoutModal,
+    closeLogoutModal,
+    isLogoutModalOpen,
+    isLogoutLoading,
+  } = useLogout(logout)
 
   const {
     currentTopic,
@@ -47,7 +57,6 @@ export default function TopicPage() {
     handleRolesChange,
   } = useAutosave(id, currentTopic, updateTopic)
 
-  // Убираем initialEditorContent - редактор будет загружать данные через коллаборацию
   const { editor, isEditorSaving } = useBlockNoteEditor(id, profile)
 
   const deleteTopicHook = useDeleteTopic(id, () => {
@@ -57,14 +66,6 @@ export default function TopicPage() {
   const approveTopicHook = useApproveTopic(id, () => {
     refreshTopic()
   })
-
-  const handleLogout = useCallback(async () => {
-    try {
-      await logout()
-    } finally {
-      window.location.href = '/login'
-    }
-  }, [logout])
 
   const isSaving = isTopicSaving || isEditorSaving
   const isApproved = currentTopic?.status === 'approved'
@@ -90,7 +91,7 @@ export default function TopicPage() {
           <Header
             navLinks={NAV_LINKS}
             activeLink={pathname}
-            onLogout={handleLogout}
+            onLogout={openLogoutModal} // Передаем openLogoutModal вместо handleLogout
             userLogin={profile?.login ?? profile?.email}
             userRole={profile?.role?.name ?? 'Role'}
           />
@@ -111,7 +112,7 @@ export default function TopicPage() {
           <Header
             navLinks={NAV_LINKS}
             activeLink={pathname}
-            onLogout={handleLogout}
+            onLogout={openLogoutModal} // Передаем openLogoutModal вместо handleLogout
             userLogin={profile?.login ?? profile?.email}
             userRole={profile?.role?.name ?? 'Role'}
           />
@@ -128,24 +129,42 @@ export default function TopicPage() {
               isApproved={isApproved}
             />
             <div className="topic-page__editor">
-              <BlockNoteView editor={editor} theme="dark" editable={canUpdate}/>
+              <BlockNoteView editor={editor} theme="dark" editable={canUpdate} />
             </div>
           </div>
         </div>
       </Layout>
+
+      {/* Модалки */}
       <ConfirmModal
         isOpen={deleteTopicHook.isModalOpen}
-        type="delete"
+        type="warning"
+        title="Подтвердите действие"
+        confirmLabel="Удалить"
+        message="Вы точно хотите удалить эту тему?"
         isLoading={deleteTopicHook.isLoading}
         onConfirm={deleteTopicHook.handleDelete}
         onClose={deleteTopicHook.closeModal}
       />
       <ConfirmModal
         isOpen={approveTopicHook.isModalOpen}
-        type="approve"
+        type="warning"
+        title="Подтвердите действие"
+        confirmLabel="Одобрить"
+        message="Вы уверены, что хотите одобрить эту тему?"
         isLoading={approveTopicHook.isLoading}
         onConfirm={approveTopicHook.handleApprove}
         onClose={approveTopicHook.closeModal}
+      />
+      <ConfirmModal
+        isOpen={isLogoutModalOpen}
+        type="warning"
+        title="Выход из системы"
+        confirmLabel="Выйти"
+        message="Вы уверены, что хотите выйти из системы?"
+        isLoading={isLogoutLoading}
+        onConfirm={handleLogout}
+        onClose={closeLogoutModal}
       />
     </>
   )

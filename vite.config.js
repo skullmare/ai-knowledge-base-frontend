@@ -22,6 +22,7 @@ export default defineConfig({
       '@router': path.resolve(__dirname, './src/router'),
       '@utils': path.resolve(__dirname, './src/utils'),
       '@api': path.resolve(__dirname, './src/api'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
       '@pages': path.resolve(__dirname, './src/pages'),
       '@assets': path.resolve(__dirname, './src/assets'),
       '@ui': path.resolve(__dirname, './src/components/ui'),

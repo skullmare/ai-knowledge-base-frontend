@@ -5,6 +5,8 @@ import Header from '@layout/Header/Header'
 import Navbar from '@layout/Navbar/Navbar'
 import Layout from '@layout/Layout/Layout'
 import Table from '@layout/Table/Table'
+import ConfirmModal from '@layout/Modal/ConfirmModal' // импортируем модалку
+import { useLogout } from '@hooks/useLogout' // импортируем хук
 import { useTopicsFilters } from './hooks/useTopicsFilters'
 import { useTopicsData } from './hooks/useTopicsData'
 import { useCreateCategoryModal } from './hooks/useCreateCategoryModal'
@@ -23,6 +25,14 @@ export default function TopicsPage() {
     const { pathname } = useLocation()
     const { profile } = useProfileStore()
     const { logout } = useAuthStore()
+
+    const {
+        handleLogout,
+        openLogoutModal,
+        closeLogoutModal,
+        isLogoutModalOpen,
+        isLogoutLoading,
+    } = useLogout(logout)
 
     const filters = useTopicsFilters()
     const {
@@ -52,10 +62,6 @@ export default function TopicsPage() {
 
     const categoryOptions = categories.map((c) => ({ value: c._id, label: c.name }))
 
-    const handleLogout = async () => {
-        try { await logout() } finally { window.location.href = '/login' }
-    }
-
     return (
         <Layout
             navbar={
@@ -71,7 +77,7 @@ export default function TopicsPage() {
                 <Header
                     navLinks={NAV_LINKS}
                     activeLink={pathname}
-                    onLogout={handleLogout}
+                    onLogout={openLogoutModal}
                     userLogin={profile?.login ?? profile?.email}
                     userRole={profile?.role?.name ?? 'Role'}
                 />
@@ -150,6 +156,16 @@ export default function TopicsPage() {
                     isLoading={isLoadingCreateTopic}
                 />
             )}
+            <ConfirmModal
+                isOpen={isLogoutModalOpen}
+                type="warning"
+                title="Выход из системы"
+                confirmLabel="Выйти"
+                message="Вы уверены, что хотите выйти из системы?"
+                isLoading={isLogoutLoading}
+                onConfirm={handleLogout}
+                onClose={closeLogoutModal}
+            />
         </Layout>
     )
 }
