@@ -1,6 +1,6 @@
 // stores/useTopicCategoryStore.js
 import { create } from 'zustand';
-import { topicCategoryService } from '../services/topicCategory';
+import { topicCategoryService } from '@services/topicCategory';
 import { handleError } from '../utils/handleError';
 import { syncEntityUpdate } from '../utils/syncStores';
 

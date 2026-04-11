@@ -1,6 +1,6 @@
 // stores/usePlatformUserStore.js
 import { create } from 'zustand';
-import { userService } from '../services/user';
+import { userService } from '@services/platformUser';
 import { handleError } from '../utils/handleError';
 import { storeRegistry } from '../utils/storeRegistry';
 

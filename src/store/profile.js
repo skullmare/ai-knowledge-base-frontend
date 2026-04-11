@@ -1,6 +1,6 @@
 // stores/useProfileStore.js
 import { create } from 'zustand';
-import { profileService } from '../services/profile';
+import { profileService } from '@services/profile';
 import { handleError } from '../utils/handleError';
 import { storeRegistry } from '../utils/storeRegistry';
 

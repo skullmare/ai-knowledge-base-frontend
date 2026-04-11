@@ -1,6 +1,6 @@
 // stores/useTopicStore.js
 import { create } from 'zustand';
-import { topicService } from '../services/topic';
+import { topicService } from '@services/topic';
 import { handleError } from '../utils/handleError';
 
 import { storeRegistry } from '../utils/storeRegistry';

@@ -1,6 +1,6 @@
 // stores/useAgentRoleStore.js
 import { create } from 'zustand';
-import { agentRoleService } from '../services/agentRole';
+import { agentRoleService } from '@services/agentRole';
 import { handleError } from '../utils/handleError';
 import { syncEntityUpdate } from '../utils/syncStores';
 

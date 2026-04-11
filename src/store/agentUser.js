@@ -1,6 +1,6 @@
 // stores/useAgentUserStore.js
 import { create } from 'zustand';
-import { agentUserService } from '../services/agentUser';
+import { agentUserService } from '@services/agentUser';
 import { handleError } from '../utils/handleError';
 import { storeRegistry } from '../utils/storeRegistry';
 

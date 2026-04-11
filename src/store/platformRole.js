@@ -1,6 +1,6 @@
 // stores/usePlatformRoleStore.js
 import { create } from 'zustand';
-import { platformRoleService } from '../services/platformRole';
+import { platformRoleService } from '@services/platformRole';
 import { handleError } from '../utils/handleError';
 import { syncEntityUpdate } from '../utils/syncStores';
 
