@@ -8,7 +8,7 @@ export function TopicsCatalogue({ groupedTopics, categories, onEditCategory }) {
                 <div key={category._id} className="topics-page__group">
                     <div className="topics-page__group-header">
                         <h2 className="topics-page__group-title">{category.name}</h2>
-                        <button
+                        {/* <button
                             className="topics-page__group-edit-btn"
                             onClick={() => {
                                 const full = categories.find((c) => c._id === category._id) ?? category
@@ -17,7 +17,7 @@ export function TopicsCatalogue({ groupedTopics, categories, onEditCategory }) {
                             title="Редактировать раздел"
                         >
                             <Edit />
-                        </button>
+                        </button> */}
                     </div>
                     <ul className="topics-page__list">
                         {topics.map((topic) => (

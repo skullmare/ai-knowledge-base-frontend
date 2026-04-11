@@ -5,12 +5,13 @@ import Header from '@layout/Header/Header'
 import Navbar from '@layout/Navbar/Navbar'
 import Layout from '@layout/Layout/Layout'
 import Table from '@layout/Table/Table'
-import ConfirmModal from '@layout/Modal/ConfirmModal' // импортируем модалку
-import { useLogout } from '@hooks/useLogout' // импортируем хук
+import ConfirmModal from '@layout/Modal/ConfirmModal'
+import { useLogout } from '@hooks/useLogout'
 import { useTopicsFilters } from './hooks/useTopicsFilters'
 import { useTopicsData } from './hooks/useTopicsData'
 import { useCreateCategoryModal } from './hooks/useCreateCategoryModal'
 import { useEditCategoryModal } from './hooks/useEditCategoryModal'
+import { useDeleteCategoryModal } from './hooks/useDeleteCategoryModal' // Импортируем новый хук
 import { TopicsToolbar } from './components/TopicsToolbar'
 import { TopicsCatalogue } from './components/TopicsCatalogue'
 import { CreateCategoryModal } from './components/CreateCategoryModal'
@@ -46,6 +47,7 @@ export default function TopicsPage() {
         pagination,
         createCategory,
         updateCategory,
+        deleteCategory,
         fetchTopics,
         fetchCategories,
         buildParams,
@@ -56,9 +58,23 @@ export default function TopicsPage() {
         activeCategory: filters.activeCategory,
         viewMode: filters.viewMode,
     })
+
     const categoryModal = useCreateCategoryModal(createCategory)
     const editModal = useEditCategoryModal(updateCategory, fetchTopics, buildParams, fetchCategories)
     const topicModal = useCreateTopicModal(createTopic)
+    
+    // Используем новый хук для удаления категории
+    const {
+        deleteModal,
+        isLoadingDeleteCategory,
+        handleDeleteCategory,
+        handleConfirmDelete,
+        handleCloseModal,
+    } = useDeleteCategoryModal({
+        deleteCategory,
+        activeCategory: filters.activeCategory,
+        setActiveCategory: filters.setActiveCategory,
+    })
 
     const categoryOptions = categories.map((c) => ({ value: c._id, label: c.name }))
 
@@ -70,6 +86,9 @@ export default function TopicsPage() {
                         sections={navSections}
                         activeSection={filters.activeCategory}
                         onSelect={filters.setActiveCategory}
+                        onEditCategory={editModal.open}
+                        onDeleteCategory={handleDeleteCategory}
+                        categories={categories}
                     />
                 </Navbar>
             }
@@ -127,6 +146,7 @@ export default function TopicsPage() {
                     onClose={categoryModal.close}
                 />
             )}
+
             {editModal.isOpen && (
                 <EditCategoryModal
                     name={editModal.name}
@@ -139,6 +159,7 @@ export default function TopicsPage() {
                     onClose={editModal.close}
                 />
             )}
+
             {topicModal.isOpen && (
                 <CreateTopicModal
                     name={topicModal.name}
@@ -156,6 +177,7 @@ export default function TopicsPage() {
                     isLoading={isLoadingCreateTopic}
                 />
             )}
+
             <ConfirmModal
                 isOpen={isLogoutModalOpen}
                 type="warning"
@@ -165,6 +187,18 @@ export default function TopicsPage() {
                 isLoading={isLogoutLoading}
                 onConfirm={handleLogout}
                 onClose={closeLogoutModal}
+            />
+
+            {/* Модалка подтверждения удаления категории */}
+            <ConfirmModal
+                isOpen={deleteModal.isOpen}
+                type="danger"
+                title="Удаление раздела"
+                confirmLabel="Удалить"
+                message={`Вы уверены, что хотите удалить раздел "${deleteModal.category?.name}"?`}
+                isLoading={isLoadingDeleteCategory}
+                onConfirm={handleConfirmDelete}
+                onClose={handleCloseModal}
             />
         </Layout>
     )

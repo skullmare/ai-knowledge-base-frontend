@@ -41,6 +41,8 @@
 }
 
 .topics-page__group-edit-btn {
+    width: 15px;
+    height: 15px;
     background: transparent;
     border: none;
     padding: 0;
@@ -53,7 +55,7 @@
 }
 
 .topics-page__group-edit-btn:hover {
-    color: var(--color-white);
+    color: var(--color-gold-200);
 }
 
 /* ── List & items ── */

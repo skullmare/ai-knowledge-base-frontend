@@ -31,7 +31,6 @@ export const useTopicData = (id) => {
       ])
       setIsPageLoading(false)
     }
-    
     loadData()
   }, [id, fetchOneTopic, fetchRoles, fetchCategories])
 

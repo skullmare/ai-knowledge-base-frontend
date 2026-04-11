@@ -7,20 +7,16 @@ export const useAutosave = (id, currentTopic, updateTopic) => {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectedRoles, setSelectedRoles] = useState([])
   const autosaveTimerRef = useRef(null)
-  const isInitializedRef = useRef(false)
 
   useEffect(() => {
-    if (currentTopic && !isInitializedRef.current) {
+    if (currentTopic) {
       setName(currentTopic.name ?? '')
       setSelectedCategory(currentTopic.metadata?.category?._id ?? null)
       setSelectedRoles(currentTopic.metadata?.accessibleByRoles?.map((r) => r._id) ?? [])
-      isInitializedRef.current = true
     }
   }, [currentTopic])
 
   const scheduleAutosave = useCallback((overrides = {}) => {
-    if (!isInitializedRef.current) return
-    
     clearTimeout(autosaveTimerRef.current)
     autosaveTimerRef.current = setTimeout(() => {
       const n = overrides.name ?? name

@@ -24,6 +24,7 @@ export function CreateTopicModal({
                 placeholder="Укажите название темы"
                 showClearButton
                 label="Название"
+                maxLength={150}
                 required
                 error={touched.name && !name.trim() ? 'Поле обязательно для заполнения' : undefined}
                 value={name}

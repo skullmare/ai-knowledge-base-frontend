@@ -24,6 +24,7 @@ const TopicSidebar = ({
         size="large"
         placeholder="Укажите название темы"
         label="Название"
+        maxLength={150}
         required
         value={name}
         onChange={onNameChange}

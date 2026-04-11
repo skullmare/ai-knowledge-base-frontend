@@ -17,6 +17,7 @@ export function CreateCategoryModal({ name, onNameChange, description, onDescrip
                 showClearButton
                 label="Название"
                 required
+                maxLength={50}
                 error={touched.name && !name.trim() ? 'Поле обязательно для заполнения' : undefined}
                 value={name}
                 onChange={(e) => onNameChange(e.target.value)}
@@ -28,6 +29,7 @@ export function CreateCategoryModal({ name, onNameChange, description, onDescrip
                 showClearButton
                 label="Описание"
                 required
+                maxLength={300}
                 error={touched.description && !description.trim() ? 'Поле обязательно для заполнения' : undefined}
                 value={description}
                 onChange={(e) => onDescriptionChange(e.target.value)}

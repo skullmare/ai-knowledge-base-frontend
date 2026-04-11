@@ -29,6 +29,7 @@ const Input = ({
     containerClassName = '',
     labelClassName = '',
     messageClassName = '',
+    maxLength,
     ...props
 }) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -40,9 +41,14 @@ const Input = ({
     const value = isControlled ? externalValue : internalValue;
 
     const handleChange = useCallback((e) => {
-        if (!isControlled) setInternalValue(e.target.value);
-        onChange?.(e);
-    }, [isControlled, onChange]);
+        let newValue = e.target.value;
+        if (maxLength && newValue.length > maxLength) {
+            newValue = newValue.slice(0, maxLength);
+        }
+
+        if (!isControlled) setInternalValue(newValue);
+        onChange?.({ ...e, target: { ...e.target, value: newValue } });
+    }, [isControlled, onChange, maxLength]);
 
     const handleClear = useCallback(() => {
         const newValue = '';
@@ -61,8 +67,8 @@ const Input = ({
     const handleMouseUp = useCallback(() => handlePasswordVisibility(false), [handlePasswordVisibility]);
     const handleMouseLeave = useCallback(() => handlePasswordVisibility(false), [handlePasswordVisibility]);
 
-    const inputType = (type === 'password' && showPasswordToggle) 
-        ? (showPassword ? 'text' : 'password') 
+    const inputType = (type === 'password' && showPasswordToggle)
+        ? (showPassword ? 'text' : 'password')
         : type;
 
     // Функция для определения количества иконок
@@ -84,7 +90,7 @@ const Input = ({
 
     const iconCount = getIconCount();
     const iconPaddingClass = getIconPaddingClass(iconCount);
-    
+
     // Определяем, есть ли вообще иконки
     const hasIcons = iconCount > 0;
 
@@ -104,21 +110,21 @@ const Input = ({
 
     const showClearIcon = showClearButton && value && !disabled && !readOnly;
     const showPasswordIcon = showPasswordToggle && type === 'password';
-    
+
     // Определяем, какой текст показывать: errorText имеет приоритет над error и info
     const getMessageText = () => {
         if (errorText) return errorText;
         if (error) return error;
         return info;
     };
-    
+
     // Определяем тип сообщения
     const getMessageType = () => {
         if (errorText || error) return 'error';
         if (info) return 'info';
         return null;
     };
-    
+
     const messageText = getMessageText();
     const messageType = getMessageType();
 
@@ -143,6 +149,7 @@ const Input = ({
                     required={required}
                     placeholder={placeholder}
                     className={inputClasses}
+                    maxLength={maxLength}
                     {...props}
                 />
 
