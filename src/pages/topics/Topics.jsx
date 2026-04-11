@@ -11,13 +11,16 @@ import { useTopicsFilters } from './hooks/useTopicsFilters'
 import { useTopicsData } from './hooks/useTopicsData'
 import { useCreateCategoryModal } from './hooks/useCreateCategoryModal'
 import { useEditCategoryModal } from './hooks/useEditCategoryModal'
-import { useDeleteCategoryModal } from './hooks/useDeleteCategoryModal' // Импортируем новый хук
+import { useDeleteCategoryModal } from './hooks/useDeleteCategoryModal'
+import { useDeleteTopicModal } from './hooks/useDeleteTopicModal'
+import { useApproveTopicModal } from './hooks/useApproveTopicModal'
+import { useArchiveTopicModal } from './hooks/useArchiveTopicModal'
 import { TopicsToolbar } from './components/TopicsToolbar'
 import { TopicsCatalogue } from './components/TopicsCatalogue'
 import { CreateCategoryModal } from './components/CreateCategoryModal'
 import { EditCategoryModal } from './components/EditCategoryModal'
 import { TopicsNavbar } from './components/TopicsNavbar'
-import { NAV_LINKS, TOPIC_COLUMNS } from './Topics.constants'
+import { NAV_LINKS, getTopicColumns } from './Topics.constants'
 import { useCreateTopicModal } from './hooks/useCreateTopicModal'
 import { CreateTopicModal } from './components/CreateTopicModal'
 import './css/topics.css'
@@ -51,7 +54,7 @@ export default function TopicsPage() {
         fetchTopics,
         fetchCategories,
         buildParams,
-        categories
+        categories,
     } = useTopicsData({
         debouncedSearch: filters.debouncedSearch,
         selectedRole: filters.selectedRole,
@@ -62,8 +65,7 @@ export default function TopicsPage() {
     const categoryModal = useCreateCategoryModal(createCategory)
     const editModal = useEditCategoryModal(updateCategory, fetchTopics, buildParams, fetchCategories)
     const topicModal = useCreateTopicModal(createTopic)
-    
-    // Используем новый хук для удаления категории
+
     const {
         deleteModal,
         isLoadingDeleteCategory,
@@ -76,7 +78,17 @@ export default function TopicsPage() {
         setActiveCategory: filters.setActiveCategory,
     })
 
+    const deleteTopicHook = useDeleteTopicModal()
+    const approveTopicHook = useApproveTopicModal()
+    const archiveTopicHook = useArchiveTopicModal()
+
     const categoryOptions = categories.map((c) => ({ value: c._id, label: c.name }))
+
+    const topicColumns = getTopicColumns({
+        onDelete: deleteTopicHook.openModal,
+        onApprove: approveTopicHook.openModal,
+        onArchive: archiveTopicHook.openModal,
+    })
 
     return (
         <Layout
@@ -123,7 +135,7 @@ export default function TopicsPage() {
                     />
                 ) : (
                     <Table
-                        columns={TOPIC_COLUMNS}
+                        columns={topicColumns}
                         data={tableData}
                         page={pagination.current}
                         limit={pagination.limit}
@@ -189,7 +201,6 @@ export default function TopicsPage() {
                 onClose={closeLogoutModal}
             />
 
-            {/* Модалка подтверждения удаления категории */}
             <ConfirmModal
                 isOpen={deleteModal.isOpen}
                 type="danger"
@@ -199,6 +210,39 @@ export default function TopicsPage() {
                 isLoading={isLoadingDeleteCategory}
                 onConfirm={handleConfirmDelete}
                 onClose={handleCloseModal}
+            />
+
+            <ConfirmModal
+                isOpen={deleteTopicHook.isModalOpen}
+                type="danger"
+                title="Подтвердите действие"
+                confirmLabel="Удалить"
+                message="Вы точно хотите удалить эту тему?"
+                isLoading={deleteTopicHook.isLoading}
+                onConfirm={deleteTopicHook.handleDelete}
+                onClose={deleteTopicHook.closeModal}
+            />
+
+            <ConfirmModal
+                isOpen={approveTopicHook.isModalOpen}
+                type="warning"
+                title="Подтвердите действие"
+                confirmLabel="Одобрить"
+                message="Вы уверены, что хотите одобрить эту тему?"
+                isLoading={approveTopicHook.isLoading}
+                onConfirm={approveTopicHook.handleApprove}
+                onClose={approveTopicHook.closeModal}
+            />
+
+            <ConfirmModal
+                isOpen={archiveTopicHook.isModalOpen}
+                type="warning"
+                title="Подтвердите действие"
+                confirmLabel="Архивировать"
+                message="Вы уверены, что хотите архивировать эту тему?"
+                isLoading={archiveTopicHook.isLoading}
+                onConfirm={archiveTopicHook.handleArchive}
+                onClose={archiveTopicHook.closeModal}
             />
         </Layout>
     )

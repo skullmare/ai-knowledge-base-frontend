@@ -1,0 +1,113 @@
+/* topics-table.css - с использованием глобальных переменных */
+
+/* Статус */
+.topics-page__table-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.topics-page__table-status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.topics-page__table-status__dot--approved { background: var(--color-green); }
+.topics-page__table-status__dot--review   { background: var(--color-gold-100); }
+.topics-page__table-status__dot--archived { background: var(--color-gray-200); }
+
+/* Автор */
+.topics-page__table-author {
+    display: flex;
+    align-items: center;
+    color: var(--color-gray-100);
+    font-size: var(--text-sm);
+    gap: var(--spacing-sm);
+}
+
+.topics-page__table-author__avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.topics-page__table-author__avatar--placeholder {
+    background: var(--color-gray-400);
+}
+
+/* Кликабельное название топика */
+.topics-page__table-name-link {
+    color: var(--color-white);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    font-weight: var(--font-medium);
+    transition: color var(--transition-fast);
+}
+
+.topics-page__table-name-link:hover {
+    color: var(--color-gold-100);
+}
+
+/* Теги ролей */
+.topics-page__table-roles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.topics-page__table-role-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    background-color: var(--color-gray-500);
+    color: var(--color-gold-100);
+    white-space: nowrap;
+}
+
+/* Кнопки действий */
+.topics-page__table-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    justify-content: flex-end;
+}
+
+.topics-page__table-actions__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-gray-100);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.topics-page__table-actions__btn:hover {
+    background-color: var(--color-gray-400);
+}
+
+.topics-page__table-actions__btn--approve {
+    background-color: var(--color-gray-500);
+    color: var(--color-green);
+}
+
+.topics-page__table-actions__btn--delete {
+    background-color: var(--color-gray-500);
+    color: var(--color-red);
+}
+
+.topics-page__table-actions__btn--archive {
+    background-color: var(--color-gray-500);
+    color: var(--color-gray-100);
+}

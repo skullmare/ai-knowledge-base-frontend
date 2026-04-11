@@ -1,10 +1,10 @@
 /* Topics.css — точка входа, подключает все части */
 
 @import url('./topics-toolbar.css');
-@import url('./topics-badges.css');
 @import url('./topics-grid.css');
 @import url('./topics-navbar.css');
 @import url('./topics-responsive.css');
+@import url('./topics-table.css');
 
 /* ── Корневой контейнер страницы ── */
 .topics-page {
