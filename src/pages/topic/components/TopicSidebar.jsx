@@ -14,7 +14,8 @@ const TopicSidebar = ({
   onNameChange,
   onCategoryChange,
   onRolesChange,
-  currentTopic
+  currentTopic,
+  canUpdate
 }) => {
   const fields = (
     <div className="topic-page__fields">
@@ -26,6 +27,7 @@ const TopicSidebar = ({
         required
         value={name}
         onChange={onNameChange}
+        disabled={!canUpdate}
       />
       <Dropdown
         options={categoryOptions}
@@ -34,6 +36,7 @@ const TopicSidebar = ({
         size="large"
         label="Раздел"
         required
+        disabled={!canUpdate}
       />
       <Multiselect
         label="Роли"
@@ -43,6 +46,7 @@ const TopicSidebar = ({
         value={selectedRoles}
         onChange={onRolesChange}
         placeholder="Выберите роли"
+        disabled={!canUpdate}
       />
     </div>
   )

@@ -189,3 +189,52 @@
     font-size: var(--text-xs);
     color: var(--color-red);
 }
+
+/* ── Disabled состояния ── */
+
+.multiselect--disabled {
+    cursor: not-allowed;
+}
+
+.multiselect__trigger--disabled {
+    cursor: not-allowed;
+    background: var(--color-gray-700);
+    border-color: var(--color-gray-500);
+    pointer-events: auto;
+}
+
+.multiselect__trigger--disabled:hover {
+    border-color: var(--color-gray-500);
+}
+
+.multiselect__label--disabled {
+    color: var(--color-gray-200);
+}
+
+.multiselect__placeholder--disabled {
+    color: var(--color-gray-400);
+}
+
+.multiselect__tag--disabled {
+    background: var(--color-gray-500);
+    color: var(--color-gray-200);
+}
+
+.multiselect__chevron--disabled {
+    color: var(--color-gray-400);
+    cursor: not-allowed;
+}
+
+.multiselect__chevron--disabled:hover {
+    color: var(--color-gray-400);
+}
+
+/* Отключаем hover-эффекты для disabled */
+.multiselect--disabled .multiselect__option:hover {
+    background: transparent;
+    cursor: not-allowed;
+}
+
+.multiselect--disabled .multiselect__checkbox {
+    cursor: not-allowed;
+}

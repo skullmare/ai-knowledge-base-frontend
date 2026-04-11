@@ -3,7 +3,19 @@ import DropdownIcon from '@assets/icons/dropdown-16.svg';
 import DropdownFlippedIcon from '@assets/icons/dropdown-flipped-16.svg';
 import './Dropdown.css';
 
-export default function Dropdown({ options = [], value, onChange, placeholder = 'Выбрать', menuWidth, label, required, labelClassName, size = "medium", error }) {
+export default function Dropdown({ 
+  options = [], 
+  value, 
+  onChange, 
+  placeholder = 'Выбрать', 
+  menuWidth, 
+  label, 
+  required, 
+  labelClassName, 
+  size = "medium", 
+  error,
+  disabled = false  // Добавлен проп disabled
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
@@ -18,14 +30,21 @@ export default function Dropdown({ options = [], value, onChange, placeholder = 
   }, []);
 
   const handleSelect = (val) => {
+    if (disabled) return; // Предотвращаем выбор при disabled
     onChange?.(val);
     setIsOpen(false);
+  };
+
+  const handleToggle = () => {
+    if (!disabled) {
+      setIsOpen((v) => !v);
+    }
   };
 
   const ChevronIcon = isOpen ? DropdownFlippedIcon : DropdownIcon;
 
   return (
-    <div className={`dropdown${isOpen ? ' dropdown--open' : ''}`} ref={ref}>
+    <div className={`dropdown${isOpen ? ' dropdown--open' : ''}${disabled ? ' dropdown--disabled' : ''}`} ref={ref}>
       {label && (
         <label className={`input-component__label ${labelClassName}`} data-required={required}>
           {label}
@@ -33,18 +52,20 @@ export default function Dropdown({ options = [], value, onChange, placeholder = 
         </label>
       )}
       <button
-        className={`dropdown__trigger dropdown__trigger-${size}${error ? ' dropdown__trigger--error' : ''}`}
-        onClick={() => setIsOpen((v) => !v)}
+        className={`dropdown__trigger dropdown__trigger-${size}${error ? ' dropdown__trigger--error' : ''}${disabled ? ' dropdown__trigger--disabled' : ''}`}
+        onClick={handleToggle}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        disabled={disabled}
+        aria-disabled={disabled}
       >
-        <span className={`dropdown__label${selected ? ' dropdown__label--selected' : ''}`}>
+        <span className={`dropdown__label${selected ? ' dropdown__label--selected' : ''}${disabled ? ' dropdown__label--disabled' : ''}`}>
           {selected?.label ?? placeholder}
         </span>
         <ChevronIcon width="16px" height="16px" color="white" className="dropdown__chevron" />
       </button>
       {error && <span className="dropdown__error">{error}</span>}
-      {isOpen && (
+      {isOpen && !disabled && ( // Не показываем меню если disabled
         <ul
           className="dropdown__menu"
           role="listbox"

@@ -30,7 +30,7 @@ export function useEditCategoryModal(onUpdate, fetchTopics, buildParams, fetchCa
         setIsSaving(true)
         try {
             await onUpdate(categoryId, { name, description })
-            await Promise.all([fetchCategories(), fetchTopics(buildParams())])
+            // await Promise.all([fetchCategories(), fetchTopics(buildParams())])
             close()
         } finally {
             setIsSaving(false)

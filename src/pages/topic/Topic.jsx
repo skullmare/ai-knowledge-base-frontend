@@ -23,7 +23,10 @@ export default function TopicPage() {
   const { pathname } = useLocation()
   const { id } = useParams()
   const profile = useProfileStore((state) => state.profile)
+  const checkPermission = useProfileStore((state) => state.checkPermission)
   const logout = useAuthStore((state) => state.logout)
+
+  const canUpdate = checkPermission('topics.update')
 
   const {
     currentTopic,
@@ -75,7 +78,8 @@ export default function TopicPage() {
     onNameChange: handleNameChange,
     onCategoryChange: handleCategoryChange,
     onRolesChange: handleRolesChange,
-    currentTopic
+    currentTopic,
+    canUpdate
   })
 
   if (isPageLoading) {
@@ -124,7 +128,7 @@ export default function TopicPage() {
               isApproved={isApproved}
             />
             <div className="topic-page__editor">
-              <BlockNoteView editor={editor} theme="dark" />
+              <BlockNoteView editor={editor} theme="dark" editable={canUpdate}/>
             </div>
           </div>
         </div>

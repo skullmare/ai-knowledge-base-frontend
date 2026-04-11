@@ -106,3 +106,31 @@
     font-size: var(--text-xs);
     color: var(--color-red);
 }
+
+/* ── Disabled состояния ────────────────────────────────────────────────── */
+.dropdown--disabled {
+  cursor: not-allowed;
+}
+
+.dropdown__trigger--disabled {
+  cursor: not-allowed;
+  pointer-events: auto; /* Чтобы блокировать клики, но сохранить визуальный эффект */
+  background: var(--color-gray-700);
+  border-color: var(--color-gray-500);
+}
+
+.dropdown__trigger--disabled:hover {
+  border-color: var(--color-gray-500);
+}
+
+.dropdown__label--disabled {
+  color: var(--color-gray-200);
+}
+
+.dropdown__trigger--disabled .dropdown__chevron {
+  color: var(--color-gray-400);
+}
+
+.dropdown__trigger--disabled .dropdown__chevron:hover {
+  color: var(--color-gray-400);
+}

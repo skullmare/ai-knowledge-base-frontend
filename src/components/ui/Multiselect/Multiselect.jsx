@@ -8,7 +8,17 @@ import ChevronUp from '@assets/icons/dropdown-16.svg'
 import ChevronDown from '@assets/icons/dropdown-flipped-16.svg'
 import './Multiselect.css'
 
-export default function Multiselect({ options = [], value = [], onChange, placeholder = 'Выберите...', label, required, error, size="medium" }) {
+export default function Multiselect({ 
+  options = [], 
+  value = [], 
+  onChange, 
+  placeholder = 'Выберите...', 
+  label, 
+  required, 
+  error, 
+  size = "medium",
+  disabled = false  // Добавлен проп disabled
+}) {
     const [isOpen, setIsOpen] = useState(false)
     const containerRef = useRef(null)
 
@@ -26,6 +36,7 @@ export default function Multiselect({ options = [], value = [], onChange, placeh
     }, [])
 
     const toggleOption = (optValue) => {
+        if (disabled) return  // Предотвращаем изменение при disabled
         if (value.includes(optValue)) {
             onChange(value.filter((v) => v !== optValue))
         } else {
@@ -34,6 +45,7 @@ export default function Multiselect({ options = [], value = [], onChange, placeh
     }
 
     const toggleAll = () => {
+        if (disabled) return  // Предотвращаем изменение при disabled
         if (allSelected) {
             onChange([])
         } else {
@@ -43,20 +55,28 @@ export default function Multiselect({ options = [], value = [], onChange, placeh
 
     const removeOne = (optValue, e) => {
         e.stopPropagation()
+        if (disabled) return  // Предотвращаем удаление при disabled
         onChange(value.filter((v) => v !== optValue))
     }
 
     const clearAll = (e) => {
         e.stopPropagation()
+        if (disabled) return  // Предотвращаем очистку при disabled
         onChange([])
+    }
+
+    const handleToggle = () => {
+        if (!disabled) {
+            setIsOpen((v) => !v)
+        }
     }
 
     const selectedOptions = options.filter((o) => value.includes(o.value))
 
     return (
-        <div className="multiselect" ref={containerRef}>
+        <div className={`multiselect ${disabled ? 'multiselect--disabled' : ''}`} ref={containerRef}>
             {label && (
-                <label className="multiselect__label" data-required={required ? "true" : "false"}>
+                <label className={`multiselect__label ${disabled ? 'multiselect__label--disabled' : ''}`} data-required={required ? "true" : "false"}>
                     {label}
                     {required && <span className="multiselect__required-star">*</span>}
                 </label>
@@ -64,40 +84,46 @@ export default function Multiselect({ options = [], value = [], onChange, placeh
 
             {/* Trigger */}
             <div
-                className={`multiselect__trigger ${'multiselect__trigger-'+size.trim()} ${isOpen ? 'multiselect__trigger--open' : ''} ${error ? 'multiselect__trigger--error' : ''}`}
-                onClick={() => setIsOpen((v) => !v)}
+                className={`multiselect__trigger ${'multiselect__trigger-' + size.trim()} ${isOpen ? 'multiselect__trigger--open' : ''} ${error ? 'multiselect__trigger--error' : ''} ${disabled ? 'multiselect__trigger--disabled' : ''}`}
+                onClick={handleToggle}
+                aria-disabled={disabled}
             >
                 
                 <div className="multiselect__tags">
                     {selectedOptions.length === 0 && (
-                        <span className="multiselect__placeholder">{placeholder}</span>
+                        <span className={`multiselect__placeholder ${disabled ? 'multiselect__placeholder--disabled' : ''}`}>
+                            {placeholder}
+                        </span>
                     )}
                     {selectedOptions.map((opt) => (
-                        <span key={opt.value} className="multiselect__tag">
+                        <span key={opt.value} className={`multiselect__tag ${disabled ? 'multiselect__tag--disabled' : ''}`}>
                             {opt.label}
-                            <button
-                                className="multiselect__tag-remove"
-                                onClick={(e) => removeOne(opt.value, e)}
-                            >
-                                <Close width="16px" height="16px" />
-                            </button>
+                            {!disabled && (
+                                <button
+                                    className="multiselect__tag-remove"
+                                    onClick={(e) => removeOne(opt.value, e)}
+                                    disabled={disabled}
+                                >
+                                    <Close width="16px" height="16px" />
+                                </button>
+                            )}
                         </span>
                     ))}
                 </div>
                 <div className="multiselect__actions">
-                    {selectedOptions.length > 0 && (
-                        <button className="multiselect__clear" onClick={clearAll}>
+                    {selectedOptions.length > 0 && !disabled && (
+                        <button className="multiselect__clear" onClick={clearAll} disabled={disabled}>
                             <Close width="16px" height="16px" />
                         </button>
                     )}
-                    <button className="multiselect__chevron">
-                        {isOpen ?  <ChevronDown width="16px" height="16px" /> : <ChevronUp width="16px" height="16px" />}
+                    <button className={`multiselect__chevron ${disabled ? 'multiselect__chevron--disabled' : ''}`} disabled={disabled}>
+                        {isOpen ? <ChevronDown width="16px" height="16px" /> : <ChevronUp width="16px" height="16px" />}
                     </button>
                 </div>
             </div>
             {error && <span className="multiselect__error">{error}</span>}
             {/* Dropdown */}
-            {isOpen && (
+            {isOpen && !disabled && (  // Не показываем dropdown если disabled
                 <div className="multiselect__dropdown">
                     {/* Все */}
                     <div className="multiselect__option" onClick={toggleAll}>
