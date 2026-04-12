@@ -79,10 +79,15 @@
 
 .table__td {
     min-width: 150px;
+    max-width: 300px;
     padding: var(--spacing-md) var(--spacing-md) var(--spacing-md) 0;
     color: var(--color-gray-100);
     font-size: var(--text-sm);
     vertical-align: middle;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* ── Pagination ── */
