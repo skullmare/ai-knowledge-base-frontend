@@ -27,7 +27,6 @@ function Pagination({ page, limit, total, onPageChange, onLimitChange }) {
 
     const getPages = () => {
         if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1)
-
         if (page <= 4) return [1, 2, 3, 4, 5, '...', totalPages]
         if (page >= totalPages - 3) return [1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
         return [1, '...', page - 1, page, page + 1, '...', totalPages]
@@ -93,6 +92,32 @@ function Pagination({ page, limit, total, onPageChange, onLimitChange }) {
     )
 }
 
+function useRowHeights(tableRef, data) {
+    const [heights, setHeights] = useState({ header: 0, rows: [] })
+
+    useEffect(() => {
+        const table = tableRef.current
+        if (!table) return
+
+        const sync = () => {
+            const headerEl = table.querySelector('thead tr')
+            const rowEls = Array.from(table.querySelectorAll('tbody tr'))
+            setHeights({
+                header: headerEl?.getBoundingClientRect().height ?? 0,
+                rows: rowEls.map((r) => r.getBoundingClientRect().height),
+            })
+        }
+
+        sync()
+
+        const observer = new ResizeObserver(sync)
+        observer.observe(table)
+        return () => observer.disconnect()
+    }, [data])  // пересинхронизируемся при смене данных
+
+    return heights
+}
+
 export default function Table({
     columns = [],
     data = [],
@@ -102,31 +127,59 @@ export default function Table({
     onPageChange,
     onLimitChange,
 }) {
+    const tableRef = useRef(null)
+    const mainColumns = columns.filter((col) => !col.actions)
+    const actionsColumn = columns.find((col) => col.actions)
+
+    const heights = useRowHeights(tableRef, data)
+
     return (
         <div className="table-wrapper">
-            <div className="table-scroll">
-                <table className="table">
-                    <thead className="table__head">
-                        <tr>
-                            {columns.map((col) => (
-                                <th key={col.key} className="table__th">
-                                    {col.label}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody className="table__body">
-                        {data.map((row, rowIndex) => (
-                            <tr key={row._id ?? rowIndex} className="table__row">
-                                {columns.map((col) => (
-                                    <td key={col.key} className="table__td">
-                                        {col.render ? col.render(row[col.key], row) : row[col.key]}
-                                    </td>
+            <div className="table-body">
+
+                <div className="table-scroll">
+                    <table className="table" ref={tableRef}>
+                        <thead className="table__head">
+                            <tr>
+                                {mainColumns.map((col) => (
+                                    <th key={col.key} className="table__th">
+                                        {col.label}
+                                    </th>
                                 ))}
                             </tr>
+                        </thead>
+                        <tbody className="table__body">
+                            {data.map((row, rowIndex) => (
+                                <tr key={row._id ?? rowIndex} className="table__row">
+                                    {mainColumns.map((col) => (
+                                        <td key={col.key} className="table__td">
+                                            {col.render ? col.render(row[col.key], row) : row[col.key]}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {actionsColumn && (
+                    <div className="table-actions-column">
+                        <div
+                            className="table-actions-column__header"
+                            style={{ height: heights.header }}
+                        />
+                        {data.map((row, rowIndex) => (
+                            <div
+                                key={row._id ?? rowIndex}
+                                className="table-actions-column__cell"
+                                style={{ height: heights.rows[rowIndex] }}
+                            >
+                                {actionsColumn.render(row[actionsColumn.key], row)}
+                            </div>
                         ))}
-                    </tbody>
-                </table>
+                    </div>
+                )}
+
             </div>
 
             <Pagination

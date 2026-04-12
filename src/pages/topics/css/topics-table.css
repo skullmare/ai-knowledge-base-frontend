@@ -111,3 +111,23 @@
     background-color: var(--color-gray-500);
     color: var(--color-gray-100);
 }
+
+/* ── Actions dropdown (topics-specific variants) ── */
+
+.dropdown-actions__item--approve {
+    color: var(--color-green);
+}
+
+.dropdown-actions__item--approve:hover {
+    background-color: var(--color-gray-600);
+    color: var(--color-green);
+}
+
+.dropdown-actions__item--delete {
+    color: var(--color-red);
+}
+
+.dropdown-actions__item--delete:hover {
+    background-color: var(--color-gray-600);
+    color: var(--color-red);
+}

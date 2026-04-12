@@ -1,13 +1,41 @@
 import { Link } from 'react-router-dom'
-import Protected from '@guards/Protected'
-import Delete from '@assets/icons/delete-16.svg'
 import DoubleCheck from '@assets/icons/double-check-24.svg'
 import Archive from '@assets/icons/archive-16.svg'
+import Delete from '@assets/icons/delete-16.svg'
+import DropdownActions from '@ui/DropdownActions/DropdownActions'
 
 export const NAV_LINKS = [
     { to: '/topics', label: 'Управление данными', permission: 'topics.read' },
     { to: '/users', label: 'Управление пользователями', permission: ['platformUsers.read', 'agentUsers.read'], permissionMode: 'some' },
     { to: '/logs', label: 'Лента событий', permission: 'logs.read' },
+]
+
+const getTopicActions = ({ onApprove, onArchive, onDelete }, row) => [
+    {
+        label: 'Одобрить',
+        icon: DoubleCheck,
+        variant: 'approve',
+        permission: 'topics.approve',
+        permissionMode: 'some',
+        hidden: row.status === 'approved',
+        onClick: () => onApprove(row),
+    },
+    {
+        label: 'Архивировать',
+        icon: Archive,
+        permission: 'topics.update',
+        permissionMode: 'some',
+        hidden: row.status === 'archived',
+        onClick: () => onArchive(row),
+    },
+    {
+        label: 'Удалить',
+        icon: Delete,
+        variant: 'delete',
+        permission: 'topics.delete',
+        permissionMode: 'some',
+        onClick: () => onDelete(row),
+    },
 ]
 
 export const getTopicColumns = ({ onDelete, onApprove, onArchive }) => [
@@ -71,40 +99,11 @@ export const getTopicColumns = ({ onDelete, onApprove, onArchive }) => [
     {
         key: '_id',
         label: '',
-        render: (value, row) => (
-            <div className="topics-page__table-actions">
-                {row.status !== 'approved' && (
-                    <Protected permission="topics.approve" mode="some">
-                        <button
-                            className="topics-page__table-actions__btn topics-page__table-actions__btn--approve"
-                            onClick={() => onApprove(row)}
-                            title="Одобрить"
-                        >
-                            <DoubleCheck />
-                        </button>
-                    </Protected>
-                )}
-                {row.status !== 'archived' && (
-                    <Protected permission="topics.update" mode="some">
-                        <button
-                            className="topics-page__table-actions__btn topics-page__table-actions__btn--archive"
-                            onClick={() => onArchive(row)}
-                            title="Архивировать"
-                        >
-                            <Archive />
-                        </button>
-                    </Protected>
-                )}
-                <Protected permission="topics.delete" mode="some">
-                    <button
-                        className="topics-page__table-actions__btn topics-page__table-actions__btn--delete"
-                        onClick={() => onDelete(row)}
-                        title="Удалить"
-                    >
-                        <Delete />
-                    </button>
-                </Protected>
-            </div>
+        actions: true,
+        render: (_, row) => (
+            <DropdownActions
+                actions={getTopicActions({ onApprove, onArchive, onDelete }, row)}
+            />
         ),
     },
 ]

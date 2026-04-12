@@ -7,12 +7,44 @@
     min-height: 0;
 }
 
-/* ── Scroll container ── */
+/* ── Scroll + actions side by side ── */
+
+.table-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
 
 .table-scroll {
     flex: 1;
     overflow-x: auto;
     overflow-y: auto;
+    min-width: 0;
+}
+
+/* ── Actions column (outside scroll) ── */
+
+.table-actions-column {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    width: 48px;
+    overflow: visible;
+}
+
+/* height выставляется инлайново через JS (ResizeObserver) */
+.table-actions-column__header {
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.table-actions-column__cell {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: visible;
 }
 
 /* ── Table ── */
@@ -28,12 +60,12 @@
 }
 
 .table__th {
-    height: 52px;
     font-size: var(--text-sm);
     font-weight: var(--font-normal);
     color: var(--color-gray-200);
     text-align: left;
     white-space: nowrap;
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-md) 0;
 }
 
 .table__row {
@@ -46,9 +78,8 @@
 }
 
 .table__td {
-    height: 52px;
     min-width: 150px;
-    padding-right: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-md) 0;
     color: var(--color-gray-100);
     font-size: var(--text-sm);
     vertical-align: middle;
@@ -60,7 +91,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-sm) 0px;
+    padding: var(--spacing-sm) 0;
     background: var(--color-black);
 }
 
@@ -149,6 +180,8 @@
     overflow: hidden;
     min-width: 80px;
     z-index: 10;
+    margin: 0;
+    padding: 0;
 }
 
 .table-pagination__limit-option {
