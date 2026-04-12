@@ -79,7 +79,7 @@
 
 .table__td {
     min-width: 150px;
-    max-width: 300px;
+    max-width: 150px;
     padding: var(--spacing-md) var(--spacing-md) var(--spacing-md) 0;
     color: var(--color-gray-100);
     font-size: var(--text-sm);

@@ -23,6 +23,7 @@
 }
 
 .dropdown-actions__trigger:hover {
+    border-color: var(--color-gold-300);
     color: var(--color-white);
 }
 
