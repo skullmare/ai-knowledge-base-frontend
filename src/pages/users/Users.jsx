@@ -28,12 +28,11 @@ import { useEditPlatformRoleModal } from './hooks/useEditPlatformRoleModal'
 import { useEditAgentRoleModal } from './hooks/useEditAgentRoleModal'
 import { useDeleteRoleModal } from './hooks/useDeleteRoleModal'
 import { useCreatePlatformUserModal } from './hooks/useCreatePlatformUserModal'
+import { RolesList } from './components/RolesList'
 import {
     NAV_LINKS,
     getPlatformUserColumns,
     getAgentUserColumns,
-    getPlatformRoleColumns,
-    getAgentRoleColumns,
 } from './Users.constants'
 import './css/users.css'
 
@@ -84,16 +83,6 @@ export default function UsersPage() {
     const agentColumns = getAgentUserColumns({
         onEdit: editAgentModal.open,
         onDelete: deleteAgentHook.openModal,
-    })
-
-    const platformRoleColumns = getPlatformRoleColumns({
-        onEdit: editPlatformRoleModal.open,
-        onDelete: deletePlatformRoleHook.openModal,
-    })
-
-    const agentRoleColumns = getAgentRoleColumns({
-        onEdit: editAgentRoleModal.open,
-        onDelete: deleteAgentRoleHook.openModal,
     })
 
     return (
@@ -156,18 +145,25 @@ export default function UsersPage() {
 
                 {activeSection === 'platformRoles' && (
                     <Protected permission="platformRoles.read" mode="some">
-                        <Table
-                            columns={platformRoleColumns}
-                            data={platformRoles}
+                        <RolesList
+                            roles={platformRoles}
+                            showPermissions
+                            editPermission="platformRoles.update"
+                            deletePermission="platformRoles.delete"
+                            onEdit={editPlatformRoleModal.open}
+                            onDelete={deletePlatformRoleHook.openModal}
                         />
                     </Protected>
                 )}
 
                 {activeSection === 'agentRoles' && (
                     <Protected permission="agentRoles.read" mode="some">
-                        <Table
-                            columns={agentRoleColumns}
-                            data={agentRoles}
+                        <RolesList
+                            roles={agentRoles}
+                            editPermission="agentRoles.update"
+                            deletePermission="agentRoles.delete"
+                            onEdit={editAgentRoleModal.open}
+                            onDelete={deleteAgentRoleHook.openModal}
                         />
                     </Protected>
                 )}

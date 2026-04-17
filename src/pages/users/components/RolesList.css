@@ -1,0 +1,17 @@
+.roles-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.roles-list__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2xl) 0;
+}
+
+.roles-list__empty-text {
+    font-size: var(--text-base);
+    color: var(--color-gray-200);
+}
