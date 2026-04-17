@@ -10,7 +10,6 @@ export function UsersToolbar({
     onCreateAgentRole,
 }) {
     const isPlatform = activeSection === 'platform'
-    console.log(activeSection)
 
     return (
         <div className="users-page__toolbar">
