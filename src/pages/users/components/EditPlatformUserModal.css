@@ -29,7 +29,7 @@
 
 .edit-platform-user-modal__avatar-actions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: var(--spacing-xs);
 }
 
@@ -58,11 +58,6 @@
 }
 
 .edit-platform-user-modal__avatar-btn--remove {
-    border-color: var(--color-red-400, #e53e3e);
-    color: var(--color-red-400, #e53e3e);
-}
-
-.edit-platform-user-modal__avatar-btn--remove:hover:not(:disabled) {
-    border-color: var(--color-red-300, #fc8181);
-    color: var(--color-red-300, #fc8181);
+    border-color: var(--color-red);
+    color: var(--color-red);
 }

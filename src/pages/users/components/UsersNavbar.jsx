@@ -29,7 +29,7 @@ export function UsersNavbar({ activeSection, onSelect }) {
     return (
         <>
             {NAVBAR_GROUPS.map(({ label, items }) => (
-                <div key={label}>
+                <div className="users-page__navbar" key={label}>
                     <p className="users-page__navbar__label">{label}</p>
                     <ul className="users-page__navbar__list" role="list">
                         {items.map(({ id, label: itemLabel }) => (

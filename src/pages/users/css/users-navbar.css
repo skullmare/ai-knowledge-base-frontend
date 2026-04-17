@@ -1,5 +1,11 @@
 /* users-navbar.css — боковая навигация */
 
+.users-page__navbar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
 .users-page__navbar__label {
     padding: 0 var(--spacing-md);
     font-size: var(--text-xs);

@@ -8,6 +8,9 @@
     border-radius: var(--radius-lg);
     transition: border-color var(--transition-base), background var(--transition-base);
     cursor: default;
+    /* Важно: фиксируем высоту карточки */
+    height: 100%;
+    min-height: 0; /* Позволяет flex-контейнеру сжиматься */
 }
 
 .role-card:hover {
@@ -20,6 +23,8 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--spacing-sm);
+    /* Заголовок не сжимается */
+    flex-shrink: 0;
 }
 
 .role-card__name {
@@ -60,13 +65,33 @@
 }
 
 .role-card__action-btn:hover {
-    background: var(--color-gray-400);
     color: var(--color-gold-200);
 }
 
 .role-card__action-btn--delete:hover {
-    background: rgba(196, 31, 31, 0.15);
     color: var(--color-red);
+}
+
+/* Обертка для описания с прокруткой */
+.role-card__description-wrapper {
+    flex: 1 1 auto; /* Занимает доступное пространство */
+    max-height: 100px;  /* Важно для корректной работы прокрутки */
+    overflow-y: auto; /* Добавляем прокрутку при необходимости */
+}
+
+/* Стили для скроллбара (опционально, но улучшит внешний вид) */
+.role-card__description-wrapper::-webkit-scrollbar {
+    width: 4px;
+}
+
+.role-card__description-wrapper::-webkit-scrollbar-track {
+    background: var(--color-gray-500);
+    border-radius: var(--radius-full);
+}
+
+.role-card__description-wrapper::-webkit-scrollbar-thumb {
+    background: var(--color-gold-300);
+    border-radius: var(--radius-full);
 }
 
 .role-card__description {
@@ -77,8 +102,10 @@
     word-break: break-word;
 }
 
+/* Футер всегда прижат к низу */
 .role-card__footer {
-    margin-top: var(--spacing-xs);
+    flex-shrink: 0; /* Футер не сжимается */
+    margin-top: 0; /* Убираем margin-top, используем gap из .role-card */
     padding-top: var(--spacing-sm);
     border-top: 1px solid var(--color-gray-500);
 }
