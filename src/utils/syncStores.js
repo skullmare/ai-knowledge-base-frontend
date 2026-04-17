@@ -13,7 +13,7 @@ export const syncEntityUpdate = (entityType, entityId, updatedEntity) => {
     stores.forEach(store => {
         const { updateEntityInStore } = store.getState();
         if (updateEntityInStore) {
-            updateEntityInStore(entityId, updatedEntity);
+            updateEntityInStore(entityType, entityId, updatedEntity);
         }
     });
 };

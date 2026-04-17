@@ -19,7 +19,7 @@ const useAgentUserStore = create((set, get) => ({
         limit: 10,
     },
 
-    updateEntityInStore: (entityId, updatedEntity) => {
+    updateEntityInStore: (entityType, entityId, updatedEntity) => {
         set((state) => ({
             users: state.users.map((user) => ({
                 ...user,
