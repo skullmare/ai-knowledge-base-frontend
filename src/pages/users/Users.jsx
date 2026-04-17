@@ -6,15 +6,23 @@ import Navbar from '@layout/Navbar/Navbar'
 import Layout from '@layout/Layout/Layout'
 import Table from '@layout/Table/Table'
 import ConfirmModal from '@layout/Modal/ConfirmModal'
+import Protected from '@guards/Protected'
 import { useLogout } from '@hooks/useLogout'
 import { UsersNavbar } from './components/UsersNavbar'
+import { UsersToolbar } from './components/UsersToolbar'
 import { EditPlatformUserModal } from './components/EditPlatformUserModal'
 import { EditAgentUserModal } from './components/EditAgentUserModal'
+import { CreatePlatformRoleModal } from './components/CreatePlatformRoleModal'
+import { CreateAgentRoleModal } from './components/CreateAgentRoleModal'
+import { CreatePlatformUserModal } from './components/CreatePlatformUserModal'
 import { useUsersData } from './hooks/useUsersData'
 import { useUsersFilters } from './hooks/useUsersFilters'
 import { useEditPlatformUserModal } from './hooks/useEditPlatformUserModal'
 import { useEditAgentUserModal } from './hooks/useEditAgentUserModal'
 import { useDeleteUserModal } from './hooks/useDeleteUserModal'
+import { useCreatePlatformRoleModal } from './hooks/useCreatePlatformRoleModal'
+import { useCreateAgentRoleModal } from './hooks/useCreateAgentRoleModal'
+import { useCreatePlatformUserModal } from './hooks/useCreatePlatformUserModal'
 import { NAV_LINKS, getPlatformUserColumns, getAgentUserColumns } from './Users.constants'
 import './css/users.css'
 
@@ -31,20 +39,24 @@ export default function UsersPage() {
         isLogoutLoading,
     } = useLogout(logout)
 
-    const { activeSection, setActiveSection, search, setSearch } = useUsersFilters()
+    const { activeSection, setActiveSection, search, setSearch, debouncedSearch } = useUsersFilters()
 
     const {
         platformUsers, platformPagination, updatePlatformUser, deletePlatformUser,
         fetchPlatformUsers, platformRoleOptions, buildPlatformParams,
         agentUsers, agentPagination, updateAgentUser, deleteAgentUser,
         fetchAgentUsers, agentRoleOptions, buildAgentParams,
-    } = useUsersData({ activeSection })
+    } = useUsersData({ activeSection, debouncedSearch })
 
     const editPlatformModal = useEditPlatformUserModal(updatePlatformUser)
     const editAgentModal = useEditAgentUserModal(updateAgentUser)
 
     const deletePlatformHook = useDeleteUserModal(deletePlatformUser)
     const deleteAgentHook = useDeleteUserModal(deleteAgentUser)
+
+    const createPlatformRoleModal = useCreatePlatformRoleModal()
+    const createAgentRoleModal = useCreateAgentRoleModal()
+    const createPlatformUserModal = useCreatePlatformUserModal()
 
     const platformColumns = getPlatformUserColumns({
         onEdit: editPlatformModal.open,
@@ -79,28 +91,39 @@ export default function UsersPage() {
             }
         >
             <div className="users-page">
-                {/* UsersToolbar будет добавлен позже, отдельно для каждого типа */}
+                <UsersToolbar
+                    activeSection={activeSection}
+                    search={search}
+                    onSearchChange={setSearch}
+                    onCreatePlatformRole={createPlatformRoleModal.open}
+                    onCreatePlatformUser={createPlatformUserModal.open}
+                    onCreateAgentRole={createAgentRoleModal.open}
+                />
 
                 {isPlatform ? (
-                    <Table
-                        columns={platformColumns}
-                        data={platformUsers}
-                        page={platformPagination.current}
-                        limit={platformPagination.limit}
-                        total={platformPagination.total}
-                        onPageChange={(p) => fetchPlatformUsers(buildPlatformParams({ page: p }))}
-                        onLimitChange={(l) => fetchPlatformUsers(buildPlatformParams({ page: 1, limit: l }))}
-                    />
+                    <Protected permission="platformUsers.read" mode="some">
+                        <Table
+                            columns={platformColumns}
+                            data={platformUsers}
+                            page={platformPagination.current}
+                            limit={platformPagination.limit}
+                            total={platformPagination.total}
+                            onPageChange={(p) => fetchPlatformUsers(buildPlatformParams({ page: p }))}
+                            onLimitChange={(l) => fetchPlatformUsers(buildPlatformParams({ page: 1, limit: l }))}
+                        />
+                    </Protected>
                 ) : (
-                    <Table
-                        columns={agentColumns}
-                        data={agentUsers}
-                        page={agentPagination.current}
-                        limit={agentPagination.limit}
-                        total={agentPagination.total}
-                        onPageChange={(p) => fetchAgentUsers(buildAgentParams({ page: p }))}
-                        onLimitChange={(l) => fetchAgentUsers(buildAgentParams({ page: 1, limit: l }))}
-                    />
+                    <Protected permission="agentUsers.read" mode="some">
+                        <Table
+                            columns={agentColumns}
+                            data={agentUsers}
+                            page={agentPagination.current}
+                            limit={agentPagination.limit}
+                            total={agentPagination.total}
+                            onPageChange={(p) => fetchAgentUsers(buildAgentParams({ page: p }))}
+                            onLimitChange={(l) => fetchAgentUsers(buildAgentParams({ page: 1, limit: l }))}
+                        />
+                    </Protected>
                 )}
             </div>
 
@@ -135,6 +158,58 @@ export default function UsersPage() {
                     isSaving={editAgentModal.isSaving}
                     onConfirm={editAgentModal.handleSave}
                     onClose={editAgentModal.close}
+                />
+            )}
+
+            {createPlatformRoleModal.isOpen && (
+                <CreatePlatformRoleModal
+                    name={createPlatformRoleModal.name}
+                    onNameChange={createPlatformRoleModal.setName}
+                    description={createPlatformRoleModal.description}
+                    onDescriptionChange={createPlatformRoleModal.setDescription}
+                    permissionOptions={createPlatformRoleModal.permissionOptions}
+                    selectedPermissions={createPlatformRoleModal.selectedPermissions}
+                    onPermissionsChange={createPlatformRoleModal.setSelectedPermissions}
+                    isLoadingPermissions={createPlatformRoleModal.isLoadingPermissions}
+                    touched={createPlatformRoleModal.touched}
+                    isCreating={createPlatformRoleModal.isCreating}
+                    onConfirm={createPlatformRoleModal.handleCreate}
+                    onClose={createPlatformRoleModal.close}
+                />
+            )}
+
+            {createAgentRoleModal.isOpen && (
+                <CreateAgentRoleModal
+                    name={createAgentRoleModal.name}
+                    onNameChange={createAgentRoleModal.setName}
+                    description={createAgentRoleModal.description}
+                    onDescriptionChange={createAgentRoleModal.setDescription}
+                    touched={createAgentRoleModal.touched}
+                    isCreating={createAgentRoleModal.isCreating}
+                    onConfirm={createAgentRoleModal.handleCreate}
+                    onClose={createAgentRoleModal.close}
+                />
+            )}
+
+            {createPlatformUserModal.isOpen && (
+                <CreatePlatformUserModal
+                    firstName={createPlatformUserModal.firstName}
+                    onFirstNameChange={createPlatformUserModal.setFirstName}
+                    lastName={createPlatformUserModal.lastName}
+                    onLastNameChange={createPlatformUserModal.setLastName}
+                    login={createPlatformUserModal.login}
+                    onLoginChange={createPlatformUserModal.setLogin}
+                    email={createPlatformUserModal.email}
+                    onEmailChange={createPlatformUserModal.setEmail}
+                    photoUrl={createPlatformUserModal.photoUrl}
+                    onPhotoUrlChange={createPlatformUserModal.setPhotoUrl}
+                    roleOptions={platformRoleOptions}
+                    selectedRole={createPlatformUserModal.selectedRole}
+                    onRoleChange={createPlatformUserModal.setSelectedRole}
+                    touched={createPlatformUserModal.touched}
+                    isCreating={createPlatformUserModal.isCreating}
+                    onConfirm={createPlatformUserModal.handleCreate}
+                    onClose={createPlatformUserModal.close}
                 />
             )}
 
