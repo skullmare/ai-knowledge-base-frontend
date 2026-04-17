@@ -1,0 +1,20 @@
+@media (max-width: 512px) {
+    .users-page__grid {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 720px) {
+    .users-page__toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .users-page__controls {
+        flex-wrap: wrap;
+    }
+
+    .users-page__group {
+        width: 100%;
+    }
+}

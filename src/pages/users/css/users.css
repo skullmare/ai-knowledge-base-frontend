@@ -1,0 +1,13 @@
+/* Topics.css — точка входа, подключает все части */
+
+@import url('./users-toolbar.css');
+@import url('./users-navbar.css');
+@import url('./users-responsive.css');
+@import url('./users-table.css');
+
+/* ── Корневой контейнер страницы ── */
+.topics-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
