@@ -1,0 +1,84 @@
+/* users-grid.css — сетка, группы и список топиков */
+
+.users-page__title {
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl);
+    font-weight: var(--font-semibold);
+    color: var(--color-white);
+}
+
+.users-page__meta {
+    font-size: var(--text-sm);
+    color: var(--color-gray-200);
+}
+
+/* ── Grid ── */
+
+.users-page__grid {
+    columns: 3;
+    column-width: 280px;
+    column-gap: var(--spacing-xl);
+}
+
+.users-page__group {
+    break-inside: avoid;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.users-page__group-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.users-page__group-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-medium);
+    color: var(--color-white);
+}
+
+.users-page__group-edit-btn {
+    width: 15px;
+    height: 15px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-gray-200);
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.users-page__group-edit-btn:hover {
+    color: var(--color-gold-200);
+}
+
+/* ── List & items ── */
+
+.users-page__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.users-page__item {
+    font-size: var(--text-base);
+    color: var(--color-gold-200);
+    transition: all var(--transition-fast);
+}
+
+.users-page__item a:hover {
+    color: var(--color-gold-100);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.users-page__item-link {
+    color: currentColor;
+}

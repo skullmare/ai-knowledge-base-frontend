@@ -45,6 +45,7 @@ export function CreatePlatformRoleModal({
             <Multiselect
                 options={permissionOptions}
                 value={selectedPermissions}
+                size="large"
                 onChange={onPermissionsChange}
                 placeholder={isLoadingPermissions ? 'Загрузка прав...' : 'Выберите права доступа'}
                 label="Права доступа"

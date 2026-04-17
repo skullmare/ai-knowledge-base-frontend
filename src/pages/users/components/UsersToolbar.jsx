@@ -10,9 +10,11 @@ export function UsersToolbar({
     onCreateAgentRole,
 }) {
     const isPlatform = activeSection === 'platform'
+    console.log(activeSection)
 
     return (
         <div className="users-page__toolbar">
+            <h1 className="users-page__title">Управление пользователями</h1>
             <div className="users-page__controls">
                 <div className="users-page__controls-search">
                     <Input
