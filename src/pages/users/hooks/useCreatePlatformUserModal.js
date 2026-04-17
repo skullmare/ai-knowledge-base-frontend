@@ -9,7 +9,6 @@ export function useCreatePlatformUserModal() {
     const [lastName, setLastName] = useState('')
     const [login, setLogin] = useState('')
     const [email, setEmail] = useState('')
-    const [photoUrl, setPhotoUrl] = useState('')
     const [selectedRole, setSelectedRole] = useState(null)
     const [isCreating, setIsCreating] = useState(false)
     const [touched, setTouched] = useState({
@@ -28,7 +27,6 @@ export function useCreatePlatformUserModal() {
         setLastName('')
         setLogin('')
         setEmail('')
-        setPhotoUrl('')
         setSelectedRole(null)
         setTouched({ firstName: false, lastName: false, login: false, email: false, role: false })
     }
@@ -44,7 +42,6 @@ export function useCreatePlatformUserModal() {
                 lastName: lastName.trim(),
                 login: login.trim(),
                 email: email.trim(),
-                ...(photoUrl.trim() && { photoUrl: photoUrl.trim() }),
                 role: selectedRole,
             })
             close()
@@ -59,7 +56,6 @@ export function useCreatePlatformUserModal() {
         lastName, setLastName,
         login, setLogin,
         email, setEmail,
-        photoUrl, setPhotoUrl,
         selectedRole, setSelectedRole,
         isCreating,
         touched,

@@ -14,6 +14,8 @@ import { EditPlatformUserModal } from './components/EditPlatformUserModal'
 import { EditAgentUserModal } from './components/EditAgentUserModal'
 import { CreatePlatformRoleModal } from './components/CreatePlatformRoleModal'
 import { CreateAgentRoleModal } from './components/CreateAgentRoleModal'
+import { EditPlatformRoleModal } from './components/EditPlatformRoleModal'
+import { EditAgentRoleModal } from './components/EditAgentRoleModal'
 import { CreatePlatformUserModal } from './components/CreatePlatformUserModal'
 import { useUsersData } from './hooks/useUsersData'
 import { useUsersFilters } from './hooks/useUsersFilters'
@@ -22,8 +24,17 @@ import { useEditAgentUserModal } from './hooks/useEditAgentUserModal'
 import { useDeleteUserModal } from './hooks/useDeleteUserModal'
 import { useCreatePlatformRoleModal } from './hooks/useCreatePlatformRoleModal'
 import { useCreateAgentRoleModal } from './hooks/useCreateAgentRoleModal'
+import { useEditPlatformRoleModal } from './hooks/useEditPlatformRoleModal'
+import { useEditAgentRoleModal } from './hooks/useEditAgentRoleModal'
+import { useDeleteRoleModal } from './hooks/useDeleteRoleModal'
 import { useCreatePlatformUserModal } from './hooks/useCreatePlatformUserModal'
-import { NAV_LINKS, getPlatformUserColumns, getAgentUserColumns } from './Users.constants'
+import {
+    NAV_LINKS,
+    getPlatformUserColumns,
+    getAgentUserColumns,
+    getPlatformRoleColumns,
+    getAgentRoleColumns,
+} from './Users.constants'
 import './css/users.css'
 
 export default function UsersPage() {
@@ -46,6 +57,8 @@ export default function UsersPage() {
         fetchPlatformUsers, platformRoleOptions, buildPlatformParams,
         agentUsers, agentPagination, updateAgentUser, deleteAgentUser,
         fetchAgentUsers, agentRoleOptions, buildAgentParams,
+        platformRoles, deletePlatformRole,
+        agentRoles, deleteAgentRole,
     } = useUsersData({ activeSection, debouncedSearch })
 
     const editPlatformModal = useEditPlatformUserModal(updatePlatformUser)
@@ -58,6 +71,11 @@ export default function UsersPage() {
     const createAgentRoleModal = useCreateAgentRoleModal()
     const createPlatformUserModal = useCreatePlatformUserModal()
 
+    const editPlatformRoleModal = useEditPlatformRoleModal()
+    const editAgentRoleModal = useEditAgentRoleModal()
+    const deletePlatformRoleHook = useDeleteRoleModal(deletePlatformRole)
+    const deleteAgentRoleHook = useDeleteRoleModal(deleteAgentRole)
+
     const platformColumns = getPlatformUserColumns({
         onEdit: editPlatformModal.open,
         onDelete: deletePlatformHook.openModal,
@@ -68,7 +86,15 @@ export default function UsersPage() {
         onDelete: deleteAgentHook.openModal,
     })
 
-    const isPlatform = activeSection === 'platform'
+    const platformRoleColumns = getPlatformRoleColumns({
+        onEdit: editPlatformRoleModal.open,
+        onDelete: deletePlatformRoleHook.openModal,
+    })
+
+    const agentRoleColumns = getAgentRoleColumns({
+        onEdit: editAgentRoleModal.open,
+        onDelete: deleteAgentRoleHook.openModal,
+    })
 
     return (
         <Layout
@@ -100,7 +126,7 @@ export default function UsersPage() {
                     onCreateAgentRole={createAgentRoleModal.open}
                 />
 
-                {isPlatform ? (
+                {activeSection === 'platform' && (
                     <Protected permission="platformUsers.read" mode="some">
                         <Table
                             columns={platformColumns}
@@ -112,7 +138,9 @@ export default function UsersPage() {
                             onLimitChange={(l) => fetchPlatformUsers(buildPlatformParams({ page: 1, limit: l }))}
                         />
                     </Protected>
-                ) : (
+                )}
+
+                {activeSection === 'agent' && (
                     <Protected permission="agentUsers.read" mode="some">
                         <Table
                             columns={agentColumns}
@@ -122,6 +150,24 @@ export default function UsersPage() {
                             total={agentPagination.total}
                             onPageChange={(p) => fetchAgentUsers(buildAgentParams({ page: p }))}
                             onLimitChange={(l) => fetchAgentUsers(buildAgentParams({ page: 1, limit: l }))}
+                        />
+                    </Protected>
+                )}
+
+                {activeSection === 'platformRoles' && (
+                    <Protected permission="platformRoles.read" mode="some">
+                        <Table
+                            columns={platformRoleColumns}
+                            data={platformRoles}
+                        />
+                    </Protected>
+                )}
+
+                {activeSection === 'agentRoles' && (
+                    <Protected permission="agentRoles.read" mode="some">
+                        <Table
+                            columns={agentRoleColumns}
+                            data={agentRoles}
                         />
                     </Protected>
                 )}
@@ -139,6 +185,8 @@ export default function UsersPage() {
                     onEmailChange={editPlatformModal.setEmail}
                     photoUrl={editPlatformModal.photoUrl}
                     onPhotoUrlChange={editPlatformModal.setPhotoUrl}
+                    onPhotoUpload={editPlatformModal.handlePhotoUpload}
+                    isUploadingPhoto={editPlatformModal.isUploadingPhoto}
                     roleOptions={platformRoleOptions}
                     selectedRole={editPlatformModal.selectedRole}
                     onRoleChange={editPlatformModal.setSelectedRole}
@@ -191,6 +239,36 @@ export default function UsersPage() {
                 />
             )}
 
+            {editPlatformRoleModal.isOpen && (
+                <EditPlatformRoleModal
+                    name={editPlatformRoleModal.name}
+                    onNameChange={editPlatformRoleModal.setName}
+                    description={editPlatformRoleModal.description}
+                    onDescriptionChange={editPlatformRoleModal.setDescription}
+                    permissionOptions={editPlatformRoleModal.permissionOptions}
+                    selectedPermissions={editPlatformRoleModal.selectedPermissions}
+                    onPermissionsChange={editPlatformRoleModal.setSelectedPermissions}
+                    isLoadingPermissions={editPlatformRoleModal.isLoadingPermissions}
+                    touched={editPlatformRoleModal.touched}
+                    isSaving={editPlatformRoleModal.isSaving}
+                    onConfirm={editPlatformRoleModal.handleSave}
+                    onClose={editPlatformRoleModal.close}
+                />
+            )}
+
+            {editAgentRoleModal.isOpen && (
+                <EditAgentRoleModal
+                    name={editAgentRoleModal.name}
+                    onNameChange={editAgentRoleModal.setName}
+                    description={editAgentRoleModal.description}
+                    onDescriptionChange={editAgentRoleModal.setDescription}
+                    touched={editAgentRoleModal.touched}
+                    isSaving={editAgentRoleModal.isSaving}
+                    onConfirm={editAgentRoleModal.handleSave}
+                    onClose={editAgentRoleModal.close}
+                />
+            )}
+
             {createPlatformUserModal.isOpen && (
                 <CreatePlatformUserModal
                     firstName={createPlatformUserModal.firstName}
@@ -201,8 +279,6 @@ export default function UsersPage() {
                     onLoginChange={createPlatformUserModal.setLogin}
                     email={createPlatformUserModal.email}
                     onEmailChange={createPlatformUserModal.setEmail}
-                    photoUrl={createPlatformUserModal.photoUrl}
-                    onPhotoUrlChange={createPlatformUserModal.setPhotoUrl}
                     roleOptions={platformRoleOptions}
                     selectedRole={createPlatformUserModal.selectedRole}
                     onRoleChange={createPlatformUserModal.setSelectedRole}
@@ -244,6 +320,28 @@ export default function UsersPage() {
                 isLoading={deleteAgentHook.isLoading}
                 onConfirm={deleteAgentHook.handleDelete}
                 onClose={deleteAgentHook.closeModal}
+            />
+
+            <ConfirmModal
+                isOpen={deletePlatformRoleHook.isModalOpen}
+                type="danger"
+                title="Удаление роли"
+                confirmLabel="Удалить"
+                message={`Вы уверены, что хотите удалить роль "${deletePlatformRoleHook.role?.name}"?`}
+                isLoading={deletePlatformRoleHook.isLoading}
+                onConfirm={deletePlatformRoleHook.handleDelete}
+                onClose={deletePlatformRoleHook.closeModal}
+            />
+
+            <ConfirmModal
+                isOpen={deleteAgentRoleHook.isModalOpen}
+                type="danger"
+                title="Удаление роли агента"
+                confirmLabel="Удалить"
+                message={`Вы уверены, что хотите удалить роль "${deleteAgentRoleHook.role?.name}"?`}
+                isLoading={deleteAgentRoleHook.isLoading}
+                onConfirm={deleteAgentRoleHook.handleDelete}
+                onClose={deleteAgentRoleHook.closeModal}
             />
         </Layout>
     )

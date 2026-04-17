@@ -7,7 +7,6 @@ export function CreatePlatformUserModal({
     lastName, onLastNameChange,
     login, onLoginChange,
     email, onEmailChange,
-    photoUrl, onPhotoUrlChange,
     roleOptions, selectedRole, onRoleChange,
     touched, isCreating, onConfirm, onClose,
 }) {
@@ -66,15 +65,6 @@ export function CreatePlatformUserModal({
                 error={touched.email && !email.trim() ? 'Поле обязательно для заполнения' : undefined}
                 value={email}
                 onChange={(e) => onEmailChange(e.target.value)}
-            />
-            <Input
-                variant="default"
-                size="large"
-                placeholder="Ссылка на фото"
-                showClearButton
-                label="Фото (URL)"
-                value={photoUrl}
-                onChange={(e) => onPhotoUrlChange(e.target.value)}
             />
             <Dropdown
                 options={roleOptions}

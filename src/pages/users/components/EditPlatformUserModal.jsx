@@ -1,6 +1,8 @@
+import { useRef } from 'react'
 import Modal from '@layout/Modal/Modal'
 import Input from '@ui/Input/Input'
 import Dropdown from '@ui/Dropdown/Dropdown'
+import './EditPlatformUserModal.css'
 
 export function EditPlatformUserModal({
     firstName, onFirstNameChange,
@@ -8,9 +10,12 @@ export function EditPlatformUserModal({
     login, onLoginChange,
     email, onEmailChange,
     photoUrl, onPhotoUrlChange,
+    onPhotoUpload, isUploadingPhoto,
     roleOptions, selectedRole, onRoleChange,
     touched, isSaving, onConfirm, onClose,
 }) {
+    const fileInputRef = useRef(null)
+
     const isValid =
         firstName.trim() && lastName.trim() && login.trim() && email.trim() && selectedRole
 
@@ -20,9 +25,53 @@ export function EditPlatformUserModal({
             onClose={onClose}
             onConfirm={onConfirm}
             confirmLabel="Сохранить"
-            confirmDisabled={!isValid || isSaving}
+            confirmDisabled={!isValid || isSaving || isUploadingPhoto}
             isLoading={isSaving}
         >
+            <div className="edit-platform-user-modal__avatar-section">
+                <div className="edit-platform-user-modal__avatar-preview">
+                    {photoUrl ? (
+                        <img
+                            className="edit-platform-user-modal__avatar-img"
+                            src={photoUrl}
+                            alt="Аватар"
+                        />
+                    ) : (
+                        <span className="edit-platform-user-modal__avatar-placeholder" />
+                    )}
+                </div>
+                <div className="edit-platform-user-modal__avatar-actions">
+                    <button
+                        type="button"
+                        className="edit-platform-user-modal__avatar-btn"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploadingPhoto}
+                    >
+                        {isUploadingPhoto ? 'Загрузка...' : 'Загрузить фото'}
+                    </button>
+                    {photoUrl && (
+                        <button
+                            type="button"
+                            className="edit-platform-user-modal__avatar-btn edit-platform-user-modal__avatar-btn--remove"
+                            onClick={() => onPhotoUrlChange('')}
+                            disabled={isUploadingPhoto}
+                        >
+                            Удалить фото
+                        </button>
+                    )}
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file) onPhotoUpload(file)
+                            e.target.value = ''
+                        }}
+                    />
+                </div>
+            </div>
             <Input
                 variant="default"
                 size="large"
@@ -66,15 +115,6 @@ export function EditPlatformUserModal({
                 error={touched.email && !email.trim() ? 'Поле обязательно для заполнения' : undefined}
                 value={email}
                 onChange={(e) => onEmailChange(e.target.value)}
-            />
-            <Input
-                variant="default"
-                size="large"
-                placeholder="Ссылка на фото"
-                showClearButton
-                label="Фото (URL)"
-                value={photoUrl}
-                onChange={(e) => onPhotoUrlChange(e.target.value)}
             />
             <Dropdown
                 options={roleOptions}
