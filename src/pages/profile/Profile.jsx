@@ -53,6 +53,7 @@ export default function ProfilePage() {
                     onLogout={openLogoutModal}
                     userLogin={profile.login ?? profile.email}
                     userRole={profile.role?.name ?? 'Role'}
+                    logo={true}
                 />
             }
         >
@@ -72,10 +73,10 @@ export default function ProfilePage() {
                         )}
                     </div>
                     <div className="profile-page__card-actions">
-                        <Button variant="secondary" onClick={() => editModal.open(profile)}>
+                        <Button size="interface" variant="secondary" onClick={() => editModal.open(profile)}>
                             Редактировать
                         </Button>
-                        <Button variant="primary" onClick={pwdModal.open}>
+                        <Button size="interface" variant="secondary" onClick={pwdModal.open}>
                             Сменить пароль
                         </Button>
                     </div>

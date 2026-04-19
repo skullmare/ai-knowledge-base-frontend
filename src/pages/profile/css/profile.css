@@ -3,7 +3,7 @@
 .profile-page {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
 }
 
 /* ── Top card ── */
@@ -39,7 +39,6 @@
 
 .profile-page__identity {
     flex: 1;
-    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
@@ -67,6 +66,7 @@
     display: flex;
     gap: var(--spacing-sm);
     flex-shrink: 0;
+    min-width: 300px;
 }
 
 /* ── Body grid ── */
@@ -74,7 +74,7 @@
 .profile-page__body {
     display: grid;
     grid-template-columns: 280px 1fr;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
     align-items: start;
 }
 
@@ -163,8 +163,6 @@
     font-weight: var(--font-semibold);
     color: var(--color-gold-100);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    line-height: var(--leading-none);
     margin-bottom: var(--spacing-xs);
 }
 
@@ -179,21 +177,14 @@
 
 .profile-page__perm-item {
     position: relative;
-    padding-left: var(--spacing-sm);
     font-size: var(--text-sm);
     color: var(--color-gray-100);
     line-height: var(--leading-normal);
+    list-style: none;
 }
 
 .profile-page__perm-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.55em;
-    width: 4px;
-    height: 4px;
-    border-radius: var(--radius-full);
-    background: var(--color-gray-200);
+    display: none;
 }
 
 /* ── Responsive ── */

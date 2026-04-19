@@ -7,7 +7,7 @@ export const profileService = {
   },
 
   updateProfile: async (payload) => {
-    const { data } = await api.patch('/profile', payload);
+    const { data } = await api.patch('/profile/update', payload);
     return data;
   }
 };
