@@ -3,28 +3,26 @@
     align-items: center;
     gap: var(--spacing-md);
     padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid var(--color-gray-700);
-}
-
-.edit-platform-user-modal__avatar-preview {
-    flex-shrink: 0;
+    border-bottom: 1px solid var(--color-gray-500);
 }
 
 .edit-platform-user-modal__avatar-img {
     width: 64px;
     height: 64px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     object-fit: cover;
-    border: 2px solid var(--color-gray-600);
+    border: 2px solid var(--color-gray-500);
+    flex-shrink: 0;
 }
 
 .edit-platform-user-modal__avatar-placeholder {
     display: block;
     width: 64px;
     height: 64px;
-    border-radius: 50%;
-    background-color: var(--color-gray-700);
-    border: 2px solid var(--color-gray-600);
+    border-radius: var(--radius-full);
+    background: var(--color-gray-400);
+    border: 2px solid var(--color-gray-500);
+    flex-shrink: 0;
 }
 
 .edit-platform-user-modal__avatar-actions {
@@ -37,14 +35,14 @@
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
-    padding: 6px 12px;
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-sm);
-    border: 1px solid var(--color-gray-500);
+    border: 1px solid var(--color-gray-400);
     background: transparent;
     color: var(--color-gray-200);
-    font-size: var(--font-size-sm);
+    font-size: var(--text-sm);
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
 .edit-platform-user-modal__avatar-btn:hover:not(:disabled) {
@@ -57,6 +55,7 @@
     cursor: not-allowed;
 }
 
+/* rgba = --color-red (#C41F1F) */
 .edit-platform-user-modal__avatar-btn--remove {
     border-color: var(--color-red);
     color: var(--color-red);

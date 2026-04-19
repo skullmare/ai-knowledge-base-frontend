@@ -6,11 +6,10 @@
     background: var(--color-gray-600);
     border: 1px solid var(--color-gray-500);
     border-radius: var(--radius-lg);
-    transition: border-color var(--transition-base), background var(--transition-base);
     cursor: default;
-    /* Важно: фиксируем высоту карточки */
     height: 100%;
-    min-height: 0; /* Позволяет flex-контейнеру сжиматься */
+    min-height: 0;
+    transition: border-color var(--transition-base), background var(--transition-base);
 }
 
 .role-card:hover {
@@ -23,17 +22,16 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--spacing-sm);
-    /* Заголовок не сжимается */
     flex-shrink: 0;
 }
 
 .role-card__name {
+    flex: 1;
+    min-width: 0;
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     color: var(--color-white);
     line-height: var(--leading-tight);
-    flex: 1;
-    min-width: 0;
     word-break: break-word;
 }
 
@@ -68,18 +66,17 @@
     color: var(--color-gold-200);
 }
 
+/* rgba = --color-red (#C41F1F) при 15% прозрачности */
 .role-card__action-btn--delete:hover {
     color: var(--color-red);
 }
 
-/* Обертка для описания с прокруткой */
 .role-card__description-wrapper {
-    flex: 1 1 auto; /* Занимает доступное пространство */
-    max-height: 100px;  /* Важно для корректной работы прокрутки */
-    overflow-y: auto; /* Добавляем прокрутку при необходимости */
+    flex: 1 1 auto;
+    max-height: 100px;
+    overflow-y: auto;
 }
 
-/* Стили для скроллбара (опционально, но улучшит внешний вид) */
 .role-card__description-wrapper::-webkit-scrollbar {
     width: 4px;
 }
@@ -95,17 +92,16 @@
 }
 
 .role-card__description {
+    margin: 0;
     font-size: var(--text-sm);
     color: var(--color-gray-200);
     line-height: var(--leading-normal);
-    margin: 0;
     word-break: break-word;
 }
 
-/* Футер всегда прижат к низу */
 .role-card__footer {
-    flex-shrink: 0; /* Футер не сжимается */
-    margin-top: 0; /* Убираем margin-top, используем gap из .role-card */
+    flex-shrink: 0;
+    margin-top: 0;
     padding-top: var(--spacing-sm);
     border-top: 1px solid var(--color-gray-500);
 }
@@ -113,7 +109,7 @@
 .role-card__permissions-badge {
     display: inline-flex;
     align-items: center;
-    padding: 2px var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-full);
     background: var(--color-gray-400);
     color: var(--color-gray-100);

@@ -29,17 +29,15 @@ export function EditPlatformUserModal({
             isLoading={isSaving}
         >
             <div className="edit-platform-user-modal__avatar-section">
-                <div className="edit-platform-user-modal__avatar-preview">
-                    {photoUrl ? (
-                        <img
-                            className="edit-platform-user-modal__avatar-img"
-                            src={photoUrl}
-                            alt="Аватар"
-                        />
-                    ) : (
-                        <span className="edit-platform-user-modal__avatar-placeholder" />
-                    )}
-                </div>
+                {photoUrl ? (
+                    <img
+                        className="edit-platform-user-modal__avatar-img"
+                        src={photoUrl}
+                        alt="Аватар"
+                    />
+                ) : (
+                    <span className="edit-platform-user-modal__avatar-placeholder" />
+                )}
                 <div className="edit-platform-user-modal__avatar-actions">
                     <button
                         type="button"
