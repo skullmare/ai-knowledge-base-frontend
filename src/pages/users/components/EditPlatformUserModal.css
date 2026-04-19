@@ -55,8 +55,13 @@
     cursor: not-allowed;
 }
 
-/* rgba = --color-red (#C41F1F) */
 .edit-platform-user-modal__avatar-btn--remove {
     border-color: var(--color-red);
     color: var(--color-red);
 }
+
+.edit-platform-user-modal__avatar-btn--remove:hover:not(:disabled) {
+    border-color: var(--color-red);
+    color: var(--color-red);
+}
+

@@ -2,7 +2,7 @@ import { useNavbar } from '@layout/Navbar/Navbar'
 
 const NAVBAR_GROUPS = [
     {
-        label: 'СОТРУДНИКИ',
+        label: 'АДМИНКА',
         items: [
             { id: 'platform', label: 'Пользователи' },
             { id: 'platformRoles', label: 'Роли' },

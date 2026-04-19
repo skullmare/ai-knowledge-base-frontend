@@ -40,7 +40,7 @@ export function RoleCard({
             </div>
 
             {role.description && (
-                <div class="role-card__description-wrapper"><p className="role-card__description">{role.description}</p></div>
+                <div className="role-card__description-wrapper"><p className="role-card__description">{role.description}</p></div>
             )}
 
             {permissionCount !== undefined && (

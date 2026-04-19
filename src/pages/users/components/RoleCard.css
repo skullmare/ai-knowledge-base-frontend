@@ -77,20 +77,6 @@
     overflow-y: auto;
 }
 
-.role-card__description-wrapper::-webkit-scrollbar {
-    width: 4px;
-}
-
-.role-card__description-wrapper::-webkit-scrollbar-track {
-    background: var(--color-gray-500);
-    border-radius: var(--radius-full);
-}
-
-.role-card__description-wrapper::-webkit-scrollbar-thumb {
-    background: var(--color-gold-300);
-    border-radius: var(--radius-full);
-}
-
 .role-card__description {
     margin: 0;
     font-size: var(--text-sm);
