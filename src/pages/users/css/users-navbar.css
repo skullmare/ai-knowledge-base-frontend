@@ -1,5 +1,11 @@
 /* users-navbar.css — боковая навигация */
 
+.users-page__navbar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
 .users-page__navbar__label {
     padding: 0 var(--spacing-md);
     font-size: var(--text-xs);
@@ -24,7 +30,6 @@
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
     border: none;
@@ -35,68 +40,13 @@
     line-height: var(--leading-normal);
     text-align: left;
     cursor: pointer;
-    transition: all var(--transition-base) ease;
-    gap: var(--spacing-sm);
+    transition: background var(--transition-base), color var(--transition-base);
 }
 
-/* Контейнер для текста */
 .users-page__navbar__item-label {
     flex: 1;
-    text-align: left;
 }
 
-/* Контейнер для кнопок действий */
-.users-page__navbar__item-actions {
-    display: flex;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--transition-base) ease, visibility var(--transition-base) ease;
-    flex-shrink: 0;
-}
-
-/* Показываем кнопки при наведении на весь пункт */
-.users-page__navbar__item:hover .users-page__navbar__item-actions {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Стили кнопок редактирования/удаления */
-.users-page__navbar__item-edit-btn,
-.users-page__navbar__item-delete-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all var(--transition-base) ease;
-    flex-shrink: 0;
-}
-
-.users-page__navbar__item-edit-btn svg {
-    width: 15px;
-    height: 15px;
-    color: var(--color-gray-200);
-}
-
-.users-page__navbar__item-delete-btn svg {
-    width: 15px;
-    height: 15px;
-    color: var(--color-gray-200);
-}
-.users-page__navbar__item-edit-btn:hover svg {
-    color: var(--color-gold-200);
-}
-
-.users-page__navbar__item-delete-btn:hover svg {
-    color: var(--color-gold-200);
-}
-
-/* Ховер и активное состояние для основного элемента */
 .users-page__navbar__item:hover,
 .users-page__navbar__item--active {
     background: var(--color-gray-700);
@@ -105,9 +55,4 @@
 
 .users-page__navbar__item--active {
     font-weight: var(--font-medium);
-}
-
-.users-page__navbar__item--active .users-page__navbar__item-actions {
-    opacity: 1;
-    visibility: visible;
 }

@@ -1,6 +1,5 @@
-/* users-table.css - с использованием глобальных переменных */
+/* users-table.css — стили ячеек таблицы */
 
-/* Статус */
 .users-page__table-status {
     display: flex;
     align-items: center;
@@ -14,17 +13,16 @@
     flex-shrink: 0;
 }
 
-.users-page__table-status__dot--approved { background: var(--color-green); }
-.users-page__table-status__dot--review   { background: var(--color-gold-100); }
-.users-page__table-status__dot--archived { background: var(--color-gray-200); }
+.users-page__table-status__dot--active   { background: var(--color-green); }
+.users-page__table-status__dot--blocked  { background: var(--color-red); }
+.users-page__table-status__dot--pending  { background: var(--color-gold-100); }
 
-/* Автор */
 .users-page__table-author {
     display: flex;
     align-items: center;
+    gap: var(--spacing-sm);
     color: var(--color-gray-100);
     font-size: var(--text-sm);
-    gap: var(--spacing-sm);
 }
 
 .users-page__table-author__avatar {
@@ -37,90 +35,6 @@
 
 .users-page__table-author__avatar--placeholder {
     background: var(--color-gray-400);
-}
-
-/* Кликабельное название топика */
-.users-page__table-name-link {
-    color: var(--color-white);
-    font-size: var(--text-sm);
-    text-decoration: none;
-    font-weight: var(--font-medium);
-    transition: color var(--transition-fast);
-}
-
-.users-page__table-name-link:hover {
-    color: var(--color-gold-100);
-}
-
-/* Теги ролей */
-.users-page__table-roles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-}
-
-.users-page__table-role-tag {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px var(--spacing-sm);
-    border-radius: var(--radius-full);
-    font-size: var(--text-xs);
-    font-weight: var(--font-medium);
-    background-color: var(--color-gray-500);
-    color: var(--color-gold-100);
-    white-space: nowrap;
-}
-
-/* Кнопки действий */
-.users-page__table-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    justify-content: flex-end;
-}
-
-.users-page__table-actions__btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: var(--radius-md);
-    background: transparent;
-    cursor: pointer;
-    color: var(--color-gray-100);
-    transition: background-color var(--transition-fast), color var(--transition-fast);
-}
-
-.users-page__table-actions__btn:hover {
-    background-color: var(--color-gray-400);
-}
-
-.users-page__table-actions__btn--approve {
-    background-color: var(--color-gray-500);
-    color: var(--color-green);
-}
-
-.users-page__table-actions__btn--delete {
-    background-color: var(--color-gray-500);
-    color: var(--color-red);
-}
-
-.users-page__table-actions__btn--archive {
-    background-color: var(--color-gray-500);
-    color: var(--color-gray-100);
-}
-
-/* ── Actions dropdown (users-specific variants) ── */
-
-.dropdown-actions__item--approve {
-    color: var(--color-green);
-}
-
-.dropdown-actions__item--approve:hover {
-    background-color: var(--color-gray-600);
-    color: var(--color-green);
 }
 
 .dropdown-actions__item--delete {

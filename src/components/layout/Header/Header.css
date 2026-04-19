@@ -10,14 +10,25 @@
 }
 
 /* ── Desktop nav ──────────────────────────────────────────────────────── */
+.header-component .nav-block {
+  display: flex;
+  align-items: center;
+}
+
+.header-component .nav-block .logo{
+  display: flex;
+  align-items: center;
+  width: 260px;
+}
+
 .header-component nav {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xl);
 }
 
 .header-component nav .nav-link {
   font-size: var(--text-sm);
+  padding-right: var(--spacing-md);
   font-weight: var(--font-medium);
   color: var(--color-gray-100);
   white-space: nowrap;

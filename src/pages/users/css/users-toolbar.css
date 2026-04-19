@@ -1,4 +1,11 @@
-/* users-toolbar.css — панель инструментов и элементы управления */
+/* users-toolbar.css — заголовок и панель инструментов */
+
+.users-page__title {
+    font-size: var(--text-2xl);
+    line-height: var(--leading-tight);
+    font-weight: var(--font-semibold);
+    color: var(--color-white);
+}
 
 .users-page__toolbar {
     display: flex;
@@ -12,10 +19,6 @@
     gap: var(--spacing-sm);
 }
 
-.users-page__controls-filter {
-    flex: 1;
-}
-
 .users-page__controls-search {
     flex: 7;
     min-width: 200px;
@@ -24,31 +27,5 @@
 .users-page__controls-btn {
     flex: 2;
     min-width: 200px;
-}
-
-.users-page__controls-btn-mode-container {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    gap: var(--spacing-sm);
-    align-items: center;
-    justify-content: center;
-}
-
-.users-page__controls-btn-mode {
-    width: 20px;
-    height: 20px;
-    background-color: transparent;
-    border: none;
-    color: var(--color-gray-200);
-    transition: all var(--transition-fast);
-}
-
-.users-page__controls-btn-mode:hover {
-    color: var(--color-gold-200);
-    cursor: pointer;
-}
-
-.users-page__controls-btn-mode--active {
-    color: var(--color-gold-200);
+    max-width: 200px;
 }

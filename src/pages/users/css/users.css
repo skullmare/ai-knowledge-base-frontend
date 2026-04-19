@@ -1,12 +1,11 @@
-/* Topics.css — точка входа, подключает все части */
+/* users.css — точка входа */
 
 @import url('./users-toolbar.css');
 @import url('./users-navbar.css');
-@import url('./users-responsive.css');
 @import url('./users-table.css');
+@import url('./users-responsive.css');
 
-/* ── Корневой контейнер страницы ── */
-.topics-page {
+.users-page {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);

@@ -24,10 +24,16 @@ export function useUsersData({ activeSection, debouncedSearch }) {
     // Platform roles
     const fetchPlatformRoles = usePlatformRoleStore((s) => s.fetchRoles)
     const platformRoles = usePlatformRoleStore((s) => s.roles)
+    const updatePlatformRole = usePlatformRoleStore((s) => s.updateRole)
+    const deletePlatformRole = usePlatformRoleStore((s) => s.deleteRole)
+    const isLoadingPlatformRoles = usePlatformRoleStore((s) => s.isLoadingFetchRoles)
 
     // Agent roles
     const fetchAgentRoles = useAgentRoleStore((s) => s.fetchRoles)
     const agentRoles = useAgentRoleStore((s) => s.roles)
+    const updateAgentRole = useAgentRoleStore((s) => s.updateRole)
+    const deleteAgentRole = useAgentRoleStore((s) => s.deleteRole)
+    const isLoadingAgentRoles = useAgentRoleStore((s) => s.isLoadingFetchRoles)
 
     useEffect(() => {
         fetchPlatformRoles()
@@ -40,7 +46,7 @@ export function useUsersData({ activeSection, debouncedSearch }) {
 
         if (activeSection === 'platform') {
             fetchPlatformUsers(params)
-        } else {
+        } else if (activeSection === 'agent') {
             fetchAgentUsers(params)
         }
     }, [activeSection, debouncedSearch, fetchPlatformUsers, fetchAgentUsers])
@@ -68,7 +74,7 @@ export function useUsersData({ activeSection, debouncedSearch }) {
     })
 
     return {
-        // Platform
+        // Platform users
         platformUsers,
         platformPagination,
         updatePlatformUser,
@@ -78,7 +84,7 @@ export function useUsersData({ activeSection, debouncedSearch }) {
         platformRoleOptions,
         buildPlatformParams,
 
-        // Agent
+        // Agent users
         agentUsers,
         agentPagination,
         updateAgentUser,
@@ -87,5 +93,17 @@ export function useUsersData({ activeSection, debouncedSearch }) {
         isLoadingAgentUsers,
         agentRoleOptions,
         buildAgentParams,
+
+        // Platform roles
+        platformRoles,
+        updatePlatformRole,
+        deletePlatformRole,
+        isLoadingPlatformRoles,
+
+        // Agent roles
+        agentRoles,
+        updateAgentRole,
+        deleteAgentRole,
+        isLoadingAgentRoles,
     }
 }

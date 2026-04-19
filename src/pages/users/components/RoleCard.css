@@ -1,0 +1,105 @@
+.role-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--color-gray-600);
+    border: 1px solid var(--color-gray-500);
+    border-radius: var(--radius-lg);
+    cursor: default;
+    height: 100%;
+    min-height: 0;
+    transition: border-color var(--transition-base), background var(--transition-base);
+}
+
+.role-card:hover {
+    border-color: var(--color-gold-300);
+    background: var(--color-gray-700);
+}
+
+.role-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+.role-card__name {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--color-white);
+    line-height: var(--leading-tight);
+    word-break: break-word;
+}
+
+.role-card__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.role-card:hover .role-card__actions {
+    opacity: 1;
+}
+
+.role-card__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-gray-200);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.role-card__action-btn:hover {
+    color: var(--color-gold-200);
+}
+
+/* rgba = --color-red (#C41F1F) при 15% прозрачности */
+.role-card__action-btn--delete:hover {
+    color: var(--color-red);
+}
+
+.role-card__description-wrapper {
+    flex: 1 1 auto;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.role-card__description {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-gray-200);
+    line-height: var(--leading-normal);
+    word-break: break-word;
+}
+
+.role-card__footer {
+    flex-shrink: 0;
+    margin-top: 0;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-gray-500);
+}
+
+.role-card__permissions-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    background: var(--color-gray-400);
+    color: var(--color-gray-100);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    letter-spacing: 0.02em;
+}

@@ -1,8 +1,4 @@
-@media (max-width: 512px) {
-    .users-page__grid {
-        flex-wrap: wrap;
-    }
-}
+/* users-responsive.css — адаптивность */
 
 @media (max-width: 720px) {
     .users-page__toolbar {
@@ -12,9 +8,5 @@
 
     .users-page__controls {
         flex-wrap: wrap;
-    }
-
-    .users-page__group {
-        width: 100%;
     }
 }

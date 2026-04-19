@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react'
-// import { useDebounce } from '@hooks/useDebounce'
 
 export function useUsersFilters() {
     const [activeSection, setActiveSection] = useState('platform')
     const [search, setSearch] = useState('')
-    // const debouncedSearch = useDebounce(search, 400)
+    const [debouncedSearch, setDebouncedSearch] = useState('')
 
-    // Сбрасываем поиск при переключении вкладки
+    useEffect(() => {
+        const timer = setTimeout(() => setDebouncedSearch(search), 400)
+        return () => clearTimeout(timer)
+    }, [search])
+
     useEffect(() => {
         setSearch('')
+        setDebouncedSearch('')
     }, [activeSection])
 
     return {
@@ -16,6 +20,6 @@ export function useUsersFilters() {
         setActiveSection,
         search,
         setSearch,
-        // debouncedSearch,
+        debouncedSearch,
     }
 }

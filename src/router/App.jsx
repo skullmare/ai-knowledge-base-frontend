@@ -4,6 +4,7 @@ import LoginPage from '@pages/login/Login'
 import TopicPage from '@pages/topic/Topic'
 import TopicsPage from '@pages/topics/Topics'
 import UsersPage from '@pages/users/Users'
+import ProfilePage from '@pages/profile/Profile'
 import NotFound from '@pages/NotFound'
 import IndexPage from '@pages/Index'
 import AccessDenied from '@pages/AccessDenied'
@@ -30,6 +31,12 @@ export default function AppRouter() {
                 <Route path="/users" element={
                     <ProtectedRoute permission="users.read">
                         <UsersPage />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/profile" element={
+                    <ProtectedRoute>
+                        <ProfilePage />
                     </ProtectedRoute>
                 } />
 

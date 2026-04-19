@@ -6,16 +6,34 @@ import Navbar from '@layout/Navbar/Navbar'
 import Layout from '@layout/Layout/Layout'
 import Table from '@layout/Table/Table'
 import ConfirmModal from '@layout/Modal/ConfirmModal'
+import Protected from '@guards/Protected'
 import { useLogout } from '@hooks/useLogout'
 import { UsersNavbar } from './components/UsersNavbar'
+import { UsersToolbar } from './components/UsersToolbar'
 import { EditPlatformUserModal } from './components/EditPlatformUserModal'
 import { EditAgentUserModal } from './components/EditAgentUserModal'
+import { CreatePlatformRoleModal } from './components/CreatePlatformRoleModal'
+import { CreateAgentRoleModal } from './components/CreateAgentRoleModal'
+import { EditPlatformRoleModal } from './components/EditPlatformRoleModal'
+import { EditAgentRoleModal } from './components/EditAgentRoleModal'
+import { CreatePlatformUserModal } from './components/CreatePlatformUserModal'
 import { useUsersData } from './hooks/useUsersData'
 import { useUsersFilters } from './hooks/useUsersFilters'
 import { useEditPlatformUserModal } from './hooks/useEditPlatformUserModal'
 import { useEditAgentUserModal } from './hooks/useEditAgentUserModal'
 import { useDeleteUserModal } from './hooks/useDeleteUserModal'
-import { NAV_LINKS, getPlatformUserColumns, getAgentUserColumns } from './Users.constants'
+import { useCreatePlatformRoleModal } from './hooks/useCreatePlatformRoleModal'
+import { useCreateAgentRoleModal } from './hooks/useCreateAgentRoleModal'
+import { useEditPlatformRoleModal } from './hooks/useEditPlatformRoleModal'
+import { useEditAgentRoleModal } from './hooks/useEditAgentRoleModal'
+import { useDeleteRoleModal } from './hooks/useDeleteRoleModal'
+import { useCreatePlatformUserModal } from './hooks/useCreatePlatformUserModal'
+import { RolesList } from './components/RolesList'
+import {
+    NAV_LINKS,
+    getPlatformUserColumns,
+    getAgentUserColumns,
+} from './Users.constants'
 import './css/users.css'
 
 export default function UsersPage() {
@@ -31,20 +49,31 @@ export default function UsersPage() {
         isLogoutLoading,
     } = useLogout(logout)
 
-    const { activeSection, setActiveSection, search, setSearch } = useUsersFilters()
+    const { activeSection, setActiveSection, search, setSearch, debouncedSearch } = useUsersFilters()
 
     const {
         platformUsers, platformPagination, updatePlatformUser, deletePlatformUser,
         fetchPlatformUsers, platformRoleOptions, buildPlatformParams,
         agentUsers, agentPagination, updateAgentUser, deleteAgentUser,
         fetchAgentUsers, agentRoleOptions, buildAgentParams,
-    } = useUsersData({ activeSection })
+        platformRoles, deletePlatformRole,
+        agentRoles, deleteAgentRole,
+    } = useUsersData({ activeSection, debouncedSearch })
 
     const editPlatformModal = useEditPlatformUserModal(updatePlatformUser)
     const editAgentModal = useEditAgentUserModal(updateAgentUser)
 
     const deletePlatformHook = useDeleteUserModal(deletePlatformUser)
     const deleteAgentHook = useDeleteUserModal(deleteAgentUser)
+
+    const createPlatformRoleModal = useCreatePlatformRoleModal()
+    const createAgentRoleModal = useCreateAgentRoleModal()
+    const createPlatformUserModal = useCreatePlatformUserModal()
+
+    const editPlatformRoleModal = useEditPlatformRoleModal()
+    const editAgentRoleModal = useEditAgentRoleModal()
+    const deletePlatformRoleHook = useDeleteRoleModal(deletePlatformRole)
+    const deleteAgentRoleHook = useDeleteRoleModal(deleteAgentRole)
 
     const platformColumns = getPlatformUserColumns({
         onEdit: editPlatformModal.open,
@@ -55,8 +84,6 @@ export default function UsersPage() {
         onEdit: editAgentModal.open,
         onDelete: deleteAgentHook.openModal,
     })
-
-    const isPlatform = activeSection === 'platform'
 
     return (
         <Layout
@@ -79,28 +106,66 @@ export default function UsersPage() {
             }
         >
             <div className="users-page">
-                {/* UsersToolbar будет добавлен позже, отдельно для каждого типа */}
+                <UsersToolbar
+                    activeSection={activeSection}
+                    search={search}
+                    onSearchChange={setSearch}
+                    onCreatePlatformRole={createPlatformRoleModal.open}
+                    onCreatePlatformUser={createPlatformUserModal.open}
+                    onCreateAgentRole={createAgentRoleModal.open}
+                />
 
-                {isPlatform ? (
-                    <Table
-                        columns={platformColumns}
-                        data={platformUsers}
-                        page={platformPagination.current}
-                        limit={platformPagination.limit}
-                        total={platformPagination.total}
-                        onPageChange={(p) => fetchPlatformUsers(buildPlatformParams({ page: p }))}
-                        onLimitChange={(l) => fetchPlatformUsers(buildPlatformParams({ page: 1, limit: l }))}
-                    />
-                ) : (
-                    <Table
-                        columns={agentColumns}
-                        data={agentUsers}
-                        page={agentPagination.current}
-                        limit={agentPagination.limit}
-                        total={agentPagination.total}
-                        onPageChange={(p) => fetchAgentUsers(buildAgentParams({ page: p }))}
-                        onLimitChange={(l) => fetchAgentUsers(buildAgentParams({ page: 1, limit: l }))}
-                    />
+                {activeSection === 'platform' && (
+                    <Protected permission="platformUsers.read" mode="some">
+                        <Table
+                            columns={platformColumns}
+                            data={platformUsers}
+                            page={platformPagination.current}
+                            limit={platformPagination.limit}
+                            total={platformPagination.total}
+                            onPageChange={(p) => fetchPlatformUsers(buildPlatformParams({ page: p }))}
+                            onLimitChange={(l) => fetchPlatformUsers(buildPlatformParams({ page: 1, limit: l }))}
+                        />
+                    </Protected>
+                )}
+
+                {activeSection === 'agent' && (
+                    <Protected permission="agentUsers.read" mode="some">
+                        <Table
+                            columns={agentColumns}
+                            data={agentUsers}
+                            page={agentPagination.current}
+                            limit={agentPagination.limit}
+                            total={agentPagination.total}
+                            onPageChange={(p) => fetchAgentUsers(buildAgentParams({ page: p }))}
+                            onLimitChange={(l) => fetchAgentUsers(buildAgentParams({ page: 1, limit: l }))}
+                        />
+                    </Protected>
+                )}
+
+                {activeSection === 'platformRoles' && (
+                    <Protected permission="platformRoles.read" mode="some">
+                        <RolesList
+                            roles={platformRoles}
+                            showPermissions
+                            editPermission="platformRoles.update"
+                            deletePermission="platformRoles.delete"
+                            onEdit={editPlatformRoleModal.open}
+                            onDelete={deletePlatformRoleHook.openModal}
+                        />
+                    </Protected>
+                )}
+
+                {activeSection === 'agentRoles' && (
+                    <Protected permission="agentRoles.read" mode="some">
+                        <RolesList
+                            roles={agentRoles}
+                            editPermission="agentRoles.update"
+                            deletePermission="agentRoles.delete"
+                            onEdit={editAgentRoleModal.open}
+                            onDelete={deleteAgentRoleHook.openModal}
+                        />
+                    </Protected>
                 )}
             </div>
 
@@ -116,9 +181,13 @@ export default function UsersPage() {
                     onEmailChange={editPlatformModal.setEmail}
                     photoUrl={editPlatformModal.photoUrl}
                     onPhotoUrlChange={editPlatformModal.setPhotoUrl}
+                    onPhotoUpload={editPlatformModal.handlePhotoUpload}
+                    isUploadingPhoto={editPlatformModal.isUploadingPhoto}
                     roleOptions={platformRoleOptions}
                     selectedRole={editPlatformModal.selectedRole}
                     onRoleChange={editPlatformModal.setSelectedRole}
+                    status={editPlatformModal.status}
+                    onStatusChange={editPlatformModal.setStatus}
                     touched={editPlatformModal.touched}
                     isSaving={editPlatformModal.isSaving}
                     onConfirm={editPlatformModal.handleSave}
@@ -131,10 +200,93 @@ export default function UsersPage() {
                     roleOptions={agentRoleOptions}
                     selectedRole={editAgentModal.selectedRole}
                     onRoleChange={editAgentModal.setSelectedRole}
+                    status={editAgentModal.status}
+                    onStatusChange={editAgentModal.setStatus}
+                    isPending={editAgentModal.isPending}
                     touched={editAgentModal.touched}
                     isSaving={editAgentModal.isSaving}
                     onConfirm={editAgentModal.handleSave}
                     onClose={editAgentModal.close}
+                />
+            )}
+
+            {createPlatformRoleModal.isOpen && (
+                <CreatePlatformRoleModal
+                    name={createPlatformRoleModal.name}
+                    onNameChange={createPlatformRoleModal.setName}
+                    description={createPlatformRoleModal.description}
+                    onDescriptionChange={createPlatformRoleModal.setDescription}
+                    permissionOptions={createPlatformRoleModal.permissionOptions}
+                    selectedPermissions={createPlatformRoleModal.selectedPermissions}
+                    onPermissionsChange={createPlatformRoleModal.setSelectedPermissions}
+                    isLoadingPermissions={createPlatformRoleModal.isLoadingPermissions}
+                    touched={createPlatformRoleModal.touched}
+                    isCreating={createPlatformRoleModal.isCreating}
+                    onConfirm={createPlatformRoleModal.handleCreate}
+                    onClose={createPlatformRoleModal.close}
+                />
+            )}
+
+            {createAgentRoleModal.isOpen && (
+                <CreateAgentRoleModal
+                    name={createAgentRoleModal.name}
+                    onNameChange={createAgentRoleModal.setName}
+                    description={createAgentRoleModal.description}
+                    onDescriptionChange={createAgentRoleModal.setDescription}
+                    touched={createAgentRoleModal.touched}
+                    isCreating={createAgentRoleModal.isCreating}
+                    onConfirm={createAgentRoleModal.handleCreate}
+                    onClose={createAgentRoleModal.close}
+                />
+            )}
+
+            {editPlatformRoleModal.isOpen && (
+                <EditPlatformRoleModal
+                    name={editPlatformRoleModal.name}
+                    onNameChange={editPlatformRoleModal.setName}
+                    description={editPlatformRoleModal.description}
+                    onDescriptionChange={editPlatformRoleModal.setDescription}
+                    permissionOptions={editPlatformRoleModal.permissionOptions}
+                    selectedPermissions={editPlatformRoleModal.selectedPermissions}
+                    onPermissionsChange={editPlatformRoleModal.setSelectedPermissions}
+                    isLoadingPermissions={editPlatformRoleModal.isLoadingPermissions}
+                    touched={editPlatformRoleModal.touched}
+                    isSaving={editPlatformRoleModal.isSaving}
+                    onConfirm={editPlatformRoleModal.handleSave}
+                    onClose={editPlatformRoleModal.close}
+                />
+            )}
+
+            {editAgentRoleModal.isOpen && (
+                <EditAgentRoleModal
+                    name={editAgentRoleModal.name}
+                    onNameChange={editAgentRoleModal.setName}
+                    description={editAgentRoleModal.description}
+                    onDescriptionChange={editAgentRoleModal.setDescription}
+                    touched={editAgentRoleModal.touched}
+                    isSaving={editAgentRoleModal.isSaving}
+                    onConfirm={editAgentRoleModal.handleSave}
+                    onClose={editAgentRoleModal.close}
+                />
+            )}
+
+            {createPlatformUserModal.isOpen && (
+                <CreatePlatformUserModal
+                    firstName={createPlatformUserModal.firstName}
+                    onFirstNameChange={createPlatformUserModal.setFirstName}
+                    lastName={createPlatformUserModal.lastName}
+                    onLastNameChange={createPlatformUserModal.setLastName}
+                    login={createPlatformUserModal.login}
+                    onLoginChange={createPlatformUserModal.setLogin}
+                    email={createPlatformUserModal.email}
+                    onEmailChange={createPlatformUserModal.setEmail}
+                    roleOptions={platformRoleOptions}
+                    selectedRole={createPlatformUserModal.selectedRole}
+                    onRoleChange={createPlatformUserModal.setSelectedRole}
+                    touched={createPlatformUserModal.touched}
+                    isCreating={createPlatformUserModal.isCreating}
+                    onConfirm={createPlatformUserModal.handleCreate}
+                    onClose={createPlatformUserModal.close}
                 />
             )}
 
@@ -169,6 +321,28 @@ export default function UsersPage() {
                 isLoading={deleteAgentHook.isLoading}
                 onConfirm={deleteAgentHook.handleDelete}
                 onClose={deleteAgentHook.closeModal}
+            />
+
+            <ConfirmModal
+                isOpen={deletePlatformRoleHook.isModalOpen}
+                type="danger"
+                title="Удаление роли"
+                confirmLabel="Удалить"
+                message={`Вы уверены, что хотите удалить роль "${deletePlatformRoleHook.role?.name}"?`}
+                isLoading={deletePlatformRoleHook.isLoading}
+                onConfirm={deletePlatformRoleHook.handleDelete}
+                onClose={deletePlatformRoleHook.closeModal}
+            />
+
+            <ConfirmModal
+                isOpen={deleteAgentRoleHook.isModalOpen}
+                type="danger"
+                title="Удаление роли агента"
+                confirmLabel="Удалить"
+                message={`Вы уверены, что хотите удалить роль "${deleteAgentRoleHook.role?.name}"?`}
+                isLoading={deleteAgentRoleHook.isLoading}
+                onConfirm={deleteAgentRoleHook.handleDelete}
+                onClose={deleteAgentRoleHook.closeModal}
             />
         </Layout>
     )
