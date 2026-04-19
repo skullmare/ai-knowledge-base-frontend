@@ -11,6 +11,7 @@ export function useEditPlatformRoleModal() {
     const [description, setDescription] = useState('')
     const [selectedPermissions, setSelectedPermissions] = useState([])
     const [permissionOptions, setPermissionOptions] = useState([])
+    const [original, setOriginal] = useState(null)
     const [isLoadingPermissions, setIsLoadingPermissions] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
     const [touched, setTouched] = useState({ name: false, permissions: false })
@@ -19,7 +20,13 @@ export function useEditPlatformRoleModal() {
         setRoleId(role._id)
         setName(role.name ?? '')
         setDescription(role.description ?? '')
-        setSelectedPermissions(Array.isArray(role.permissions) ? role.permissions : [])
+        const perms = Array.isArray(role.permissions) ? role.permissions : []
+        setSelectedPermissions(perms)
+        setOriginal({
+            name: role.name ?? '',
+            description: role.description ?? '',
+            permissions: [...perms].sort(),
+        })
         setTouched({ name: false, permissions: false })
         setIsOpen(true)
 
@@ -42,6 +49,7 @@ export function useEditPlatformRoleModal() {
         setDescription('')
         setSelectedPermissions([])
         setPermissionOptions([])
+        setOriginal(null)
         setTouched({ name: false, permissions: false })
     }
 
@@ -49,13 +57,21 @@ export function useEditPlatformRoleModal() {
         setTouched({ name: true, permissions: true })
         if (!name.trim() || !selectedPermissions.length) return
 
+        const patch = {}
+        if (name.trim() !== original.name.trim()) patch.name = name.trim()
+        if (description.trim() !== original.description.trim()) patch.description = description.trim()
+        if (JSON.stringify([...selectedPermissions].sort()) !== JSON.stringify(original.permissions)) {
+            patch.permissions = selectedPermissions
+        }
+
+        if (!Object.keys(patch).length) {
+            close()
+            return
+        }
+
         setIsSaving(true)
         try {
-            await updateRole(roleId, {
-                name: name.trim(),
-                description: description.trim(),
-                permissions: selectedPermissions,
-            })
+            await updateRole(roleId, patch)
             close()
         } finally {
             setIsSaving(false)

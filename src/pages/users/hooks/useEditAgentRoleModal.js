@@ -8,6 +8,7 @@ export function useEditAgentRoleModal() {
     const [roleId, setRoleId] = useState(null)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
+    const [original, setOriginal] = useState(null)
     const [isSaving, setIsSaving] = useState(false)
     const [touched, setTouched] = useState({ name: false })
 
@@ -15,6 +16,10 @@ export function useEditAgentRoleModal() {
         setRoleId(role._id)
         setName(role.name ?? '')
         setDescription(role.description ?? '')
+        setOriginal({
+            name: role.name ?? '',
+            description: role.description ?? '',
+        })
         setTouched({ name: false })
         setIsOpen(true)
     }
@@ -24,6 +29,7 @@ export function useEditAgentRoleModal() {
         setRoleId(null)
         setName('')
         setDescription('')
+        setOriginal(null)
         setTouched({ name: false })
     }
 
@@ -31,12 +37,18 @@ export function useEditAgentRoleModal() {
         setTouched({ name: true })
         if (!name.trim()) return
 
+        const patch = {}
+        if (name.trim() !== original.name.trim()) patch.name = name.trim()
+        if (description.trim() !== original.description.trim()) patch.description = description.trim()
+
+        if (!Object.keys(patch).length) {
+            close()
+            return
+        }
+
         setIsSaving(true)
         try {
-            await updateRole(roleId, {
-                name: name.trim(),
-                description: description.trim(),
-            })
+            await updateRole(roleId, patch)
             close()
         } finally {
             setIsSaving(false)
