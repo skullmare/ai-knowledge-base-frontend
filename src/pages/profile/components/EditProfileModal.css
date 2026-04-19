@@ -1,0 +1,66 @@
+.edit-profile-modal__avatar-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-gray-500);
+}
+
+.edit-profile-modal__avatar-img {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 2px solid var(--color-gray-500);
+    flex-shrink: 0;
+}
+
+.edit-profile-modal__avatar-placeholder {
+    display: block;
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    background: var(--color-gray-400);
+    border: 2px solid var(--color-gray-500);
+    flex-shrink: 0;
+}
+
+.edit-profile-modal__avatar-actions {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-xs);
+}
+
+.edit-profile-modal__avatar-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-gray-400);
+    background: transparent;
+    color: var(--color-gray-200);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.edit-profile-modal__avatar-btn:hover:not(:disabled) {
+    border-color: var(--color-gold-200);
+    color: var(--color-gold-200);
+}
+
+.edit-profile-modal__avatar-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.edit-profile-modal__avatar-btn--remove {
+    border-color: var(--color-red);
+    color: var(--color-red);
+}
+
+.edit-profile-modal__avatar-btn--remove:hover:not(:disabled) {
+    border-color: var(--color-red);
+    color: var(--color-red);
+    opacity: 0.8;
+}
