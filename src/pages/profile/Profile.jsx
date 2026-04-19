@@ -2,6 +2,7 @@ import { useLocation } from 'react-router-dom'
 import useProfileStore from '@store/profile'
 import useAuthStore from '@store/auth'
 import Header from '@layout/Header/Header'
+import Navbar from '@layout/Navbar/Navbar'
 import Layout from '@layout/Layout/Layout'
 import ConfirmModal from '@layout/Modal/ConfirmModal'
 import Button from '@ui/Button/Button'
@@ -19,16 +20,16 @@ const STATUS_LABELS = { active: 'Активен', blocked: 'Заблокиров
 const formatDateTime = (iso) =>
     iso
         ? new Date(iso).toLocaleString('ru-RU', {
-              day: '2-digit', month: '2-digit', year: 'numeric',
-              hour: '2-digit', minute: '2-digit',
-          })
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit',
+        })
         : '—'
 
 const formatDate = (iso) =>
     iso
         ? new Date(iso).toLocaleDateString('ru-RU', {
-              day: '2-digit', month: '2-digit', year: 'numeric',
-          })
+            day: '2-digit', month: '2-digit', year: 'numeric',
+        })
         : '—'
 
 export default function ProfilePage() {

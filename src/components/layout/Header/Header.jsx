@@ -52,10 +52,12 @@ const Header = ({ navLinks = [], activeLink, onLogout, userLogin, userRole, onOp
 
   return (
     <header className="header-component">
+      <div className="nav-block">
+        {logo ? <div className="logo"><Logo width="87px" /></div> : undefined}
+        <nav>{renderLinks()}</nav>
+      </div>
 
-      {logo ? <Logo width="87px" /> : undefined}
-
-      <nav>{renderLinks()}</nav>
+      
 
       <div className="profile-block">
         <Link to="/profile" className="user-data-block">
