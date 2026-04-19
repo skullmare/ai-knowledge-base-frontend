@@ -27,4 +27,5 @@
 .users-page__controls-btn {
     flex: 2;
     min-width: 200px;
+    max-width: 200px;
 }
