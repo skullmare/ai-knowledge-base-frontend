@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { fileService } from '@services/file'
+import useFileStore from '@store/file'
 
 export function useEditPlatformUserModal(updateUser) {
+    const upload = useFileStore((s) => s.upload)
     const [isOpen, setIsOpen] = useState(false)
     const [userId, setUserId] = useState(null)
     const [firstName, setFirstName] = useState('')
@@ -62,7 +63,7 @@ export function useEditPlatformUserModal(updateUser) {
         if (!file) return
         setIsUploadingPhoto(true)
         try {
-            const res = await fileService.upload(file)
+            const res = await upload(file)
             if (res.success) setPhotoUrl(res.data.url)
         } finally {
             setIsUploadingPhoto(false)

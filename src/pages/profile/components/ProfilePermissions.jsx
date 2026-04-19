@@ -1,22 +1,24 @@
 import { useEffect, useState } from 'react'
-import { permissionsService } from '@services/permissions'
+import usePermissionsStore from '@store/permissions'
 
 export function ProfilePermissions({ userPermissions }) {
+    const fetchPermissions = usePermissionsStore((s) => s.fetchPermissions)
     const [groups, setGroups] = useState([])
 
     useEffect(() => {
         if (!userPermissions.length) return
-        permissionsService.getPermissions().then((res) => {
-            if (!res.success) return
-            const permSet = new Set(userPermissions)
-            const filtered = res.data
-                .map((g) => ({
-                    group: g.group,
-                    actions: g.actions.filter((a) => permSet.has(a.key)),
-                }))
-                .filter((g) => g.actions.length > 0)
-            setGroups(filtered)
-        })
+        fetchPermissions()
+            .then((data) => {
+                const permSet = new Set(userPermissions)
+                const filtered = data
+                    .map((g) => ({
+                        group: g.group,
+                        actions: g.actions.filter((a) => permSet.has(a.key)),
+                    }))
+                    .filter((g) => g.actions.length > 0)
+                setGroups(filtered)
+            })
+            .catch(() => {})
     }, [userPermissions.length])
 
     if (!groups.length) return null

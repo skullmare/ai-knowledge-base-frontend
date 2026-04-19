@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { passwordService } from '@services/password'
+import usePasswordStore from '@store/password'
 
 export function useChangePasswordModal() {
+    const changePassword = usePasswordStore((s) => s.changePassword)
     const [isOpen, setIsOpen] = useState(false)
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
@@ -34,7 +35,7 @@ export function useChangePasswordModal() {
 
         setIsChanging(true)
         try {
-            await passwordService.change({ oldPassword, newPassword, confirmPassword })
+            await changePassword({ oldPassword, newPassword, confirmPassword })
             close()
         } finally {
             setIsChanging(false)

@@ -3,11 +3,12 @@ import { useCreateBlockNote } from '@blocknote/react'
 import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core'
 import { ru } from '@blocknote/core/locales'
 import { collaborationService } from '@services/collaboration'
-import { fileService } from '@services/file'
+import useFileStore from '@store/file'
 
 const DEFAULT_USER_COLOR = '#DDB364'
 
 export const useBlockNoteEditor = (id, profile) => {
+  const upload = useFileStore((s) => s.upload)
   const collaborationRef = useRef(null)
 
   // Инициализация collaboration
@@ -33,7 +34,7 @@ export const useBlockNoteEditor = (id, profile) => {
       fragment: collaborationRef.current.ydoc.getXmlFragment('document-store'),
     },
     uploadFile: async (file) => {
-      const data = await fileService.upload(file)
+      const data = await upload(file)
       return data.data.url
     },
   })
