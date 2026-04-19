@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import usePlatformRoleStore from '@store/platformRole'
-import { permissionsService } from '@services/permissions'
+import usePermissionsStore from '@store/permissions'
 
 export function useEditPlatformRoleModal() {
     const updateRole = usePlatformRoleStore((s) => s.updateRole)
+    const fetchPermissions = usePermissionsStore((s) => s.fetchPermissions)
 
     const [isOpen, setIsOpen] = useState(false)
     const [roleId, setRoleId] = useState(null)
@@ -32,8 +33,8 @@ export function useEditPlatformRoleModal() {
 
         setIsLoadingPermissions(true)
         try {
-            const res = await permissionsService.getPermissions()
-            const flat = res.data.flatMap((group) =>
+            const data = await fetchPermissions()
+            const flat = data.flatMap((group) =>
                 group.actions.map((a) => ({ value: a.key, label: a.label }))
             )
             setPermissionOptions(flat)

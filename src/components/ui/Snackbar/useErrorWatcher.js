@@ -8,6 +8,9 @@ import usePlatformUserStore from '@store/platformUser'
 import useProfileStore from '@store/profile'
 import useTopicStore from '@store/topic'
 import useTopicCategoryStore from '@store/topicCategory'
+import useFileStore from '@store/file'
+import usePasswordStore from '@store/password'
+import usePermissionsStore from '@store/permissions'
 
 // Registry: storeKey -> { useStore, clearError }
 const STORE_REGISTRY = [
@@ -64,6 +67,24 @@ const STORE_REGISTRY = [
     label: 'Категории топиков',
     useStore: useTopicCategoryStore,
     clearError: () => useTopicCategoryStore.setState({ error: null }),
+  },
+  {
+    key: 'file',
+    label: 'Файлы',
+    useStore: useFileStore,
+    clearError: () => useFileStore.setState({ error: null }),
+  },
+  {
+    key: 'password',
+    label: 'Пароль',
+    useStore: usePasswordStore,
+    clearError: () => usePasswordStore.setState({ error: null }),
+  },
+  {
+    key: 'permissions',
+    label: 'Права доступа',
+    useStore: usePermissionsStore,
+    clearError: () => usePermissionsStore.setState({ error: null }),
   },
 ]
 

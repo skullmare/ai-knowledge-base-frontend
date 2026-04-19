@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ProtectedRoute from './Protected'
 import LoginPage from '@pages/login/Login'
+import ForgotPasswordPage from '@pages/forgot-password/ForgotPassword'
+import ResetPasswordPage from '@pages/reset-password/ResetPassword'
 import TopicPage from '@pages/topic/Topic'
 import TopicsPage from '@pages/topics/Topics'
 import UsersPage from '@pages/users/Users'
@@ -15,6 +17,8 @@ export default function AppRouter() {
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
                 <Route path="/topics" element={
                     <ProtectedRoute permission="topics.read">
