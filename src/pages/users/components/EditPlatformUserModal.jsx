@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import Modal from '@layout/Modal/Modal'
 import Input from '@ui/Input/Input'
 import Dropdown from '@ui/Dropdown/Dropdown'
+import { Toggle } from '@ui/Toggle/Toggle'
 import './EditPlatformUserModal.css'
 
 export function EditPlatformUserModal({
@@ -12,6 +13,7 @@ export function EditPlatformUserModal({
     photoUrl, onPhotoUrlChange,
     onPhotoUpload, isUploadingPhoto,
     roleOptions, selectedRole, onRoleChange,
+    status, onStatusChange,
     touched, isSaving, onConfirm, onClose,
 }) {
     const fileInputRef = useRef(null)
@@ -122,6 +124,11 @@ export function EditPlatformUserModal({
                 label="Роль"
                 required
                 error={touched.role && !selectedRole ? 'Поле обязательно для заполнения' : undefined}
+            />
+            <Toggle
+                checked={status === 'active'}
+                onChange={(v) => onStatusChange(v ? 'active' : 'blocked')}
+                label="Активен"
             />
         </Modal>
     )

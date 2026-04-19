@@ -4,12 +4,14 @@ export function useEditAgentUserModal(updateUser) {
     const [isOpen, setIsOpen] = useState(false)
     const [userId, setUserId] = useState(null)
     const [selectedRole, setSelectedRole] = useState(null)
+    const [status, setStatus] = useState('active')
     const [isSaving, setIsSaving] = useState(false)
     const [touched, setTouched] = useState({ role: false })
 
     const open = (user) => {
         setUserId(user._id)
         setSelectedRole(user.role?._id ?? null)
+        setStatus(user.status ?? 'active')
         setTouched({ role: false })
         setIsOpen(true)
     }
@@ -18,6 +20,7 @@ export function useEditAgentUserModal(updateUser) {
         setIsOpen(false)
         setUserId(null)
         setSelectedRole(null)
+        setStatus('active')
         setTouched({ role: false })
     }
 
@@ -25,9 +28,14 @@ export function useEditAgentUserModal(updateUser) {
         setTouched({ role: true })
         if (!selectedRole) return
 
+        const isPending = status === 'pending'
+
         setIsSaving(true)
         try {
-            await updateUser(userId, { role: selectedRole })
+            await updateUser(userId, {
+                role: selectedRole,
+                ...(isPending ? {} : { status }),
+            })
             close()
         } finally {
             setIsSaving(false)
@@ -37,6 +45,8 @@ export function useEditAgentUserModal(updateUser) {
     return {
         isOpen, open, close,
         selectedRole, setSelectedRole,
+        status, setStatus,
+        isPending: status === 'pending',
         isSaving,
         touched,
         handleSave,

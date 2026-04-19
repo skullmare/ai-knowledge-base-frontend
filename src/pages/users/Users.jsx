@@ -186,6 +186,8 @@ export default function UsersPage() {
                     roleOptions={platformRoleOptions}
                     selectedRole={editPlatformModal.selectedRole}
                     onRoleChange={editPlatformModal.setSelectedRole}
+                    status={editPlatformModal.status}
+                    onStatusChange={editPlatformModal.setStatus}
                     touched={editPlatformModal.touched}
                     isSaving={editPlatformModal.isSaving}
                     onConfirm={editPlatformModal.handleSave}
@@ -198,6 +200,9 @@ export default function UsersPage() {
                     roleOptions={agentRoleOptions}
                     selectedRole={editAgentModal.selectedRole}
                     onRoleChange={editAgentModal.setSelectedRole}
+                    status={editAgentModal.status}
+                    onStatusChange={editAgentModal.setStatus}
+                    isPending={editAgentModal.isPending}
                     touched={editAgentModal.touched}
                     isSaving={editAgentModal.isSaving}
                     onConfirm={editAgentModal.handleSave}

@@ -1,8 +1,10 @@
 import Modal from '@layout/Modal/Modal'
 import Dropdown from '@ui/Dropdown/Dropdown'
+import { Toggle } from '@ui/Toggle/Toggle'
 
 export function EditAgentUserModal({
     roleOptions, selectedRole, onRoleChange,
+    status, onStatusChange, isPending,
     touched, isSaving, onConfirm, onClose,
 }) {
     return (
@@ -22,6 +24,13 @@ export function EditAgentUserModal({
                 label="Роль"
                 required
                 error={touched.role && !selectedRole ? 'Поле обязательно для заполнения' : undefined}
+            />
+            <Toggle
+                checked={status === 'active'}
+                onChange={(v) => onStatusChange(v ? 'active' : 'blocked')}
+                disabled={isPending}
+                label="Активен"
+                hint={isPending ? 'Ожидает назначения роли' : undefined}
             />
         </Modal>
     )

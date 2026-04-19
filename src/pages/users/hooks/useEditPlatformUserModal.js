@@ -10,6 +10,7 @@ export function useEditPlatformUserModal(updateUser) {
     const [email, setEmail] = useState('')
     const [photoUrl, setPhotoUrl] = useState('')
     const [selectedRole, setSelectedRole] = useState(null)
+    const [status, setStatus] = useState('active')
     const [isUploadingPhoto, setIsUploadingPhoto] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
     const [touched, setTouched] = useState({
@@ -28,6 +29,7 @@ export function useEditPlatformUserModal(updateUser) {
         setEmail(user.email ?? '')
         setPhotoUrl(user.photoUrl ?? '')
         setSelectedRole(user.role?._id ?? null)
+        setStatus(user.status ?? 'active')
         setTouched({ firstName: false, lastName: false, login: false, email: false, role: false })
         setIsOpen(true)
     }
@@ -41,6 +43,7 @@ export function useEditPlatformUserModal(updateUser) {
         setEmail('')
         setPhotoUrl('')
         setSelectedRole(null)
+        setStatus('active')
         setTouched({ firstName: false, lastName: false, login: false, email: false, role: false })
     }
 
@@ -68,6 +71,7 @@ export function useEditPlatformUserModal(updateUser) {
                 email: email.trim(),
                 photoUrl: photoUrl.trim(),
                 role: selectedRole,
+                status,
             })
             close()
         } finally {
@@ -83,6 +87,7 @@ export function useEditPlatformUserModal(updateUser) {
         email, setEmail,
         photoUrl, setPhotoUrl,
         selectedRole, setSelectedRole,
+        status, setStatus,
         isUploadingPhoto,
         handlePhotoUpload,
         isSaving,
