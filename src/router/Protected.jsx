@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children, requiredPermission = null }) => {
   
   if (requiredPermission && isInitialized) {
     const hasPermission = permissions.includes(requiredPermission);
-    if (!hasPermission) return <Navigate to="/login" replace />;
+    if (!hasPermission) return <Navigate to="/403" replace />;
   }
   
   return children;
