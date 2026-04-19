@@ -13,8 +13,9 @@
     flex-shrink: 0;
 }
 
-.users-page__table-status__dot--active  { background: var(--color-green); }
-.users-page__table-status__dot--blocked { background: var(--color-red); }
+.users-page__table-status__dot--active   { background: var(--color-green); }
+.users-page__table-status__dot--blocked  { background: var(--color-red); }
+.users-page__table-status__dot--pending  { background: var(--color-gold-100); }
 
 .users-page__table-author {
     display: flex;

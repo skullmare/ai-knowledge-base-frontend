@@ -121,12 +121,15 @@ export const getAgentUserColumns = ({ onEdit, onDelete }) => [
     {
         key: 'status',
         label: 'Статус',
-        render: (value) => (
-            <span className="users-page__table-status">
-                <span className={`users-page__table-status__dot users-page__table-status__dot--${value}`} />
-                {value === 'active' ? 'Активен' : 'Заблокирован'}
-            </span>
-        ),
+        render: (value) => {
+            const label = value === 'active' ? 'Активен' : value === 'pending' ? 'Ожидает' : 'Заблокирован'
+            return (
+                <span className="users-page__table-status">
+                    <span className={`users-page__table-status__dot users-page__table-status__dot--${value}`} />
+                    {label}
+                </span>
+            )
+        },
     },
     {
         key: 'lastActivity',

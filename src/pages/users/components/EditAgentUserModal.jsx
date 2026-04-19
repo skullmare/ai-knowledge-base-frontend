@@ -29,7 +29,7 @@ export function EditAgentUserModal({
                 checked={status === 'active'}
                 onChange={(v) => onStatusChange(v ? 'active' : 'blocked')}
                 disabled={isPending}
-                label="Активен"
+                label={isPending ? 'Ожидает' : (status === 'active' ? 'Активен' : 'Заблокирован')}
                 hint={isPending ? 'Ожидает назначения роли' : undefined}
             />
         </Modal>

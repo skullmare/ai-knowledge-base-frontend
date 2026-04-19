@@ -128,7 +128,7 @@ export function EditPlatformUserModal({
             <Toggle
                 checked={status === 'active'}
                 onChange={(v) => onStatusChange(v ? 'active' : 'blocked')}
-                label="Активен"
+                label={status === 'active' ? 'Активен' : 'Заблокирован'}
             />
         </Modal>
     )
