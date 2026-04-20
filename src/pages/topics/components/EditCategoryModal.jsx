@@ -10,6 +10,7 @@ export function EditCategoryModal({ name, onNameChange, description, onDescripti
             onConfirm={onConfirm}
             confirmLabel="Сохранить"
             confirmDisabled={!name.trim() || isSaving}
+            isLoading={isSaving}
         >
             <Input
                 variant="default"
