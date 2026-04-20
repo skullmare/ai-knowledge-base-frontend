@@ -56,7 +56,9 @@ export const getPlatformUserColumns = ({ onEdit, onDelete }) => [
                 ) : (
                     <span className="users-page__table-author__avatar users-page__table-author__avatar--placeholder" />
                 )}
-                {row.firstName} {row.lastName}
+                <span className="users-page__table-author__names">
+                    {row.firstName} {row.lastName}
+                </span>
             </span>
         ),
     },
