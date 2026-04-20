@@ -33,7 +33,7 @@ export default function AppRouter() {
                 } />
 
                 <Route path="/users" element={
-                    <ProtectedRoute permission="platformUsers.read">
+                    <ProtectedRoute permissions={["platformUsers.read", "agentUsers.read"]} mode="some">
                         <UsersPage />
                     </ProtectedRoute>
                 } />
