@@ -7,10 +7,10 @@ import TopicPage from '@pages/topic/Topic'
 import TopicsPage from '@pages/topics/Topics'
 import UsersPage from '@pages/users/Users'
 import ProfilePage from '@pages/profile/Profile'
-import NotFound from '@pages/NotFound'
-import IndexPage from '@pages/Index'
-import AccessDenied from '@pages/AccessDenied'
-import SetComponents from '@pages/SetComponents'
+import NotFound from '@pages/not-found/NotFound'
+import IndexPage from '@pages/index/Index'
+import AccessDenied from '@pages/access-denied/AccessDenied'
+import SetComponents from '@pages/set-components/SetComponents'
 
 export default function AppRouter() {
     return (
