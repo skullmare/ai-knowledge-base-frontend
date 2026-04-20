@@ -9,6 +9,7 @@ export function CreateCategoryModal({ name, onNameChange, description, onDescrip
             onConfirm={onConfirm}
             confirmLabel="Создать"
             confirmDisabled={!name.trim() || isCreating}
+            isLoading={isCreating}
         >
             <Input
                 variant="default"
