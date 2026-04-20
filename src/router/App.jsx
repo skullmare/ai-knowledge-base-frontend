@@ -33,7 +33,7 @@ export default function AppRouter() {
                 } />
 
                 <Route path="/users" element={
-                    <ProtectedRoute permission="users.read">
+                    <ProtectedRoute permission="platformUsers.read">
                         <UsersPage />
                     </ProtectedRoute>
                 } />

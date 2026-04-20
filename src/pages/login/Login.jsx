@@ -17,7 +17,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      window.location.href = '/profile';
+      window.location.href = '/';
     }
   }, [isAuthenticated]);
 
