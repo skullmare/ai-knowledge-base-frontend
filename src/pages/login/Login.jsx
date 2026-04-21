@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useAuthStore from '@store/auth';
 import Button from '@ui/Button/Button.jsx';
 import Input from '@ui/Input/Input.jsx';
@@ -7,6 +8,7 @@ import Background from '@assets/images/login-background.png';
 import './Login.css';
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [touched, setTouched] = useState({ login: false, password: false });
@@ -26,6 +28,11 @@ export default function LoginPage() {
     setTouched({ login: true, password: true });
     if (!login.trim() || !password.trim()) return;
     await doLogin(login, password);
+  };
+
+  const handleForgotPassword = (e) => {
+    e.preventDefault();
+    navigate('/forgot-password');
   };
 
   return (
@@ -69,7 +76,7 @@ export default function LoginPage() {
             </div>
 
             <div className="login-helpers">
-              <a href="/forgot-password" className="forgot-password-link">
+              <a onClick={handleForgotPassword} className="forgot-password-link">
                 Забыли пароль?
               </a>
             </div>

@@ -1,8 +1,11 @@
+import { useNavigate } from 'react-router-dom';
 import Logo from '@assets/images/logo.svg';
 import Background from '@assets/images/login-background.png';
 import './NotFound.css';
 
 export default function NotFound() {
+  const navigate = useNavigate();
+
   return (
     <div className="login-page-container">
       <div className="login-content">
@@ -17,7 +20,15 @@ export default function NotFound() {
             Запрашиваемая страница не существует или была удалена.
           </p>
           <div className="error-links">
-            <a href="/" className="forgot-password-link">На главную</a>
+            <a 
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/');
+              }}
+              className="forgot-password-link"
+            >
+              На главную
+            </a>
           </div>
         </main>
       </div>

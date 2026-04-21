@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import usePasswordStore from '@store/password';
 import Button from '@ui/Button/Button.jsx';
 import Input from '@ui/Input/Input.jsx';
@@ -9,6 +9,7 @@ import './ResetPassword.css';
 
 export default function ResetPasswordPage() {
   const { token } = useParams();
+  const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [touched, setTouched] = useState({ password: false, confirmPassword: false });
@@ -35,6 +36,11 @@ export default function ResetPasswordPage() {
     }
   };
 
+  const handleGoToLogin = (e) => {
+    e.preventDefault();
+    navigate('/login');
+  };
+
   return (
     <div className="login-page-container">
       <div className="login-content">
@@ -49,7 +55,7 @@ export default function ResetPasswordPage() {
               <p className="auth-hint-text">
                 Ваш пароль был успешно изменён. Теперь вы можете войти с новым паролем.
               </p>
-              <a href="/login" className="forgot-password-link">
+              <a onClick={handleGoToLogin} className="forgot-password-link">
                 Перейти к входу
               </a>
             </div>
@@ -95,7 +101,7 @@ export default function ResetPasswordPage() {
                 </div>
 
                 <div className="login-helpers">
-                  <a href="/login" className="forgot-password-link">
+                  <a onClick={handleGoToLogin} className="forgot-password-link">
                     Вернуться к входу
                   </a>
                 </div>

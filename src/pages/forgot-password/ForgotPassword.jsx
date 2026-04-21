@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import usePasswordStore from '@store/password';
 import Button from '@ui/Button/Button.jsx';
 import Input from '@ui/Input/Input.jsx';
@@ -7,6 +8,7 @@ import Background from '@assets/images/login-background.png';
 import './ForgotPassword.css';
 
 export default function ForgotPasswordPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [touched, setTouched] = useState({ email: false });
   const [sent, setSent] = useState(false);
@@ -27,6 +29,11 @@ export default function ForgotPasswordPage() {
     }
   };
 
+  const handleGoToLogin = (e) => {
+    e.preventDefault();
+    navigate('/login');
+  };
+
   return (
     <div className="login-page-container">
       <div className="login-content">
@@ -42,7 +49,7 @@ export default function ForgotPasswordPage() {
                 Мы отправили инструкции по восстановлению пароля на&nbsp;
                 <strong>{email}</strong>.
               </p>
-              <a href="/login" className="forgot-password-link">
+              <a onClick={handleGoToLogin} className="forgot-password-link">
                 Вернуться к входу
               </a>
             </div>
@@ -66,7 +73,7 @@ export default function ForgotPasswordPage() {
                 </div>
 
                 <div className="login-helpers">
-                  <a href="/login" className="forgot-password-link">
+                  <a onClick={handleGoToLogin} className="forgot-password-link">
                     Вернуться к входу
                   </a>
                 </div>

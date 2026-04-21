@@ -1,4 +1,4 @@
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useParams, useNavigate } from 'react-router-dom'
 import { useCallback, useMemo } from 'react'
 import useProfileStore from '@store/profile'
 import useAuthStore from '@store/auth'
@@ -23,6 +23,7 @@ import './Topic.css'
 export default function TopicPage() {
   const { pathname } = useLocation()
   const { id } = useParams()
+  const navigate = useNavigate()
   const profile = useProfileStore((state) => state.profile)
   const checkPermission = useProfileStore((state) => state.checkPermission)
   const logout = useAuthStore((state) => state.logout)
@@ -60,7 +61,7 @@ export default function TopicPage() {
   const { editor, isEditorSaving } = useBlockNoteEditor(id, profile)
 
   const deleteTopicHook = useDeleteTopic(id, () => {
-    window.location.href = '/topics'
+    navigate('/topics')
   })
 
   const approveTopicHook = useApproveTopic(id, () => {

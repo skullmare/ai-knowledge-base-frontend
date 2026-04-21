@@ -1,8 +1,21 @@
+import { useNavigate } from 'react-router-dom';
 import Logo from '@assets/images/logo.svg';
 import Background from '@assets/images/login-background.png';
 import './AccessDenied.css';
 
 export default function AccessDenied() {
+  const navigate = useNavigate();
+
+  const handleGoHome = (e) => {
+    e.preventDefault();
+    navigate('/');
+  };
+
+  const handleGoLogin = (e) => {
+    e.preventDefault();
+    navigate('/login');
+  };
+
   return (
     <div className="login-page-container">
       <div className="login-content">
@@ -17,8 +30,18 @@ export default function AccessDenied() {
             У вашей учётной записи недостаточно прав для просмотра этой страницы.
           </p>
           <div className="error-links">
-            <a href="/" className="forgot-password-link">На главную</a>
-            <a href="/login" className="forgot-password-link">Войти под другим аккаунтом</a>
+            <a
+              onClick={handleGoHome} 
+              className="forgot-password-link"
+            >
+              На главную
+            </a>
+            <a
+              onClick={handleGoLogin} 
+              className="forgot-password-link"
+            >
+              Войти под другим аккаунтом
+            </a>
           </div>
         </main>
       </div>
