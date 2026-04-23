@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '@store/auth';
 import Button from '@ui/Button/Button.jsx';
@@ -15,19 +15,16 @@ export default function LoginPage() {
 
   const doLogin = useAuthStore((state) => state.login);
   const isLoadingLogin = useAuthStore((state) => state.isLoadingLogin);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      window.location.href = '/';
-    }
-  }, [isAuthenticated]);
+  const error = useAuthStore((state) => state.error);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ login: true, password: true });
     if (!login.trim() || !password.trim()) return;
-    await doLogin(login, password);
+    const success = await doLogin(login, password);
+    if (success) {
+      navigate('/verify-2fa');
+    }
   };
 
   const handleForgotPassword = (e) => {
@@ -81,6 +78,8 @@ export default function LoginPage() {
               </a>
             </div>
 
+            {error && <p className="login-error">{error}</p>}
+
             <Button
               type="submit"
               size="login"
@@ -89,7 +88,6 @@ export default function LoginPage() {
             >
               Войти
             </Button>
-
           </form>
         </main>
       </div>

@@ -5,7 +5,7 @@ const api = axios.create({
   withCredentials: true,
 });
 
-const SKIP_REFRESH_URLS = ['/auth/refresh', '/auth/login', '/auth/logout'];
+const SKIP_REFRESH_URLS = ['/auth/refresh', '/auth/login', '/auth/logout', '/auth/verify-2fa'];
 
 let accessToken = localStorage.getItem('accessToken') || null;
 let refreshPromise = null; // ключевая штука — один промис на всех
