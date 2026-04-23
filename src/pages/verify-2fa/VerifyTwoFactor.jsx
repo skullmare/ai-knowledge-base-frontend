@@ -102,7 +102,7 @@ export default function VerifyTwoFactorPage() {
               ))}
             </div>
 
-            {error && <p className="login-error">{error}</p>}
+            {/* {error && <p className="login-error">{error}</p>} */}
 
             <Button
               type="submit"
