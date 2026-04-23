@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ProtectedRoute from './Protected'
 import LoginPage from '@pages/login/Login'
+import VerifyTwoFactorPage from '@pages/verify-2fa/VerifyTwoFactor'
 import ForgotPasswordPage from '@pages/forgot-password/ForgotPassword'
 import ResetPasswordPage from '@pages/reset-password/ResetPassword'
 import TopicPage from '@pages/topic/Topic'
@@ -17,6 +18,7 @@ export default function AppRouter() {
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/verify-2fa" element={<VerifyTwoFactorPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
