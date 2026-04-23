@@ -17,11 +17,11 @@ export default function VerifyTwoFactorPage() {
   const pendingLogin = useAuthStore((state) => state.pendingLogin);
   const error = useAuthStore((state) => state.error);
 
-  useEffect(() => {
-    if (!pendingLogin) {
-      navigate('/login');
-    }
-  }, [pendingLogin, navigate]);
+  // useEffect(() => {
+  //   if (!pendingLogin) {
+  //     navigate('/login');
+  //   }
+  // }, [pendingLogin, navigate]);
 
   useEffect(() => {
     if (isAuthenticated) {
