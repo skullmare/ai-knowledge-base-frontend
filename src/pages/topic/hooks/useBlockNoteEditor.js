@@ -14,6 +14,24 @@ const base64ToFile = async (dataUrl) => {
   return new File([blob], `pasted-image.${ext}`, { type: blob.type })
 }
 
+// Рекурсивно собирает все image-блоки с base64 URL из дерева блоков
+const collectBase64ImageBlocks = (blocks) => {
+  const result = []
+  for (const block of blocks) {
+    if (
+      block.type === 'image' &&
+      typeof block.props?.url === 'string' &&
+      block.props.url.startsWith('data:')
+    ) {
+      result.push(block)
+    }
+    if (block.children?.length) {
+      result.push(...collectBase64ImageBlocks(block.children))
+    }
+  }
+  return result
+}
+
 export const useBlockNoteEditor = (id, profile) => {
   const upload = useFileStore((s) => s.upload)
   const collaborationRef = useRef(null)
@@ -47,18 +65,16 @@ export const useBlockNoteEditor = (id, profile) => {
     },
   })
 
-  // Загружает base64-изображения в S3 и заменяет URL в блоке
+  // Загружает все base64-изображения в S3 и заменяет URL — рекурсивно по всему дереву блоков
   const uploadBase64Images = useCallback(async () => {
     if (!editor) return
 
-    const blocks = editor.document
-    for (const block of blocks) {
-      if (
-        block.type === 'image' &&
-        typeof block.props?.url === 'string' &&
-        block.props.url.startsWith('data:') &&
-        !processingBlocksRef.current.has(block.id)
-      ) {
+    const targets = collectBase64ImageBlocks(editor.document).filter(
+      (block) => !processingBlocksRef.current.has(block.id)
+    )
+
+    await Promise.all(
+      targets.map(async (block) => {
         processingBlocksRef.current.add(block.id)
         try {
           const file = await base64ToFile(block.props.url)
@@ -71,11 +87,11 @@ export const useBlockNoteEditor = (id, profile) => {
         } finally {
           processingBlocksRef.current.delete(block.id)
         }
-      }
-    }
+      })
+    )
   }, [editor, upload])
 
-  // Подписка на изменения контента для перехвата base64-изображений
+  // Подписка на изменения контента для перехвата base64-изображений при любом сценарии
   useEffect(() => {
     if (!editor) return
     return editor.onEditorContentChange(uploadBase64Images)
