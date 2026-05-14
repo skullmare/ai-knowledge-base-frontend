@@ -26,8 +26,10 @@ export default function Filter({
 }) {
     const [expandedGroups, setExpandedGroups] = useState({})
 
+    // String key prevents undefined/null collision in the state object
     const toggleExpand = (groupId) => {
-        setExpandedGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }))
+        const key = String(groupId)
+        setExpandedGroups((prev) => ({ ...prev, [key]: !prev[key] }))
     }
 
     const hasSelection = selectedGroupId !== null || selectedItemId !== null
@@ -64,7 +66,8 @@ export default function Filter({
 
             <ul className="filter__list" role="list">
                 {groups.map((group) => {
-                    const isExpanded = expandedGroups[group.id] ?? false
+                    const expandKey = String(group.id)
+                    const isExpanded = expandedGroups[expandKey] ?? false
                     const isGroupActive = selectedGroupId === group.id && selectedItemId === null
 
                     return (
@@ -72,22 +75,11 @@ export default function Filter({
                             <div className="filter__group-row">
                                 <div
                                     className={`filter__group-label${isGroupActive ? ' filter__group-label--active' : ''}`}
-                                    onClick={() => {
-                                        onGroupSelect?.(group.id)
-                                        // auto-expand group when selecting it as a filter
-                                        if (!expandedGroups[group.id]) {
-                                            setExpandedGroups((prev) => ({ ...prev, [group.id]: true }))
-                                        }
-                                    }}
+                                    onClick={() => onGroupSelect?.(group.id)}
                                     role="button"
                                     tabIndex={0}
                                     onKeyDown={(e) => {
-                                        if (e.key === 'Enter' || e.key === ' ') {
-                                            onGroupSelect?.(group.id)
-                                            if (!expandedGroups[group.id]) {
-                                                setExpandedGroups((prev) => ({ ...prev, [group.id]: true }))
-                                            }
-                                        }
+                                        if (e.key === 'Enter' || e.key === ' ') onGroupSelect?.(group.id)
                                     }}
                                 >
                                     {group.label}

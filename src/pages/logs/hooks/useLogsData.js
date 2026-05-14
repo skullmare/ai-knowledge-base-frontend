@@ -14,10 +14,18 @@ export function useLogsData({ debouncedSearch, selectedAction, selectedGroupId, 
         fetchActions()
     }, [fetchActions])
 
-    useEffect(() => {
-        fetchLogs(buildParams())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedSearch, selectedAction, selectedGroupId, status, startDate, endDate])
+    // filterGroups must be defined before buildParams so closures can reference it
+    const filterGroups = useMemo(() =>
+        actions.map((group, idx) => ({
+            // Use index-based fallback to guarantee unique React keys
+            // even if some groups have null/undefined entity from the API
+            id: group.entity ?? `group-${idx}`,
+            entityKey: group.entity ?? null,  // actual value sent as entityType param
+            label: group.group,
+            items: group.actions.map((a) => ({ id: a.key, label: a.label })),
+        })),
+        [actions]
+    )
 
     const buildParams = (overrides = {}) => {
         const params = { limit: pagination.limit }
@@ -26,7 +34,8 @@ export function useLogsData({ debouncedSearch, selectedAction, selectedGroupId, 
         if (selectedAction) {
             params.action = selectedAction
         } else if (selectedGroupId) {
-            params.entityType = selectedGroupId
+            const selectedGroup = filterGroups.find((g) => g.id === selectedGroupId)
+            if (selectedGroup?.entityKey) params.entityType = selectedGroup.entityKey
         }
         if (status) params.status = status
         if (startDate) params.startDate = new Date(startDate).toISOString()
@@ -34,14 +43,10 @@ export function useLogsData({ debouncedSearch, selectedAction, selectedGroupId, 
         return { ...params, ...overrides }
     }
 
-    const filterGroups = useMemo(() =>
-        actions.map((group) => ({
-            id: group.entity,
-            label: group.group,
-            items: group.actions.map((a) => ({ id: a.key, label: a.label })),
-        })),
-        [actions]
-    )
+    useEffect(() => {
+        fetchLogs(buildParams())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedSearch, selectedAction, selectedGroupId, status, startDate, endDate])
 
     return {
         logs,
