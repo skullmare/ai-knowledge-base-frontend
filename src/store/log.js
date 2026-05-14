@@ -23,7 +23,7 @@ const useLogStore = create((set, get) => ({
      * @param {number} queryParams.page - номер страницы
      * @param {number} queryParams.limit - количество на странице
      * @param {string} queryParams.action - тип действия
-     * @param {string} queryParams.entityType - тип сущности
+     * @param {string} queryParams.category - категория группы событий
      * @param {string} queryParams.entityId - ID сущности
      * @param {string} queryParams.user - ID пользователя
      * @param {'success'|'error'} queryParams.status - статус выполнения

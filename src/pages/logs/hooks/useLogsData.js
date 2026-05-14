@@ -26,7 +26,7 @@ export function useLogsData({ debouncedSearch, selectedAction, selectedGroupId, 
         if (selectedAction) {
             params.action = selectedAction
         } else if (selectedGroupId) {
-            params.entityType = selectedGroupId
+            params.category = selectedGroupId
         }
         if (status) params.status = status
         if (startDate) params.startDate = new Date(startDate).toISOString()
@@ -36,7 +36,7 @@ export function useLogsData({ debouncedSearch, selectedAction, selectedGroupId, 
 
     const filterGroups = useMemo(() =>
         actions.map((group) => ({
-            id: group.entity,
+            id: group.category,
             label: group.group,
             items: group.actions.map((a) => ({ id: a.key, label: a.label })),
         })),
