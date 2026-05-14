@@ -7,6 +7,7 @@ import ResetPasswordPage from '@pages/reset-password/ResetPassword'
 import TopicPage from '@pages/topic/Topic'
 import TopicsPage from '@pages/topics/Topics'
 import UsersPage from '@pages/users/Users'
+import LogsPage from '@pages/logs/Logs'
 import ProfilePage from '@pages/profile/Profile'
 import NotFound from '@pages/not-found/NotFound'
 import IndexPage from '@pages/index/Index'
@@ -37,6 +38,12 @@ export default function AppRouter() {
                 <Route path="/users" element={
                     <ProtectedRoute permissions={["platformUsers.read", "agentUsers.read"]} mode="some">
                         <UsersPage />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/logs" element={
+                    <ProtectedRoute permission="logs.read">
+                        <LogsPage />
                     </ProtectedRoute>
                 } />
 

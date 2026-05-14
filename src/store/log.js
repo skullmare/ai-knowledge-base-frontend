@@ -1,7 +1,6 @@
-// stores/useLogStore.js
-import { create } from 'zustand';
-import { logService } from '../services/log';
-import { handleError } from '../utils/handleError';
+import { create } from 'zustand'
+import { logService } from '../services/log'
+import { handleError } from '../utils/handleError'
 
 const useLogStore = create((set, get) => ({
     logs: [],
@@ -15,6 +14,8 @@ const useLogStore = create((set, get) => ({
         current: 1,
         limit: 20,
     },
+    actions: [],
+    isLoadingActions: false,
 
     /**
      * Получить список логов с фильтрацией и пагинацией
@@ -82,9 +83,23 @@ const useLogStore = create((set, get) => ({
         }
     },
 
-    clearCurrentLog: () => set({ currentLog: null }),
-    
-    clearLogs: () => set({ logs: [], pagination: { total: 0, pages: 1, current: 1, limit: 20 } }),
-}));
+    fetchActions: async () => {
+        set({ isLoadingActions: true })
+        try {
+            const response = await logService.getActions()
+            if (response.success) {
+                set({ actions: response.data })
+            }
+        } catch {
+            // non-critical
+        } finally {
+            set({ isLoadingActions: false })
+        }
+    },
 
-export default useLogStore;
+    clearCurrentLog: () => set({ currentLog: null }),
+
+    clearLogs: () => set({ logs: [], pagination: { total: 0, pages: 1, current: 1, limit: 20 } }),
+}))
+
+export default useLogStore

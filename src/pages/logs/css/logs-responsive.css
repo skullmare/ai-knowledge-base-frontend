@@ -1,0 +1,17 @@
+/* logs-responsive.css */
+
+@media (max-width: 768px) {
+    .logs-page__controls-search {
+        flex: 1 1 100%;
+    }
+
+    .logs-page__controls-status {
+        flex: 1 1 calc(50% - var(--spacing-sm) / 2);
+        min-width: 120px;
+    }
+
+    .logs-page__controls-date {
+        flex: 1 1 calc(50% - var(--spacing-sm) / 2);
+        min-width: 120px;
+    }
+}

@@ -1,0 +1,11 @@
+/* logs.css */
+
+@import url('./logs-toolbar.css');
+@import url('./logs-table.css');
+@import url('./logs-responsive.css');
+
+.logs-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
