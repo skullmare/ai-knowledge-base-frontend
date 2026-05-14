@@ -72,11 +72,22 @@ export default function Filter({
                             <div className="filter__group-row">
                                 <div
                                     className={`filter__group-label${isGroupActive ? ' filter__group-label--active' : ''}`}
-                                    onClick={() => onGroupSelect?.(group.id)}
+                                    onClick={() => {
+                                        onGroupSelect?.(group.id)
+                                        // auto-expand group when selecting it as a filter
+                                        if (!expandedGroups[group.id]) {
+                                            setExpandedGroups((prev) => ({ ...prev, [group.id]: true }))
+                                        }
+                                    }}
                                     role="button"
                                     tabIndex={0}
                                     onKeyDown={(e) => {
-                                        if (e.key === 'Enter' || e.key === ' ') onGroupSelect?.(group.id)
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            onGroupSelect?.(group.id)
+                                            if (!expandedGroups[group.id]) {
+                                                setExpandedGroups((prev) => ({ ...prev, [group.id]: true }))
+                                            }
+                                        }
                                     }}
                                 >
                                     {group.label}
