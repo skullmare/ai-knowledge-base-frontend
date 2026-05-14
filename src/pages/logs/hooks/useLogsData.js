@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import useLogStore from '@store/log'
 
-export function useLogsData({ debouncedSearch, selectedAction, status, startDate, endDate }) {
+export function useLogsData({ debouncedSearch, selectedAction, selectedGroupId, status, startDate, endDate }) {
     const fetchLogs = useLogStore((s) => s.fetchLogs)
     const fetchActions = useLogStore((s) => s.fetchActions)
     const logs = useLogStore((s) => s.logs)
@@ -17,12 +17,17 @@ export function useLogsData({ debouncedSearch, selectedAction, status, startDate
     useEffect(() => {
         fetchLogs(buildParams())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedSearch, selectedAction, status, startDate, endDate])
+    }, [debouncedSearch, selectedAction, selectedGroupId, status, startDate, endDate])
 
     const buildParams = (overrides = {}) => {
         const params = { limit: pagination.limit }
         if (debouncedSearch) params.search = debouncedSearch
-        if (selectedAction) params.action = selectedAction
+        // specific action takes priority over group-level entityType filter
+        if (selectedAction) {
+            params.action = selectedAction
+        } else if (selectedGroupId) {
+            params.entityType = selectedGroupId
+        }
         if (status) params.status = status
         if (startDate) params.startDate = new Date(startDate).toISOString()
         if (endDate) params.endDate = new Date(endDate).toISOString()

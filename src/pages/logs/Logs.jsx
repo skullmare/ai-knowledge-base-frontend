@@ -39,6 +39,7 @@ export default function LogsPage() {
     } = useLogsData({
         debouncedSearch: filters.debouncedSearch,
         selectedAction: filters.selectedAction,
+        selectedGroupId: filters.selectedGroupId,
         status: filters.status,
         startDate: filters.startDate,
         endDate: filters.endDate,

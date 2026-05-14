@@ -55,6 +55,9 @@
     font-size: var(--text-sm);
     color: var(--color-gray-100);
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .logs-page__message {
@@ -68,7 +71,7 @@
 
 .logs-page__date {
     font-size: var(--text-sm);
-    color: var(--color-gray-300);
+    color: var(--color-gray-200);
     white-space: nowrap;
 }
 
@@ -79,5 +82,5 @@
 
 .logs-page__entity-label {
     font-size: var(--text-sm);
-    color: var(--color-gray-300);
+    color: var(--color-gray-200);
 }
