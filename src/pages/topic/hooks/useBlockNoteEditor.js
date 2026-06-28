@@ -65,6 +65,23 @@ export const useBlockNoteEditor = (id, profile) => {
     },
   })
 
+  // Принудительно сохраняет документ на сервере:
+  // отключает провайдер (сервер вызывает onStoreDocument) и переподключается.
+  // Используется перед критическими операциями (approve и т.п.).
+  const forceSync = useCallback(() => {
+    return new Promise((resolve) => {
+      const provider = collaborationRef.current?.provider
+      if (!provider) return resolve()
+
+      provider.disconnect()
+      // Даём серверу 800 мс на обработку disconnect и запись в БД
+      setTimeout(() => {
+        provider.connect()
+        resolve()
+      }, 800)
+    })
+  }, [])
+
   // Загружает все base64-изображения в S3 и заменяет URL — рекурсивно по всему дереву блоков
   const uploadBase64Images = useCallback(async () => {
     if (!editor) return
@@ -97,27 +114,6 @@ export const useBlockNoteEditor = (id, profile) => {
     return editor.onEditorContentChange(uploadBase64Images)
   }, [editor, uploadBase64Images])
 
-  // Отслеживаем незавершённую обработку paste
-  const pasteInProgressRef = useRef(false)
-
-  useEffect(() => {
-    if (!editor) return
-    const view = editor._tiptapEditor?.view
-    if (!view) return
-
-    const handlePaste = () => {
-      // BlockNote обрабатывает paste асинхронно (конвертирует HTML → блоки).
-      // Помечаем, что идёт вставка, чтобы задержать destroy провайдера.
-      pasteInProgressRef.current = true
-      setTimeout(() => {
-        pasteInProgressRef.current = false
-      }, 500)
-    }
-
-    view.dom.addEventListener('paste', handlePaste)
-    return () => view.dom.removeEventListener('paste', handlePaste)
-  }, [editor])
-
   // Настройка awareness
   useEffect(() => {
     if (profile && collaborationRef.current?.provider) {
@@ -128,19 +124,13 @@ export const useBlockNoteEditor = (id, profile) => {
     }
   }, [profile])
 
-  // Очистка при размонтировании.
-  // Если вставка ещё обрабатывается — даём 500 мс на завершение async-обработки
-  // BlockNote и отправку Yjs-апдейта на сервер до закрытия WS.
+  // Очистка при размонтировании
   useEffect(() => {
     return () => {
-      const delay = pasteInProgressRef.current ? 500 : 0
-      const providerSnapshot = collaborationRef.current
-      setTimeout(() => {
-        collaborationService.destroyProvider(providerSnapshot?.provider)
-      }, delay)
+      collaborationService.destroyProvider(collaborationRef.current?.provider)
       collaborationRef.current = null
     }
   }, [id])
 
-  return { editor, isEditorSaving: false }
+  return { editor, isEditorSaving: false, forceSync }
 }
