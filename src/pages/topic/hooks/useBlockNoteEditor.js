@@ -1,13 +1,11 @@
-import { useRef, useEffect, useMemo, useCallback, useState } from 'react'
+import { useRef, useEffect, useMemo, useCallback } from 'react'
 import { useCreateBlockNote } from '@blocknote/react'
 import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core'
 import { ru } from '@blocknote/core/locales'
 import { collaborationService } from '@services/collaboration'
 import useFileStore from '@store/file'
-import { topicService } from '@services/topic'
 
 const DEFAULT_USER_COLOR = '#DDB364'
-const CONTENT_SAVE_DELAY = 2000
 
 const base64ToFile = async (dataUrl) => {
   const res = await fetch(dataUrl)
@@ -38,8 +36,6 @@ export const useBlockNoteEditor = (id, profile) => {
   const upload = useFileStore((s) => s.upload)
   const collaborationRef = useRef(null)
   const processingBlocksRef = useRef(new Set())
-  const saveTimerRef = useRef(null)
-  const [isEditorSaving, setIsEditorSaving] = useState(false)
 
   // Инициализация collaboration
   if (!collaborationRef.current) {
@@ -69,23 +65,6 @@ export const useBlockNoteEditor = (id, profile) => {
     },
   })
 
-  // Сохранение контента в БД через REST API с debounce
-  const scheduleContentSave = useCallback((editorInstance) => {
-    clearTimeout(saveTimerRef.current)
-    saveTimerRef.current = setTimeout(async () => {
-      if (!editorInstance) return
-      try {
-        setIsEditorSaving(true)
-        const markdown = await editorInstance.blocksToMarkdownLossy(editorInstance.document)
-        await topicService.update(id, { markdownContent: markdown })
-      } catch (err) {
-        console.error('Failed to save editor content:', err)
-      } finally {
-        setIsEditorSaving(false)
-      }
-    }, CONTENT_SAVE_DELAY)
-  }, [id])
-
   // Загружает все base64-изображения в S3 и заменяет URL — рекурсивно по всему дереву блоков
   const uploadBase64Images = useCallback(async () => {
     if (!editor) return
@@ -112,30 +91,32 @@ export const useBlockNoteEditor = (id, profile) => {
     )
   }, [editor, upload])
 
-  // Подписка на изменения контента: загрузка base64-изображений + сохранение в БД
+  // Подписка на изменения контента для перехвата base64-изображений при любом сценарии
   useEffect(() => {
     if (!editor) return
-    return editor.onEditorContentChange(() => {
-      uploadBase64Images()
-      scheduleContentSave(editor)
-    })
-  }, [editor, uploadBase64Images, scheduleContentSave])
+    return editor.onEditorContentChange(uploadBase64Images)
+  }, [editor, uploadBase64Images])
 
-  // Страховка для paste: нативный DOM-listener гарантирует сохранение,
-  // даже если onEditorContentChange не успел сработать до завершения async-обработки вставки
+  // После paste создаём пустую Yjs-транзакцию, чтобы гарантированно отправить
+  // накопленные изменения на Hocuspocus-сервер (иначе его debounce-сохранение
+  // может не сработать, если пользователь ушёл со страницы сразу после вставки)
   useEffect(() => {
     if (!editor) return
     const view = editor._tiptapEditor?.view
     if (!view) return
 
     const handlePaste = () => {
-      // Даём BlockNote время на async-обработку вставленного контента
-      setTimeout(() => scheduleContentSave(editor), 100)
+      setTimeout(() => {
+        const ydoc = collaborationRef.current?.ydoc
+        if (!ydoc) return
+        // Пустая транзакция создаёт Yjs-update, сбрасывающий debounce на сервере
+        ydoc.transact(() => {})
+      }, 100)
     }
 
     view.dom.addEventListener('paste', handlePaste)
     return () => view.dom.removeEventListener('paste', handlePaste)
-  }, [editor, scheduleContentSave])
+  }, [editor])
 
   // Настройка awareness
   useEffect(() => {
@@ -150,11 +131,10 @@ export const useBlockNoteEditor = (id, profile) => {
   // Очистка при размонтировании
   useEffect(() => {
     return () => {
-      clearTimeout(saveTimerRef.current)
       collaborationService.destroyProvider(collaborationRef.current?.provider)
       collaborationRef.current = null
     }
   }, [id])
 
-  return { editor, isEditorSaving }
+  return { editor, isEditorSaving: false }
 }
