@@ -7,13 +7,14 @@ const WS_URL = import.meta.env.VITE_API_URL.replace(/^http/, 'ws') + '/api/v1/co
 export const collaborationService = {
     createProvider: (documentName, { onConnect, onDisconnect, onAuthenticationFailed } = {}) => {
         const ydoc = new Y.Doc()
-        const token = localStorage.getItem('accessToken') ?? ''
 
         const provider = new HocuspocusProvider({
             url: WS_URL,
             name: documentName,
             document: ydoc,
-            token,
+            // Функция вместо строки — токен читается свежим при каждой аутентификации,
+            // в том числе после переподключения
+            token: () => localStorage.getItem('accessToken') ?? '',
 
             onConnect: () => {
                 console.log('[WS] Подключено к документу:', documentName)
@@ -29,9 +30,9 @@ export const collaborationService = {
                 console.error('[WS] Ошибка аутентификации:', reason)
                 try {
                     const res = await api.post('/auth/refresh', {})
-                    const newToken = res.data.data.accessToken
-                    setAccessToken(newToken)
-                    provider.configuration.token = newToken
+                    setAccessToken(res.data.data.accessToken)
+                    // Токен уже обновлён в localStorage — при reconnect провайдер
+                    // возьмёт его свежим через token-функцию выше
                     provider.connect()
                 } catch {
                     setAccessToken(null)
