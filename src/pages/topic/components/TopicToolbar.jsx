@@ -24,16 +24,14 @@ const TopicToolbar = ({
       </div>
       <div className="topic-page__actions">
         <Protected permission="topics.approve" mode="some">
-          {!isApproved && (
-            <button
-              className="topic-page__action-btn topic-page__action-btn--approve"
-              onClick={onApprove}
-              disabled={isLoadingApprove}
-            >
-              <DoubleCheck width="20px" height="20px" />
-              <span>Одобрить</span>
-            </button>
-          )}
+          <button
+            className="topic-page__action-btn topic-page__action-btn--approve"
+            onClick={onApprove}
+            disabled={isLoadingApprove}
+          >
+            <DoubleCheck width="20px" height="20px" />
+            <span>Одобрить</span>
+          </button>
         </Protected>
         <Protected permission="topics.delete" mode="some">
           <button
