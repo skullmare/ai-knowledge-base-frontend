@@ -17,7 +17,7 @@ const getTopicActions = ({ onApprove, onArchive, onDelete }, row) => [
         variant: 'approve',
         permission: 'topics.approve',
         permissionMode: 'some',
-        hidden: row.status === 'approved',
+        hidden: false,
         onClick: () => onApprove(row),
     },
     {
