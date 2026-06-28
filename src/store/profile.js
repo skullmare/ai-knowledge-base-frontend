@@ -86,6 +86,8 @@ const useProfileStore = create((set, get) => ({
         return permissions.includes(permission);
     },
 
+    setInitialized: () => set({ isInitialized: true }),
+
     clearProfile: () => set({ profile: null, permissions: [], isSystem: false, isInitialized: false })
 }));
 
