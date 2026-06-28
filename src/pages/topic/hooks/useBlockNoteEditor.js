@@ -97,21 +97,21 @@ export const useBlockNoteEditor = (id, profile) => {
     return editor.onEditorContentChange(uploadBase64Images)
   }, [editor, uploadBase64Images])
 
-  // После paste создаём пустую Yjs-транзакцию, чтобы гарантированно отправить
-  // накопленные изменения на Hocuspocus-сервер (иначе его debounce-сохранение
-  // может не сработать, если пользователь ушёл со страницы сразу после вставки)
+  // Отслеживаем незавершённую обработку paste
+  const pasteInProgressRef = useRef(false)
+
   useEffect(() => {
     if (!editor) return
     const view = editor._tiptapEditor?.view
     if (!view) return
 
     const handlePaste = () => {
+      // BlockNote обрабатывает paste асинхронно (конвертирует HTML → блоки).
+      // Помечаем, что идёт вставка, чтобы задержать destroy провайдера.
+      pasteInProgressRef.current = true
       setTimeout(() => {
-        const ydoc = collaborationRef.current?.ydoc
-        if (!ydoc) return
-        // Пустая транзакция создаёт Yjs-update, сбрасывающий debounce на сервере
-        ydoc.transact(() => {})
-      }, 100)
+        pasteInProgressRef.current = false
+      }, 500)
     }
 
     view.dom.addEventListener('paste', handlePaste)
@@ -128,10 +128,16 @@ export const useBlockNoteEditor = (id, profile) => {
     }
   }, [profile])
 
-  // Очистка при размонтировании
+  // Очистка при размонтировании.
+  // Если вставка ещё обрабатывается — даём 500 мс на завершение async-обработки
+  // BlockNote и отправку Yjs-апдейта на сервер до закрытия WS.
   useEffect(() => {
     return () => {
-      collaborationService.destroyProvider(collaborationRef.current?.provider)
+      const delay = pasteInProgressRef.current ? 500 : 0
+      const providerSnapshot = collaborationRef.current
+      setTimeout(() => {
+        collaborationService.destroyProvider(providerSnapshot?.provider)
+      }, delay)
       collaborationRef.current = null
     }
   }, [id])
