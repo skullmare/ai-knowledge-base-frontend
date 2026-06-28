@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import useTopicStore from '@store/topic'
 
-export const useApproveTopic = (id, onSuccess) => {
+export const useApproveTopic = (id, onSuccess, forceSync) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { approveTopic, isLoadingApproveTopic } = useTopicStore()
 
@@ -10,13 +10,15 @@ export const useApproveTopic = (id, onSuccess) => {
 
   const handleApprove = useCallback(async () => {
     try {
+      // Гарантируем сохранение актуального контента в БД перед approve
+      await forceSync?.()
       await approveTopic(id)
       closeModal()
       onSuccess?.()
     } catch (error) {
       console.error('Ошибка при одобрении:', error)
     }
-  }, [approveTopic, id, closeModal, onSuccess])
+  }, [approveTopic, id, closeModal, onSuccess, forceSync])
 
   return {
     isModalOpen,

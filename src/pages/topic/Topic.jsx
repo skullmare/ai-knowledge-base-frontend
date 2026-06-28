@@ -58,7 +58,7 @@ export default function TopicPage() {
     handleRolesChange,
   } = useAutosave(id, currentTopic, updateTopic)
 
-  const { editor, isEditorSaving } = useBlockNoteEditor(id, profile)
+  const { editor, forceSync } = useBlockNoteEditor(id, profile)
 
   const deleteTopicHook = useDeleteTopic(id, () => {
     navigate('/topics')
@@ -66,9 +66,9 @@ export default function TopicPage() {
 
   const approveTopicHook = useApproveTopic(id, () => {
     refreshTopic()
-  })
+  }, forceSync)
 
-  const isSaving = isTopicSaving || isEditorSaving
+  const isSaving = isTopicSaving
   const isApproved = currentTopic?.status === 'approved'
 
   const { fields: navbarFields, footer: navbarFooter } = TopicSidebar({
