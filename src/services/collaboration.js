@@ -1,5 +1,6 @@
 import * as Y from 'yjs'
 import { HocuspocusProvider } from '@hocuspocus/provider'
+import api, { setAccessToken } from './api'
 
 const WS_URL = import.meta.env.VITE_API_URL.replace(/^http/, 'ws') + '/api/v1/collaboration'
 
@@ -24,8 +25,20 @@ export const collaborationService = {
                 onDisconnect?.()
             },
 
-            onAuthenticationFailed: ({ reason }) => {
+            onAuthenticationFailed: async ({ reason }) => {
                 console.error('[WS] Ошибка аутентификации:', reason)
+                try {
+                    const res = await api.post('/auth/refresh', {})
+                    const newToken = res.data.data.accessToken
+                    setAccessToken(newToken)
+                    provider.configuration.token = newToken
+                    provider.connect()
+                } catch {
+                    setAccessToken(null)
+                    if (window.location.pathname !== '/login') {
+                        window.location.replace('/login')
+                    }
+                }
                 onAuthenticationFailed?.(reason)
             },
         })

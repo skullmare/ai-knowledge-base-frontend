@@ -5,6 +5,10 @@ const ProtectedRoute = ({ children, permission = null, permissions = null, mode 
   const token = localStorage.getItem('accessToken');
   const { permissions: userPermissions, isInitialized } = useProfileStore();
 
+  if (!isInitialized) {
+    return null;
+  }
+
   if (!token) {
     return <Navigate to="/login" replace />;
   }
