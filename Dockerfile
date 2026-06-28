@@ -10,7 +10,7 @@ RUN npm ci
 
 COPY . .
 
-ENV VITE_API_URL=https://operon-back-rocketmind.amvera.io
+ENV VITE_API_URL=https://back-operon123.amvera.io
 
 RUN npm run build
 
