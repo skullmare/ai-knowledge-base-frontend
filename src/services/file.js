@@ -18,7 +18,7 @@ export const fileService = {
 
   uploadPresigned: async (file) => {
     // Шаг 1: получаем presigned URL от сервера
-    const { data: step1 } = await api.post('/file/presigned-url', {
+    const { data: step1 } = await api.post('/files/presigned-url', {
       originalName: file.name,
       mimeType: file.type,
     })
@@ -35,7 +35,7 @@ export const fileService = {
     }
 
     // Шаг 3: подтверждаем загрузку — сервер проверяет через HeadObject
-    const { data: step3 } = await api.post('/file/presigned-complete', {
+    const { data: step3 } = await api.post('/files/presigned-complete', {
       key,
       originalName: file.name,
       mimeType: file.type,
