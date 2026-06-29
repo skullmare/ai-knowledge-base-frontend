@@ -29,9 +29,21 @@ export const useBlockNoteEditor = (id, profile) => {
   const upload = useFileStore((s) => s.upload)
   const collaborationRef = useRef(null)
   const processingBlocksRef = useRef(new Set())
+  const profileRef = useRef(profile)
+  useEffect(() => { profileRef.current = profile }, [profile])
 
   if (!collaborationRef.current) {
-    collaborationRef.current = collaborationService.createProvider(id)
+    collaborationRef.current = collaborationService.createProvider(id, {
+      onProviderRecreated: (newProvider) => {
+        collaborationRef.current = { ...collaborationRef.current, provider: newProvider }
+        if (profileRef.current) {
+          newProvider.setAwarenessField('user', {
+            name: profileRef.current.login ?? profileRef.current.email ?? 'Аноним',
+            color: DEFAULT_USER_COLOR,
+          })
+        }
+      },
+    })
   }
 
   const schema = useMemo(() => {
@@ -91,8 +103,9 @@ export const useBlockNoteEditor = (id, profile) => {
   }), [])
 
   useEffect(() => {
-    if (profile && collaborationRef.current?.provider) {
-      collaborationRef.current.provider.setAwarenessField('user', {
+    const provider = collaborationRef.current?.provider
+    if (profile && provider) {
+      provider.setAwarenessField('user', {
         name: profile.login ?? profile.email ?? 'Аноним',
         color: DEFAULT_USER_COLOR,
       })
