@@ -30,7 +30,7 @@ export function EditAgentRoleModal({
             <Input
                 variant="default"
                 size="large"
-                placeholder="Опишите роль агента"
+                placeholder="Опишите роль пользователя ИИ агента"
                 showClearButton
                 label="Описание"
                 maxLength={300}
