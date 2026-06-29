@@ -8,7 +8,7 @@ export function EditAgentRoleModal({
 }) {
     return (
         <Modal
-            title="Редактирование роли агента"
+            title="Редактирование роли пользователя ИИ агента"
             onClose={onClose}
             onConfirm={onConfirm}
             confirmLabel="Сохранить"
