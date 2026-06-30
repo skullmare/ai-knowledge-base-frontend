@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { profileService } from '@services/profile';
 import { handleError } from '../utils/handleError';
 import { storeRegistry } from '../utils/storeRegistry';
+import useSuccessStore from './success';
 
 const useProfileStore = create((set, get) => ({
     profile: null,
@@ -63,6 +64,7 @@ const useProfileStore = create((set, get) => ({
                     permissions: data.role?.permissions || [],
                     isSystem: data.isSystem || data.role?.isSystem || false,
                 });
+                useSuccessStore.getState().notify('Профиль', 'Профиль успешно обновлён');
             } else {
                 set({ error: message });
                 throw new Error(message);

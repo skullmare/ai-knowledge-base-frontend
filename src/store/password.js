@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { passwordService } from '@services/password'
 import { handleError } from '../utils/handleError'
+import useSuccessStore from './success'
 
 const usePasswordStore = create((set) => ({
     isLoadingChangePassword: false,
@@ -12,6 +13,7 @@ const usePasswordStore = create((set) => ({
         set({ isLoadingChangePassword: true, error: null })
         try {
             const data = await passwordService.change(payload)
+            useSuccessStore.getState().notify('Пароль', 'Пароль успешно изменён')
             return data
         } catch (err) {
             const errorMessage = handleError(err)

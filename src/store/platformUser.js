@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { userService } from '@services/platformUser';
 import { handleError } from '../utils/handleError';
 import { storeRegistry } from '../utils/storeRegistry';
+import useSuccessStore from './success';
 
 const usePlatformUserStore = create((set, get) => ({
     users: [],
@@ -90,6 +91,7 @@ const usePlatformUserStore = create((set, get) => ({
                 set((state) => ({
                     users: [newUser, ...state.users]
                 }));
+                useSuccessStore.getState().notify('Пользователи платформы', 'Пользователь успешно создан');
                 return newUser;
             } else {
                 set({ error: message });
@@ -113,6 +115,7 @@ const usePlatformUserStore = create((set, get) => ({
                     users: state.users.map((u) => (u._id === id ? updatedUser : u)),
                     currentUser: state.currentUser?._id === id ? updatedUser : state.currentUser,
                 }));
+                useSuccessStore.getState().notify('Пользователи платформы', 'Пользователь успешно обновлён');
                 return updatedUser;
             } else {
                 set({ error: message });
@@ -136,6 +139,7 @@ const usePlatformUserStore = create((set, get) => ({
                     users: state.users.filter((u) => u._id !== id),
                     currentUser: state.currentUser?._id === id ? null : state.currentUser,
                 }));
+                useSuccessStore.getState().notify('Пользователи платформы', 'Пользователь успешно удалён');
             } else {
                 set({ error: message });
                 throw new Error(message);

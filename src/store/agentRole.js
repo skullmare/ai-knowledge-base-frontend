@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { agentRoleService } from '@services/agentRole';
 import { handleError } from '../utils/handleError';
 import { syncEntityUpdate } from '../utils/syncStores';
+import useSuccessStore from './success';
 
 const useAgentRoleStore = create((set, get) => ({
     roles: [],
@@ -65,6 +66,7 @@ const useAgentRoleStore = create((set, get) => ({
                 set((state) => ({
                     roles: [newRole, ...state.roles]
                 }));
+                useSuccessStore.getState().notify('Роли агентов', 'Роль успешно создана');
                 return newRole;
             } else {
                 set({ error: message });
@@ -89,6 +91,7 @@ const useAgentRoleStore = create((set, get) => ({
                     currentRole: state.currentRole?._id === id ? updatedRole : state.currentRole,
                 }));
                 syncEntityUpdate('agentRole', id, updatedRole);
+                useSuccessStore.getState().notify('Роли агентов', 'Роль успешно обновлена');
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -111,6 +114,7 @@ const useAgentRoleStore = create((set, get) => ({
                     roles: state.roles.filter((r) => r._id !== id),
                     currentRole: state.currentRole?._id === id ? null : state.currentRole,
                 }));
+                useSuccessStore.getState().notify('Роли агентов', 'Роль успешно удалена');
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -132,6 +136,7 @@ const useAgentRoleStore = create((set, get) => ({
                 set((state) => ({
                     roles: state.roles.filter((r) => !ids.includes(r._id))
                 }));
+                useSuccessStore.getState().notify('Роли агентов', 'Роли успешно удалены');
             } else {
                 set({ error: message });
                 throw new Error(message);
