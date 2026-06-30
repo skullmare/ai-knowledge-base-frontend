@@ -58,7 +58,7 @@ export default function TopicPage() {
     handleRolesChange,
   } = useAutosave(id, currentTopic, updateTopic)
 
-  const { editor, forceSync } = useBlockNoteEditor(id, profile)
+  const { editor, forceSync, isSynced } = useBlockNoteEditor(id, profile, !isPageLoading)
 
   const deleteTopicHook = useDeleteTopic(id, () => {
     navigate('/topics')
@@ -108,8 +108,21 @@ export default function TopicPage() {
               isLoadingDelete={deleteTopicHook.isLoading}
               isApproved={isApproved}
             />
-            <div className="topic-page__editor">
-              <BlockNoteView editor={editor} theme="dark" editable={canUpdate} />
+            <div className="topic-page__editor" style={{ position: 'relative' }}>
+              {!isSynced && (
+                <div className="topic-page__editor-skeleton" aria-hidden="true">
+                  <div className="topic-page__editor-skeleton-line" style={{ height: 28, width: '55%' }} />
+                  <div className="topic-page__editor-skeleton-line" style={{ height: 18, width: '90%' }} />
+                  <div className="topic-page__editor-skeleton-line" style={{ height: 18, width: '80%' }} />
+                  <div className="topic-page__editor-skeleton-line" style={{ height: 18, width: '85%' }} />
+                  <div className="topic-page__editor-skeleton-line" style={{ height: 18, width: '70%' }} />
+                  <div className="topic-page__editor-skeleton-line" style={{ height: 18, width: '88%' }} />
+                  <div className="topic-page__editor-skeleton-line" style={{ height: 18, width: '60%' }} />
+                </div>
+              )}
+              <div style={{ visibility: isSynced ? 'visible' : 'hidden', height: isSynced ? undefined : 0 }}>
+                <BlockNoteView editor={editor} theme="dark" editable={canUpdate} />
+              </div>
             </div>
           </div>
         </div>

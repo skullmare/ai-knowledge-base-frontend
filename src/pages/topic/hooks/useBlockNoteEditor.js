@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useCallback } from 'react'
+import { useRef, useEffect, useMemo, useCallback, useState } from 'react'
 import { useCreateBlockNote } from '@blocknote/react'
 import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core'
 import { ru } from '@blocknote/core/locales'
@@ -25,15 +25,20 @@ const collectBase64ImageBlocks = (blocks) => {
   return result
 }
 
-export const useBlockNoteEditor = (id, profile) => {
+export const useBlockNoteEditor = (id, profile, ready = true) => {
   const upload = useFileStore((s) => s.upload)
   const collaborationRef = useRef(null)
   const processingBlocksRef = useRef(new Set())
   const profileRef = useRef(profile)
+  const [isSynced, setIsSynced] = useState(false)
   useEffect(() => { profileRef.current = profile }, [profile])
 
   if (!collaborationRef.current) {
+    // Создаём провайдер без авто-подключения (connect: false).
+    // WebSocket подключается только после завершения REST-запросов страницы,
+    // чтобы не блокировать загрузку метаданных топика.
     collaborationRef.current = collaborationService.createProvider(id, {
+      onSynced: () => setIsSynced(true),
       onProviderRecreated: (newProvider) => {
         collaborationRef.current = { ...collaborationRef.current, provider: newProvider }
         if (profileRef.current) {
@@ -43,8 +48,16 @@ export const useBlockNoteEditor = (id, profile) => {
           })
         }
       },
-    })
+    }, false)
   }
+
+  // Подключаемся к WebSocket только когда REST-данные страницы загружены
+  useEffect(() => {
+    const provider = collaborationRef.current?.provider
+    if (ready && provider) {
+      provider.connect()
+    }
+  }, [ready])
 
   const schema = useMemo(() => {
     const { paragraph, heading, image, video, audio, file, numberedListItem, bulletListItem } = defaultBlockSpecs
@@ -119,5 +132,5 @@ export const useBlockNoteEditor = (id, profile) => {
     }
   }, [id])
 
-  return { editor, forceSync }
+  return { editor, forceSync, isSynced }
 }

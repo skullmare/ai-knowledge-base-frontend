@@ -4,14 +4,15 @@ import api, { setAccessToken } from './api'
 
 const WS_URL = import.meta.env.VITE_API_URL.replace(/^http/, 'ws') + '/api/v1/collaboration'
 
-const buildProvider = (documentName, ydoc, callbacks = {}) => {
-    const { onConnect, onDisconnect, onAuthenticationFailed, onProviderRecreated } = callbacks
+const buildProvider = (documentName, ydoc, callbacks = {}, autoConnect = true) => {
+    const { onConnect, onDisconnect, onAuthenticationFailed, onProviderRecreated, onSynced } = callbacks
 
     const provider = new HocuspocusProvider({
         url: WS_URL,
         name: documentName,
         document: ydoc,
         token: () => localStorage.getItem('accessToken') ?? '',
+        connect: autoConnect,
 
         onConnect: () => {
             console.log('[WS] Подключено к документу:', documentName)
@@ -23,6 +24,10 @@ const buildProvider = (documentName, ydoc, callbacks = {}) => {
             onDisconnect?.()
         },
 
+        onSynced: () => {
+            onSynced?.()
+        },
+
         onAuthenticationFailed: async ({ reason }) => {
             console.error('[WS] Ошибка аутентификации:', reason)
             try {
@@ -32,7 +37,7 @@ const buildProvider = (documentName, ydoc, callbacks = {}) => {
                 // provider.connect() ненадёжен после auth failure — пересоздаём провайдер.
                 // Ydoc тот же, поэтому привязка к редактору сохраняется.
                 provider.destroy()
-                const newProvider = buildProvider(documentName, ydoc, callbacks)
+                const newProvider = buildProvider(documentName, ydoc, callbacks, true)
                 onProviderRecreated?.(newProvider)
             } catch {
                 setAccessToken(null)
@@ -48,9 +53,9 @@ const buildProvider = (documentName, ydoc, callbacks = {}) => {
 }
 
 export const collaborationService = {
-    createProvider: (documentName, callbacks = {}) => {
+    createProvider: (documentName, callbacks = {}, autoConnect = true) => {
         const ydoc = new Y.Doc()
-        const provider = buildProvider(documentName, ydoc, callbacks)
+        const provider = buildProvider(documentName, ydoc, callbacks, autoConnect)
         return { provider, ydoc }
     },
 
