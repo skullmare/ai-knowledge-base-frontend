@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import useProfileStore from '@store/profile';
 import AppRouter from '@router/App';
 import ErrorSnackbarStack from '@ui/Snackbar/ErrorSnackbarStack'
+import SuccessSnackbarStack from '@ui/Snackbar/SuccessSnackbarStack'
 import api, { setAccessToken } from '@services/api'
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
     <>
       <AppRouter />
       <ErrorSnackbarStack />
+      <SuccessSnackbarStack />
     </>
   )
 }

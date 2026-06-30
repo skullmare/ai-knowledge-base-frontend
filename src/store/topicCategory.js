@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { topicCategoryService } from '@services/topicCategory';
 import { handleError } from '../utils/handleError';
 import { syncEntityUpdate } from '../utils/syncStores';
+import useSuccessStore from './success';
 
 const useTopicCategoryStore = create((set, get) => ({
     categories: [],
@@ -63,6 +64,7 @@ const useTopicCategoryStore = create((set, get) => ({
                 set((state) => ({
                     categories: [newCategory, ...state.categories]
                 }));
+                useSuccessStore.getState().notify('Категории топиков', 'Категория успешно создана');
                 return newCategory;
             } else {
                 set({ error: message });
@@ -87,6 +89,7 @@ const useTopicCategoryStore = create((set, get) => ({
                     currentCategory: state.currentCategory?._id === id ? updatedCategory : state.currentCategory,
                 }));
                 syncEntityUpdate('topicCategory', id, updatedCategory);
+                useSuccessStore.getState().notify('Категории топиков', 'Категория успешно обновлена');
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -109,6 +112,7 @@ const useTopicCategoryStore = create((set, get) => ({
                     categories: state.categories.filter((c) => c._id !== id),
                     currentCategory: state.currentCategory?._id === id ? null : state.currentCategory,
                 }));
+                useSuccessStore.getState().notify('Категории топиков', 'Категория успешно удалена');
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -130,6 +134,7 @@ const useTopicCategoryStore = create((set, get) => ({
                 set((state) => ({
                     categories: state.categories.filter((c) => !ids.includes(c._id))
                 }));
+                useSuccessStore.getState().notify('Категории топиков', 'Категории успешно удалены');
             } else {
                 set({ error: message });
                 throw new Error(message);

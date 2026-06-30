@@ -2,8 +2,8 @@
 import { create } from 'zustand';
 import { topicService } from '@services/topic';
 import { handleError } from '../utils/handleError';
-
 import { storeRegistry } from '../utils/storeRegistry';
+import useSuccessStore from './success';
 
 const useTopicStore = create((set, get) => ({
     topics: [],
@@ -119,6 +119,7 @@ const useTopicStore = create((set, get) => ({
                 set((state) => ({
                     topics: [newTopic, ...state.topics]
                 }));
+                useSuccessStore.getState().notify('Топики', 'Топик успешно создан');
                 return newTopic;
             } else {
                 set({ error: message });
@@ -142,6 +143,7 @@ const useTopicStore = create((set, get) => ({
                     topics: state.topics.map((t) => (t._id === id ? updatedTopic : t)),
                     currentTopic: state.currentTopic?._id === id ? updatedTopic : state.currentTopic,
                 }));
+                useSuccessStore.getState().notify('Топики', 'Топик успешно обновлён');
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -163,6 +165,7 @@ const useTopicStore = create((set, get) => ({
                 set((state) => ({
                     topics: state.topics.filter((t) => t._id !== id)
                 }));
+                useSuccessStore.getState().notify('Топики', 'Топик успешно удалён');
             } else {
                 set({ error: message });
                 throw new Error(message);
@@ -184,6 +187,7 @@ const useTopicStore = create((set, get) => ({
                 set((state) => ({
                     topics: state.topics.map((t) => (t._id === id ? data : t))
                 }));
+                useSuccessStore.getState().notify('Топики', 'Топик успешно подтверждён');
             } else {
                 set({ error: message });
                 throw new Error(message);

@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { agentUserService } from '@services/agentUser';
 import { handleError } from '../utils/handleError';
 import { storeRegistry } from '../utils/storeRegistry';
+import useSuccessStore from './success';
 
 const useAgentUserStore = create((set, get) => ({
     users: [],
@@ -88,6 +89,7 @@ const useAgentUserStore = create((set, get) => ({
                     users: state.users.map((u) => (u._id === id ? updatedUser : u)),
                     currentUser: state.currentUser?._id === id ? updatedUser : state.currentUser,
                 }));
+                useSuccessStore.getState().notify('Пользователи агентов', 'Пользователь успешно обновлён');
                 return updatedUser;
             } else {
                 set({ error: message });
@@ -111,6 +113,7 @@ const useAgentUserStore = create((set, get) => ({
                     users: state.users.filter((u) => u._id !== id),
                     currentUser: state.currentUser?._id === id ? null : state.currentUser,
                 }));
+                useSuccessStore.getState().notify('Пользователи агентов', 'Пользователь успешно удалён');
             } else {
                 set({ error: message });
                 throw new Error(message);
