@@ -2,11 +2,7 @@ import Delete from '@assets/icons/delete-16.svg'
 import EditIcon from '@assets/icons/edit-16.svg'
 import DropdownActions from '@ui/DropdownActions/DropdownActions'
 
-export const NAV_LINKS = [
-    { to: '/topics', label: 'Управление данными', permission: 'topics.read' },
-    { to: '/users', label: 'Управление пользователями', permission: ['platformUsers.read', 'agentUsers.read'], permissionMode: 'some' },
-    { to: '/logs', label: 'Лента событий', permission: 'logs.read' },
-]
+export { NAV_LINKS } from '@/constants/navLinks'
 
 const getPlatformUserActions = ({ onEdit, onDelete }, row) => [
     {

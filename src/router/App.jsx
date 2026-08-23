@@ -8,6 +8,9 @@ import TopicPage from '@pages/topic/Topic'
 import TopicsPage from '@pages/topics/Topics'
 import UsersPage from '@pages/users/Users'
 import LogsPage from '@pages/logs/Logs'
+import FilesPage from '@pages/files/Files'
+import SettingsPage from '@pages/settings/Settings'
+import GoogleCallbackPage from '@pages/settings/GoogleCallback'
 import ProfilePage from '@pages/profile/Profile'
 import NotFound from '@pages/not-found/NotFound'
 import IndexPage from '@pages/index/Index'
@@ -40,6 +43,20 @@ export default function AppRouter() {
                         <UsersPage />
                     </ProtectedRoute>
                 } />
+
+                <Route path="/files" element={
+                    <ProtectedRoute permissions={["files.read", "googleDrive.read"]} mode="some">
+                        <FilesPage />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/settings" element={
+                    <ProtectedRoute permission="system_settings.read">
+                        <SettingsPage />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/settings/google-callback" element={<GoogleCallbackPage />} />
 
                 <Route path="/logs" element={
                     <ProtectedRoute permission="logs.read">

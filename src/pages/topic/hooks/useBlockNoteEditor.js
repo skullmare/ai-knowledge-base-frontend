@@ -74,7 +74,7 @@ export const useBlockNoteEditor = (id, profile, ready = true) => {
       fragment: collaborationRef.current.ydoc.getXmlFragment('document-store'),
     },
     uploadFile: async (file) => {
-      const { data } = await upload(file)
+      const { data } = await upload(file, { visibility: 'public' })
       return data.url
     },
   })
@@ -90,7 +90,7 @@ export const useBlockNoteEditor = (id, profile, ready = true) => {
         processingBlocksRef.current.add(block.id)
         try {
           const file = await base64ToFile(block.props.url)
-          const { data } = await upload(file)
+          const { data } = await upload(file, { visibility: 'public' })
           editor.updateBlock(block, { props: { ...block.props, url: data.url } })
         } catch (err) {
           console.error('Failed to upload pasted image:', err)

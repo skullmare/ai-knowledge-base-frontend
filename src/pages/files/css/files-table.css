@@ -1,0 +1,69 @@
+/* files-table.css — таблица файлов */
+
+.files-page__table-name {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-gold-100);
+    font-size: var(--text-base);
+    text-align: left;
+    cursor: pointer;
+}
+
+.files-page__table-name:hover {
+    color: var(--color-gold-200);
+}
+
+.files-page__table-error {
+    max-width: 320px;
+    overflow: hidden;
+    color: var(--color-red);
+    font-size: var(--text-xs);
+    line-height: var(--leading-normal);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.files-page__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    white-space: nowrap;
+}
+
+.files-page__status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--color-gray-200);
+}
+
+.files-page__status-dot--indexed {
+    background: var(--color-green);
+}
+
+.files-page__status-dot--indexing {
+    background: var(--color-gold-100);
+}
+
+.files-page__status-dot--error {
+    background: var(--color-red);
+}
+
+.files-page__table-roles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.files-page__table-role-tag {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    background: var(--color-gray-500);
+    color: var(--color-gray-100);
+    font-size: var(--text-xs);
+    white-space: nowrap;
+}

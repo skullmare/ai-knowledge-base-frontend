@@ -11,6 +11,8 @@ import useTopicCategoryStore from '@store/topicCategory'
 import useFileStore from '@store/file'
 import usePasswordStore from '@store/password'
 import usePermissionsStore from '@store/permissions'
+import useSystemSettingsStore from '@store/systemSettings'
+import useGoogleDriveStore from '@store/googleDrive'
 
 // Registry: storeKey -> { useStore, clearError }
 const STORE_REGISTRY = [
@@ -85,6 +87,18 @@ const STORE_REGISTRY = [
     label: 'Права доступа',
     useStore: usePermissionsStore,
     clearError: () => usePermissionsStore.setState({ error: null }),
+  },
+  {
+    key: 'systemSettings',
+    label: 'Настройки системы',
+    useStore: useSystemSettingsStore,
+    clearError: () => useSystemSettingsStore.setState({ error: null }),
+  },
+  {
+    key: 'googleDrive',
+    label: 'Google Drive',
+    useStore: useGoogleDriveStore,
+    clearError: () => useGoogleDriveStore.setState({ error: null }),
   },
 ]
 
