@@ -1,0 +1,39 @@
+/* files-responsive.css — адаптив страницы файлов */
+
+@media (max-width: 1000px) {
+    .files-page__toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .files-page__controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .files-page__controls-filter,
+    .files-page__controls-search {
+        min-width: 0;
+    }
+
+    .drive-browser__item {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .drive-browser__item-main {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .drive-browser__actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .file-preview {
+        width: 96vw;
+        height: 92vh;
+    }
+}

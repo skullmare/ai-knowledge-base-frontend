@@ -4,11 +4,7 @@ import Archive from '@assets/icons/archive-16.svg'
 import Delete from '@assets/icons/delete-16.svg'
 import DropdownActions from '@ui/DropdownActions/DropdownActions'
 
-export const NAV_LINKS = [
-    { to: '/topics', label: 'Управление данными', permission: 'topics.read' },
-    { to: '/users', label: 'Управление пользователями', permission: ['platformUsers.read', 'agentUsers.read'], permissionMode: 'some' },
-    { to: '/logs', label: 'Лента событий', permission: 'logs.read' },
-]
+export { NAV_LINKS } from '@/constants/navLinks'
 
 const getTopicActions = ({ onApprove, onArchive, onDelete }, row) => [
     {

@@ -41,7 +41,7 @@ export function useEditProfileModal() {
         if (!file) return
         setIsUploadingPhoto(true)
         try {
-            const res = await upload(file)
+            const res = await upload(file, { visibility: 'public' })
             if (res.success) setPhotoUrl(res.data.url)
         } finally {
             setIsUploadingPhoto(false)
