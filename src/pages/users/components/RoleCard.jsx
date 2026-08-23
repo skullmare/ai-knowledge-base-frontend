@@ -1,4 +1,4 @@
-import Protected from '@guards/Protected'
+import HasPermission from '@guards/HasPermission'
 import EditIcon from '@assets/icons/edit-16.svg'
 import Delete from '@assets/icons/delete-16.svg'
 import './RoleCard.css'
@@ -16,7 +16,7 @@ export function RoleCard({
             <div className="role-card__header">
                 <span className="role-card__name">{role.name}</span>
                 <div className="role-card__actions">
-                    <Protected permission={editPermission} mode="some">
+                    <HasPermission permission={editPermission} mode="some">
                         <button
                             className="role-card__action-btn"
                             onClick={() => onEdit(role)}
@@ -24,9 +24,9 @@ export function RoleCard({
                         >
                             <EditIcon width="16px" height="16px" />
                         </button>
-                    </Protected>
+                    </HasPermission>
                     {!role.isSystem && (
-                        <Protected permission={deletePermission} mode="some">
+                        <HasPermission permission={deletePermission} mode="some">
                             <button
                                 className="role-card__action-btn role-card__action-btn--delete"
                                 onClick={() => onDelete(role)}
@@ -34,7 +34,7 @@ export function RoleCard({
                             >
                                 <Delete width="16px" height="16px" />
                             </button>
-                        </Protected>
+                        </HasPermission>
                     )}
                 </div>
             </div>

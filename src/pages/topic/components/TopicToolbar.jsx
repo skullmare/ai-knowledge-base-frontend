@@ -2,15 +2,14 @@ import React from 'react'
 import Spinner from '@ui/Spinner/Spinner'
 import Delete from '@assets/icons/delete-16.svg'
 import DoubleCheck from '@assets/icons/double-check-24.svg'
-import Protected from '@guards/Protected'
+import HasPermission from '@guards/HasPermission'
 
 const TopicToolbar = ({
   isSaving,
   onApprove,
   onDelete,
   isLoadingApprove,
-  isLoadingDelete,
-  isApproved = false
+  isLoadingDelete
 }) => {
   return (
     <div className="topic-page__editor-toolbar">
@@ -23,7 +22,7 @@ const TopicToolbar = ({
         )}
       </div>
       <div className="topic-page__actions">
-        <Protected permission="topics.approve" mode="some">
+        <HasPermission permission="topics.approve" mode="some">
           <button
             className="topic-page__action-btn topic-page__action-btn--approve"
             onClick={onApprove}
@@ -32,8 +31,8 @@ const TopicToolbar = ({
             <DoubleCheck width="20px" height="20px" />
             <span>Одобрить</span>
           </button>
-        </Protected>
-        <Protected permission="topics.delete" mode="some">
+        </HasPermission>
+        <HasPermission permission="topics.delete" mode="some">
           <button
             className="topic-page__action-btn topic-page__action-btn--delete"
             onClick={onDelete}
@@ -42,7 +41,7 @@ const TopicToolbar = ({
             <Delete width="16px" height="16px" />
             <span>Удалить</span>
           </button>
-        </Protected>
+        </HasPermission>
       </div>
     </div>
   )

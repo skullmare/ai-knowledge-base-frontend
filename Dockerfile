@@ -10,7 +10,10 @@ RUN npm ci
 
 COPY . .
 
-ENV VITE_API_URL=https://back-operon123.amvera.io
+# Переменные Vite подставляются в код на этапе сборки,
+# поэтому адрес backend задаётся аргументом сборки, а не в рантайме.
+ARG VITE_API_URL=https://back-operon123.amvera.io
+ENV VITE_API_URL=$VITE_API_URL
 
 RUN npm run build
 

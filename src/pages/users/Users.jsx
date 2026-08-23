@@ -6,7 +6,7 @@ import Navbar from '@layout/Navbar/Navbar'
 import Layout from '@layout/Layout/Layout'
 import Table from '@layout/Table/Table'
 import ConfirmModal from '@layout/Modal/ConfirmModal'
-import Protected from '@guards/Protected'
+import HasPermission from '@guards/HasPermission'
 import { useLogout } from '@hooks/useLogout'
 import { UsersNavbar } from './components/UsersNavbar'
 import { UsersToolbar } from './components/UsersToolbar'
@@ -116,7 +116,7 @@ export default function UsersPage() {
                 />
 
                 {activeSection === 'platform' && (
-                    <Protected permission="platformUsers.read" mode="some">
+                    <HasPermission permission="platformUsers.read" mode="some">
                         <Table
                             columns={platformColumns}
                             data={platformUsers}
@@ -126,11 +126,11 @@ export default function UsersPage() {
                             onPageChange={(p) => fetchPlatformUsers(buildPlatformParams({ page: p }))}
                             onLimitChange={(l) => fetchPlatformUsers(buildPlatformParams({ page: 1, limit: l }))}
                         />
-                    </Protected>
+                    </HasPermission>
                 )}
 
                 {activeSection === 'agent' && (
-                    <Protected permission="agentUsers.read" mode="some">
+                    <HasPermission permission="agentUsers.read" mode="some">
                         <Table
                             columns={agentColumns}
                             data={agentUsers}
@@ -140,11 +140,11 @@ export default function UsersPage() {
                             onPageChange={(p) => fetchAgentUsers(buildAgentParams({ page: p }))}
                             onLimitChange={(l) => fetchAgentUsers(buildAgentParams({ page: 1, limit: l }))}
                         />
-                    </Protected>
+                    </HasPermission>
                 )}
 
                 {activeSection === 'platformRoles' && (
-                    <Protected permission="platformRoles.read" mode="some">
+                    <HasPermission permission="platformRoles.read" mode="some">
                         <RolesList
                             roles={platformRoles}
                             showPermissions
@@ -153,11 +153,11 @@ export default function UsersPage() {
                             onEdit={editPlatformRoleModal.open}
                             onDelete={deletePlatformRoleHook.openModal}
                         />
-                    </Protected>
+                    </HasPermission>
                 )}
 
                 {activeSection === 'agentRoles' && (
-                    <Protected permission="agentRoles.read" mode="some">
+                    <HasPermission permission="agentRoles.read" mode="some">
                         <RolesList
                             roles={agentRoles}
                             editPermission="agentRoles.update"
@@ -165,7 +165,7 @@ export default function UsersPage() {
                             onEdit={editAgentRoleModal.open}
                             onDelete={deleteAgentRoleHook.openModal}
                         />
-                    </Protected>
+                    </HasPermission>
                 )}
             </div>
 

@@ -11,8 +11,7 @@ export function useTopicsData({ debouncedSearch, selectedRole, activeCategory, v
     const isLoadingCreateTopic = useTopicStore((s) => s.isLoadingCreateTopic)
 
     const fetchCategories = useTopicCategoryStore((s) => s.fetchCategories)
-    const categoriesRaw = useTopicCategoryStore((s) => s.categories)
-    const categories = Array.isArray(categoriesRaw) ? categoriesRaw : (categoriesRaw?.categories ?? [])
+    const categories = useTopicCategoryStore((s) => s.categories)
     const createCategory = useTopicCategoryStore((s) => s.createCategory)
     const updateCategory = useTopicCategoryStore((s) => s.updateCategory)
     const deleteCategory = useTopicCategoryStore((s) => s.deleteCategory)

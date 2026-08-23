@@ -1,7 +1,7 @@
 // hooks/useEditCategoryModal.js
 import { useState } from 'react'
 
-export function useEditCategoryModal(onUpdate, fetchTopics, buildParams, fetchCategories) {
+export function useEditCategoryModal(onUpdate) {
     const [isOpen, setIsOpen] = useState(false)
     const [categoryId, setCategoryId] = useState(null)
     const [name, setName] = useState('')

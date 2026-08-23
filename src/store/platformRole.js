@@ -5,7 +5,7 @@ import { handleError } from '../utils/handleError';
 import { syncEntityUpdate } from '../utils/syncStores';
 import useSuccessStore from './success';
 
-const usePlatformRoleStore = create((set, get) => ({
+const usePlatformRoleStore = create((set) => ({
     roles: [],
     currentRole: null,
     isLoadingFetchRoles: false,

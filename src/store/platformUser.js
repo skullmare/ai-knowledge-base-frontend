@@ -5,7 +5,7 @@ import { handleError } from '../utils/handleError';
 import { storeRegistry } from '../utils/storeRegistry';
 import useSuccessStore from './success';
 
-const usePlatformUserStore = create((set, get) => ({
+const usePlatformUserStore = create((set) => ({
     users: [],
     currentUser: null,
     isLoadingFetchUsers: false,

@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { logService } from '../services/log'
 import { handleError } from '../utils/handleError'
 
-const useLogStore = create((set, get) => ({
+const useLogStore = create((set) => ({
     logs: [],
     currentLog: null,
     isLoadingFetchLogs: false,
