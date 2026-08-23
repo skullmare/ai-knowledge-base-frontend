@@ -13,6 +13,7 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
     const modelsError = useSystemSettingsStore((s) => s.modelsError)
     const recreateCollection = useSystemSettingsStore((s) => s.recreateCollection)
     const isRecreating = useSystemSettingsStore((s) => s.isLoadingRecreate)
+    const fixed = useSystemSettingsStore((s) => s.fixed)
 
     const [isRecreateOpen, setIsRecreateOpen] = useState(false)
 
@@ -47,6 +48,20 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
                 ? <p className="settings-section__error">Список моделей недоступен: {modelsError}</p>
                 : <p className="settings-section__note">Доступно моделей по текущему ключу: {models.length}</p>}
 
+            <div className="settings-field">
+                <span className="settings-field__label">Модель эмбеддингов</span>
+                <p className="settings-field__readonly">
+                    <code>{fixed.embeddingModel || '—'}</code>
+                    {fixed.embeddingDimensions ? ` · ${fixed.embeddingDimensions} измерений` : ''}
+                </p>
+                <span className="settings-field__hint">
+                    Модель зафиксирована: вся векторная база лежит в её пространстве, и смена
+                    модели потребовала бы пересоздания коллекции и повторной векторизации всего.
+                    Она принимает документы, изображения, аудио и видео напрямую — отдельный
+                    сервис разбора документов не нужен.
+                </span>
+            </div>
+
             <div className="settings-section__actions">
                 <Button size="interface" variant="secondary" onClick={handleTest} isLoading={isTesting}>
                     Проверить подключение
@@ -74,8 +89,8 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
             </div>
 
             <p className="settings-section__note">
-                Размерность вектора задаётся моделью эмбеддингов. После смены модели коллекцию
-                нужно пересоздать — иначе векторизация будет падать с ошибкой размерности.
+                Нужно один раз, если коллекция Qdrant была создана под другую размерность —
+                иначе векторизация падает с ошибкой размерности вектора.
             </p>
 
             <ConfirmModal
