@@ -1,4 +1,4 @@
-import { useNavbar } from '@layout/Navbar/Navbar'
+import { useNavbar } from '@layout/Navbar/NavbarContext'
 
 const NAVBAR_GROUPS = [
     {

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import MoreVertical from '@assets/icons/more-vertical-16.svg'
-import Protected from '@guards/Protected'
+import HasPermission from '@guards/HasPermission'
 import './DropdownActions.css'
 
 /**
@@ -60,13 +60,13 @@ export default function DropdownActions({ actions }) {
                 <ul className="dropdown-actions__menu">
                     {visibleActions.map((action) =>
                         action.permission ? (
-                            <Protected
+                            <HasPermission
                                 key={action.label}
                                 permission={action.permission}
                                 mode={action.permissionMode ?? 'some'}
                             >
                                 {renderItem(action)}
-                            </Protected>
+                            </HasPermission>
                         ) : (
                             renderItem(action)
                         )

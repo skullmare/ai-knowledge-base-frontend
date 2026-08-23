@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@ui/Button/Button';
-import HasPermission from '@guards/Protected';
+import HasPermission from '@guards/HasPermission';
 import More from '@assets/icons/more-vertical-16.svg';
 import List from '@assets/icons/list-16.svg';
 import Logo from '@assets/images/logo.svg';

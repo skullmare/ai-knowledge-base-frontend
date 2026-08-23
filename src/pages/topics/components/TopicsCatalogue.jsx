@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import Edit from '@assets/icons/edit-16.svg'
 
-export function TopicsCatalogue({ groupedTopics, categories, onEditCategory }) {
+export function TopicsCatalogue({ groupedTopics }) {
     return (
         <div className="topics-page__grid">
             {groupedTopics.map(({ category, topics }) => (

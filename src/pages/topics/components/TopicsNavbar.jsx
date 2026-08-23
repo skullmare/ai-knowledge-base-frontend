@@ -1,4 +1,4 @@
-import { useNavbar } from '@layout/Navbar/Navbar';
+import { useNavbar } from '@layout/Navbar/NavbarContext';
 import EditIcon from '@assets/icons/edit-16.svg';
 import DeleteIcon from '@assets/icons/delete-16.svg';
 
