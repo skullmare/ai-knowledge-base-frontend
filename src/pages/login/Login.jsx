@@ -15,6 +15,7 @@ export default function LoginPage() {
 
   const doLogin = useAuthStore((state) => state.login);
   const isLoadingLogin = useAuthStore((state) => state.isLoadingLogin);
+  const error = useAuthStore((state) => state.error);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

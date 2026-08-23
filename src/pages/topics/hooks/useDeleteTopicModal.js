@@ -22,8 +22,8 @@ export function useDeleteTopicModal() {
         try {
             await deleteTopic(targetTopic._id)
             closeModal()
-        } catch {
-            // ошибка уже разобрана и показана в store
+        } catch (e) {
+            // ошибка обрабатывается в store
         }
     }
 

@@ -1,54 +1,68 @@
-import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import ProtectedRoute from './ProtectedRoute'
-import Spinner from '@ui/Spinner/Spinner'
+import ProtectedRoute from './Protected'
 import LoginPage from '@pages/login/Login'
 import VerifyTwoFactorPage from '@pages/verify-2fa/VerifyTwoFactor'
 import ForgotPasswordPage from '@pages/forgot-password/ForgotPassword'
 import ResetPasswordPage from '@pages/reset-password/ResetPassword'
+import TopicPage from '@pages/topic/Topic'
+import TopicsPage from '@pages/topics/Topics'
+import UsersPage from '@pages/users/Users'
+import LogsPage from '@pages/logs/Logs'
+import ProfilePage from '@pages/profile/Profile'
 import NotFound from '@pages/not-found/NotFound'
+import IndexPage from '@pages/index/Index'
 import AccessDenied from '@pages/access-denied/AccessDenied'
-
-// Страницы за авторизацией грузятся по требованию: редактор BlockNote
-// весит больше остального приложения, а нужен только на странице темы.
-const IndexPage = lazy(() => import('@pages/index/Index'))
-const TopicsPage = lazy(() => import('@pages/topics/Topics'))
-const TopicPage = lazy(() => import('@pages/topic/Topic'))
-const UsersPage = lazy(() => import('@pages/users/Users'))
-const LogsPage = lazy(() => import('@pages/logs/Logs'))
-const ProfilePage = lazy(() => import('@pages/profile/Profile'))
-
-const guarded = (element, props = {}) => (
-    <ProtectedRoute {...props}>{element}</ProtectedRoute>
-)
+import SetComponents from '@pages/set-components/SetComponents'
 
 export default function AppRouter() {
     return (
         <BrowserRouter>
-            <Suspense fallback={<Spinner />}>
-                <Routes>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/verify-2fa" element={<VerifyTwoFactorPage />} />
-                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                    <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-                    <Route path="/403" element={<AccessDenied />} />
+            <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/verify-2fa" element={<VerifyTwoFactorPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-                    <Route path="/" element={guarded(<IndexPage />)} />
-                    <Route path="/topics" element={guarded(<TopicsPage />, { permission: 'topics.read' })} />
-                    <Route path="/topic/:id" element={guarded(<TopicPage />, { permission: 'topics.read' })} />
-                    <Route
-                        path="/users"
-                        element={guarded(<UsersPage />, {
-                            permissions: ['platformUsers.read', 'agentUsers.read'],
-                            mode: 'some'
-                        })}
-                    />
-                    <Route path="/logs" element={guarded(<LogsPage />, { permission: 'logs.read' })} />
-                    <Route path="/profile" element={guarded(<ProfilePage />)} />
+                <Route path="/topics" element={
+                    <ProtectedRoute permission="topics.read">
+                        <TopicsPage />
+                    </ProtectedRoute>
+                } />
 
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </Suspense>
+                <Route path="/topic/:id" element={
+                    <ProtectedRoute permission="topics.read">
+                        <TopicPage />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/users" element={
+                    <ProtectedRoute permissions={["platformUsers.read", "agentUsers.read"]} mode="some">
+                        <UsersPage />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/logs" element={
+                    <ProtectedRoute permission="logs.read">
+                        <LogsPage />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/profile" element={
+                    <ProtectedRoute>
+                        <ProfilePage />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/403" element={<AccessDenied />} />
+
+                <Route path="/" element={
+                    <ProtectedRoute>
+                        <IndexPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="set-components" element={<SetComponents />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
         </BrowserRouter>
     )
 }

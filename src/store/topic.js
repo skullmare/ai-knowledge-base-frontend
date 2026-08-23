@@ -5,7 +5,7 @@ import { handleError } from '../utils/handleError';
 import { storeRegistry } from '../utils/storeRegistry';
 import useSuccessStore from './success';
 
-const useTopicStore = create((set) => ({
+const useTopicStore = create((set, get) => ({
     topics: [],
     currentTopic: null,
     isLoadingFetchTopics: false,

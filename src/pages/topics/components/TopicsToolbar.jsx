@@ -1,6 +1,6 @@
 import Button from '@ui/Button/Button'
 import Input from '@ui/Input/Input'
-import HasPermission from '@guards/HasPermission'
+import Protected from '@guards/Protected'
 import Dropdown from '@ui/Dropdown/Dropdown'
 import Catalogue from '@assets/icons/catalogue-16.svg'
 import List from '@assets/icons/list-16.svg'
@@ -30,20 +30,20 @@ export function TopicsToolbar({
                         onChange={(e) => onSearchChange(e.target.value)}
                     />
                 </div>
-                <HasPermission permission="agentRoles.create" mode="some">
+                <Protected permission="agentRoles.create" mode="some">
                     <div className="topics-page__controls-btn">
                         <Button size="interface" variant="secondary" onClick={onCreateCategory}>
                             <Plus />Создать раздел
                         </Button>
                     </div>
-                </HasPermission>
-                <HasPermission permission="topics.create" mode="some">
+                </Protected>
+                <Protected permission="topics.create" mode="some">
                     <div className="topics-page__controls-btn">
                         <Button size="interface" variant="primary" onClick={onCreateTopic}>
                             <Plus />Создать тему
                         </Button>
                     </div>
-                </HasPermission>
+                </Protected>
                 <div className="topics-page__controls-btn-mode-container">
                     <button
                         className={`topics-page__controls-btn-mode ${viewMode === 'catalogue' ? 'topics-page__controls-btn-mode--active' : ''}`}

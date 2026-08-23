@@ -1,8 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import Logo from '@assets/images/logo.svg';
 import Close from '@assets/icons/close-16.svg';
-import { NavbarContext } from './NavbarContext';
 import './Navbar.css';
+
+const NavbarContext = createContext(null);
+
+export function useNavbar() {
+  const context = useContext(NavbarContext);
+  if (!context) {
+    throw new Error('useNavbar must be used within Navbar');
+  }
+  return context;
+}
 
 const BREAKPOINT = 1000;
 const isMobile = () => window.innerWidth < BREAKPOINT;
