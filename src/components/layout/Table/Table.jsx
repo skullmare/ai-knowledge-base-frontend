@@ -118,6 +118,18 @@ function useRowHeights(tableRef, data) {
     return heights
 }
 
+/**
+ * Ширина колонки задаётся в описании столбца:
+ *   width    — фиксированная колонка (не растягивается и не сжимается)
+ *   minWidth — гибкая колонка, забирает остаток ширины
+ * Без обоих полей работает прежнее поведение (150px из CSS).
+ */
+const columnStyle = (col) => {
+    if (col.width) return { width: col.width, minWidth: col.width, maxWidth: col.width }
+    if (col.minWidth) return { minWidth: col.minWidth, maxWidth: 'none' }
+    return undefined
+}
+
 export default function Table({
     columns = [],
     data = [],
@@ -126,6 +138,8 @@ export default function Table({
     total,
     onPageChange,
     onLimitChange,
+    layout = 'auto',
+    minWidth,
 }) {
     const tableRef = useRef(null)
     const mainColumns = columns.filter((col) => !col.actions)
@@ -138,11 +152,15 @@ export default function Table({
             <div className="table-body">
 
                 <div className="table-scroll">
-                    <table className="table" ref={tableRef}>
+                    <table
+                        className={`table${layout === 'fixed' ? ' table--fixed' : ''}`}
+                        style={minWidth ? { minWidth } : undefined}
+                        ref={tableRef}
+                    >
                         <thead className="table__head">
                             <tr>
                                 {mainColumns.map((col) => (
-                                    <th key={col.key} className="table__th">
+                                    <th key={col.key} className="table__th" style={columnStyle(col)}>
                                         {col.label}
                                     </th>
                                 ))}
@@ -152,7 +170,7 @@ export default function Table({
                             {data.map((row, rowIndex) => (
                                 <tr key={row._id ?? rowIndex} className="table__row">
                                     {mainColumns.map((col) => (
-                                        <td key={col.key} className="table__td">
+                                        <td key={col.key} className="table__td" style={columnStyle(col)}>
                                             {col.render ? col.render(row[col.key], row) : row[col.key]}
                                         </td>
                                     ))}

@@ -4,14 +4,16 @@ import { SETTINGS_SECTIONS } from '../Settings.constants'
 
 export function SettingsNavbar({ activeSection, onSelect }) {
     const { setIsOpen, isMobile } = useNavbar()
-    const checkPermission = useProfileStore((s) => s.checkPermission)
+    // Подписываемся именно на permissions: checkPermission — стабильная ссылка,
+    // и без этого меню не перерисуется, когда профиль догрузится
+    const permissions = useProfileStore((s) => s.permissions)
 
     const handleSelect = (id) => {
         onSelect?.(id)
         if (isMobile()) setIsOpen(false)
     }
 
-    const visible = SETTINGS_SECTIONS.filter(({ permission }) => checkPermission(permission))
+    const visible = SETTINGS_SECTIONS.filter(({ permission }) => permissions.includes(permission))
 
     return (
         <div className="settings-page__navbar">

@@ -25,7 +25,7 @@ const SECTION_COMPONENTS = {
 export default function SettingsPage() {
     const { pathname } = useLocation()
     const { profile } = useProfileStore()
-    const checkPermission = useProfileStore((s) => s.checkPermission)
+    const permissions = useProfileStore((s) => s.permissions)
     const { logout } = useAuthStore()
 
     const {
@@ -35,8 +35,8 @@ export default function SettingsPage() {
     const form = useSettingsForm()
 
     const availableSections = useMemo(
-        () => SETTINGS_SECTIONS.filter(({ permission }) => checkPermission(permission)),
-        [checkPermission]
+        () => SETTINGS_SECTIONS.filter(({ permission }) => permissions.includes(permission)),
+        [permissions]
     )
 
     const [activeSection, setActiveSection] = useState(null)

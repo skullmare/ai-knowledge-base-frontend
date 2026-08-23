@@ -8,14 +8,16 @@ const SECTIONS = [
 
 export function FilesNavbar({ activeSection, onSelect }) {
     const { setIsOpen, isMobile } = useNavbar()
-    const checkPermission = useProfileStore((s) => s.checkPermission)
+    // Подписываемся именно на permissions: checkPermission — стабильная ссылка,
+    // и без этого меню не перерисуется, когда профиль догрузится
+    const permissions = useProfileStore((s) => s.permissions)
 
     const handleSelect = (id) => {
         onSelect?.(id)
         if (isMobile()) setIsOpen(false)
     }
 
-    const visible = SECTIONS.filter(({ permission }) => checkPermission(permission))
+    const visible = SECTIONS.filter(({ permission }) => permissions.includes(permission))
 
     return (
         <div className="files-page__navbar">

@@ -10,27 +10,13 @@
     display: none;
 }
 
-.files-modal__dropzone {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
-    border: 1px dashed var(--color-gray-400);
-    border-radius: var(--radius-lg);
-}
-
-.files-modal__dropzone-hint {
-    min-width: 0;
-    overflow: hidden;
-    color: var(--color-gray-100);
-    font-size: var(--text-sm);
-    text-overflow: ellipsis;
-}
-
 .files-modal__file-name {
+    overflow: hidden;
     color: var(--color-white);
     font-size: var(--text-base);
     font-weight: var(--font-medium);
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .files-modal__hint {
@@ -44,9 +30,96 @@
     font-size: var(--text-xs);
 }
 
+/* ── Зона загрузки ── */
+
+.files-dropzone {
+    display: flex;
+    align-items: center;
+    min-height: 92px;
+    padding: var(--spacing-md);
+    border: 1px dashed var(--color-gray-400);
+    border-radius: var(--radius-lg);
+    background: var(--color-gray-600);
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.files-dropzone[role='button'] {
+    cursor: pointer;
+}
+
+.files-dropzone[role='button']:hover,
+.files-dropzone--dragging {
+    border-color: var(--color-gold-100);
+    background: var(--color-gray-500);
+}
+
+.files-dropzone--error {
+    border-color: var(--color-red);
+}
+
+.files-dropzone__empty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    width: 100%;
+    text-align: center;
+}
+
+.files-dropzone__hint {
+    color: var(--color-gray-100);
+    font-size: var(--text-sm);
+}
+
+.files-dropzone__link {
+    color: var(--color-gold-100);
+    text-decoration: underline;
+}
+
+.files-dropzone__note {
+    color: var(--color-gray-200);
+    font-size: var(--text-xs);
+    line-height: var(--leading-normal);
+}
+
+.files-dropzone__file {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    width: 100%;
+}
+
+.files-dropzone__file-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.files-dropzone__file-name {
+    overflow: hidden;
+    color: var(--color-white);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.files-dropzone__file-size {
+    color: var(--color-gray-200);
+    font-size: var(--text-xs);
+}
+
+/* ── Прогресс загрузки ── */
+
 .files-modal__progress {
-    position: relative;
-    height: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.files-modal__progress-track {
+    height: 6px;
     border-radius: var(--radius-full);
     background: var(--color-gray-500);
     overflow: hidden;
@@ -54,18 +127,14 @@
 
 .files-modal__progress-bar {
     height: 100%;
+    border-radius: var(--radius-full);
     background: var(--color-gold-100);
     transition: width var(--transition-base);
 }
 
 .files-modal__progress-label {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--color-white);
+    color: var(--color-gray-100);
     font-size: var(--text-xs);
-    line-height: 20px;
 }
 
 /* ── Просмотр файла ── */
@@ -142,6 +211,11 @@
     border: none;
     background: transparent;
     color: var(--color-gold-100);
+    font-family: inherit;
     font-size: var(--text-base);
     cursor: pointer;
+}
+
+.file-preview__fallback-link:hover {
+    text-decoration: underline;
 }

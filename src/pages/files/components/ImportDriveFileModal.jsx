@@ -5,7 +5,7 @@ export function ImportDriveFileModal({ file, roleOptions, roles, onRolesChange, 
     const willVectorize = canVectorize && roles.length > 0
     return (
         <Modal
-            title="Векторизовать файл Google Drive"
+            title="Файл из Google Drive"
             confirmLabel={willVectorize ? 'Векторизовать' : 'Добавить'}
             onClose={onClose}
             onConfirm={onConfirm}
@@ -22,7 +22,7 @@ export function ImportDriveFileModal({ file, roleOptions, roles, onRolesChange, 
                     onChange={onRolesChange}
                 />
                 <span className="files-modal__hint">
-                    Файл останется в Google Drive — в базу знаний попадёт только его текст.
+                    Файл останется в Google Drive — в базу знаний попадёт его векторное представление.
                     {canVectorize
                         ? ' Без выбранных ролей файл будет добавлен, но не векторизован.'
                         : ' У вашей роли нет прав на векторизацию — файл будет только подключён.'}

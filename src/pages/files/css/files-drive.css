@@ -6,6 +6,8 @@
     gap: var(--spacing-md);
 }
 
+/* ── Хлебные крошки ── */
+
 .drive-browser__breadcrumbs {
     display: flex;
     align-items: center;
@@ -24,8 +26,14 @@
     border: none;
     background: transparent;
     color: var(--color-gold-100);
+    font-family: inherit;
     font-size: var(--text-sm);
     cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.drive-browser__crumb:hover:not(:disabled) {
+    color: var(--color-gold-200);
 }
 
 .drive-browser__crumb:disabled {
@@ -34,8 +42,11 @@
 }
 
 .drive-browser__crumb-sep {
+    flex-shrink: 0;
     color: var(--color-gray-200);
 }
+
+/* ── Список ── */
 
 .drive-browser__list {
     list-style: none;
@@ -46,77 +57,97 @@
     overflow: hidden;
 }
 
-.drive-browser__item {
-    display: flex;
+/* Сетка держит колонки на одной вертикали независимо от длины имени */
+.drive-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 88px 148px 152px 190px;
     align-items: center;
-    justify-content: space-between;
     gap: var(--spacing-md);
+    min-height: 56px;
     padding: var(--spacing-sm) var(--spacing-md);
-    border-bottom: 1px solid var(--color-gray-400);
+    border-bottom: 1px solid var(--color-gray-500);
+    transition: background var(--transition-fast);
 }
 
-.drive-browser__item:last-child {
+.drive-row:last-child {
     border-bottom: none;
 }
 
-.drive-browser__item-main {
+.drive-row:hover {
+    background: var(--color-gray-600);
+}
+
+.drive-row__main {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-    flex: 1;
     min-width: 0;
 }
 
-.drive-browser__item-main--folder {
+.drive-row__main--folder {
     cursor: pointer;
 }
 
-.drive-browser__item-main--folder:hover .drive-browser__name {
+.drive-row__main--folder:hover .drive-row__name {
     color: var(--color-gold-100);
 }
 
-.drive-browser__icon {
+.drive-row__icon {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+    color: var(--color-gray-200);
 }
 
-.drive-browser__icon--placeholder {
+.drive-row__icon--folder {
+    color: var(--color-gold-100);
+}
+
+.drive-row__icon--placeholder {
     border-radius: var(--radius-sm);
     background: var(--color-gray-400);
 }
 
-.drive-browser__name {
-    flex: 1;
+.drive-row__name {
     min-width: 0;
     overflow: hidden;
     color: var(--color-white);
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
     text-overflow: ellipsis;
     white-space: nowrap;
-    transition: color var(--transition-base);
+    transition: color var(--transition-fast);
 }
 
-.drive-browser__meta {
-    flex-shrink: 0;
+.drive-row__size,
+.drive-row__date {
+    overflow: hidden;
     color: var(--color-gray-200);
     font-size: var(--text-sm);
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.drive-browser__actions {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    flex-shrink: 0;
+.drive-row__state {
+    min-width: 0;
+    font-size: var(--text-sm);
 }
 
-.drive-browser__link {
+.drive-row__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+}
+
+.drive-row__link {
+    flex-shrink: 0;
     color: var(--color-gold-100);
     font-size: var(--text-sm);
     text-decoration: none;
+    transition: color var(--transition-fast);
 }
 
-.drive-browser__link:hover {
+.drive-row__link:hover {
+    color: var(--color-gold-200);
     text-decoration: underline;
 }
