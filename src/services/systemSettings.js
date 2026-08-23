@@ -20,4 +20,9 @@ export const systemSettingsService = {
     const { data } = await api.post('/system/settings/ai/test', payload)
     return data
   },
+
+  recreateCollection: async () => {
+    const { data } = await api.post('/system/settings/qdrant/recreate')
+    return data
+  },
 }

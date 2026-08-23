@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '@ui/Button/Button'
+import ConfirmModal from '@layout/Modal/ConfirmModal'
 import useSystemSettingsStore from '@store/systemSettings'
 import { SettingField } from './SettingField'
 import { SECTION_FIELDS } from '../Settings.constants'
@@ -10,6 +11,10 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
     const models = useSystemSettingsStore((s) => s.models)
     const fetchModels = useSystemSettingsStore((s) => s.fetchModels)
     const modelsError = useSystemSettingsStore((s) => s.modelsError)
+    const recreateCollection = useSystemSettingsStore((s) => s.recreateCollection)
+    const isRecreating = useSystemSettingsStore((s) => s.isLoadingRecreate)
+
+    const [isRecreateOpen, setIsRecreateOpen] = useState(false)
 
     useEffect(() => {
         fetchModels()
@@ -19,6 +24,12 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
         const apiKey = valueOf('ai_api_key')
         // Пустое поле — проверяем уже сохранённый ключ
         testConnection(apiKey ? { apiKey, baseURL: valueOf('ai_base_url') } : {}).catch(() => {})
+    }
+
+    const handleRecreate = () => {
+        recreateCollection()
+            .then(() => setIsRecreateOpen(false))
+            .catch(() => {})
     }
 
     return (
@@ -31,11 +42,6 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
                     onChange={(value) => setValue(key, value)}
                 />
             ))}
-
-            <p className="settings-section__note">
-                Модель эмбеддингов должна совпадать по размерности с коллекцией Qdrant.
-                При смене модели коллекцию нужно пересоздать, иначе векторизация будет падать.
-            </p>
 
             {modelsError
                 ? <p className="settings-section__error">Список моделей недоступен: {modelsError}</p>
@@ -55,6 +61,33 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
                     Сохранить
                 </Button>
             </div>
+
+            <div className="settings-connection">
+                <div className="settings-connection__state">
+                    <span className="settings-connection__label">
+                        Пересоздать векторную коллекцию под текущую размерность
+                    </span>
+                </div>
+                <Button size="interface" variant="secondary" onClick={() => setIsRecreateOpen(true)}>
+                    Пересоздать
+                </Button>
+            </div>
+
+            <p className="settings-section__note">
+                Размерность вектора задаётся моделью эмбеддингов. После смены модели коллекцию
+                нужно пересоздать — иначе векторизация будет падать с ошибкой размерности.
+            </p>
+
+            <ConfirmModal
+                isOpen={isRecreateOpen}
+                type="delete"
+                title="Пересоздание векторной коллекции"
+                confirmLabel="Пересоздать"
+                message="Все векторы будут удалены: темы вернутся на проверку, файлы станут невекторизованными. Их придётся векторизовать заново. Продолжить?"
+                isLoading={isRecreating}
+                onConfirm={handleRecreate}
+                onClose={() => setIsRecreateOpen(false)}
+            />
         </div>
     )
 }

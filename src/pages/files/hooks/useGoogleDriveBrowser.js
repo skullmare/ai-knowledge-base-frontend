@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import useGoogleDriveStore from '@store/googleDrive'
 import useFileStore from '@store/file'
+import useProfileStore from '@store/profile'
 
 /** Навигация по подключённому Google Drive и подключение файлов к базе знаний. */
 export function useGoogleDriveBrowser({ search, isActive }) {
@@ -17,6 +18,8 @@ export function useGoogleDriveBrowser({ search, isActive }) {
     const vectorizeFile = useFileStore((s) => s.vectorizeFile)
     const isImporting = useFileStore((s) => s.isLoadingCreateFile)
     const isVectorizing = useFileStore((s) => s.isLoadingVectorize)
+
+    const canVectorize = useProfileStore((s) => s.checkPermission)('files.vectorize')
 
     const [folderId, setFolderId] = useState('root')
     const [importTarget, setImportTarget] = useState(null)
@@ -51,8 +54,9 @@ export function useGoogleDriveBrowser({ search, isActive }) {
                 accessibleByRoles: importRoles,
             })
 
+            // Без прав на векторизацию файл просто подключается — иначе получим 403
             let result = created
-            if (importRoles.length) {
+            if (importRoles.length && canVectorize) {
                 result = await vectorizeFile(created._id)
             }
 
@@ -78,5 +82,6 @@ export function useGoogleDriveBrowser({ search, isActive }) {
         closeImport,
         handleImport,
         isImporting: isImporting || isVectorizing,
+        canVectorize,
     }
 }

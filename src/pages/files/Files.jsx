@@ -189,6 +189,7 @@ export default function FilesPage() {
                     roleOptions={rolesForSelect}
                     roles={drive.importRoles}
                     onRolesChange={drive.setImportRoles}
+                    canVectorize={drive.canVectorize}
                     isLoading={drive.isImporting}
                     onConfirm={drive.handleImport}
                     onClose={drive.closeImport}

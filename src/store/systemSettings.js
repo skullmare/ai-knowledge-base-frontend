@@ -10,6 +10,7 @@ const useSystemSettingsStore = create((set) => ({
     isLoadingUpdateSettings: false,
     isLoadingFetchModels: false,
     isLoadingTestConnection: false,
+    isLoadingRecreate: false,
     modelsError: null,
     error: null,
 
@@ -85,6 +86,27 @@ const useSystemSettingsStore = create((set) => ({
             throw new Error(errorMessage)
         } finally {
             set({ isLoadingTestConnection: false })
+        }
+    },
+
+    /** Пересоздание коллекции Qdrant после смены модели эмбеддингов. */
+    recreateCollection: async () => {
+        set({ isLoadingRecreate: true, error: null })
+        try {
+            const { success, message, data } = await systemSettingsService.recreateCollection()
+            if (!success) throw new Error(message)
+
+            useSuccessStore.getState().notify(
+                'Векторная база',
+                `Коллекция пересоздана (размерность ${data.vectorSize}). Требуется повторная векторизация: тем — ${data.resetTopics}, файлов — ${data.resetFiles}.`
+            )
+            return data
+        } catch (err) {
+            const errorMessage = handleError(err)
+            set({ error: errorMessage })
+            throw new Error(errorMessage)
+        } finally {
+            set({ isLoadingRecreate: false })
         }
     },
 }))
