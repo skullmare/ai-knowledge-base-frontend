@@ -21,15 +21,9 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
         fetchModels()
     }, [fetchModels])
 
-    const handleTest = () => {
-        // Обрезаем так же, как при сохранении: ключ из пробелов уходит
-        // в провайдера пустым заголовком авторизации
-        const apiKey = valueOf('ai_api_key').trim()
-        const baseURL = valueOf('ai_base_url').trim()
-
-        // Пустое поле — проверяем уже сохранённый ключ
-        testConnection(apiKey ? { apiKey, baseURL } : {}).catch(() => {})
-    }
+    // Проверяем именно сохранённую конфигурацию: раньше кнопка проверяла
+    // значение из формы и показывала «работает», пока векторизация падала
+    const handleTest = () => testConnection().catch(() => {})
 
     const handleRecreate = () => {
         recreateCollection()
@@ -55,7 +49,7 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
                         <span className="settings-callout__desc">
                             {modelsError
                                 ? `Список моделей недоступен: ${modelsError}`
-                                : `Доступно моделей по текущему ключу: ${models.length}`}
+                                : `Доступно моделей: ${models.length}. Проверка делает настоящий запрос эмбеддингов сохранённым ключом.`}
                         </span>
                     </div>
                     <Button size="interface" variant="secondary" onClick={handleTest} isLoading={isTesting}>
@@ -72,8 +66,9 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
                     <span className="settings-field__hint">
                         Модель зафиксирована: вся векторная база лежит в её пространстве, и смена
                         модели потребовала бы пересоздания коллекции и повторной векторизации всего.
-                        Она принимает документы, изображения, аудио и видео напрямую — отдельный
-                        сервис разбора документов не нужен.
+                        RouterAI принимает только текстовый ввод, поэтому текст из PDF, DOCX и
+                        других документов извлекается на сервере — картинки, аудио и видео
+                        векторизовать нельзя.
                     </span>
                 </div>
 
