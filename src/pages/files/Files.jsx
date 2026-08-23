@@ -7,6 +7,7 @@ import Layout from '@layout/Layout/Layout'
 import Table from '@layout/Table/Table'
 import ConfirmModal from '@layout/Modal/ConfirmModal'
 import { useLogout } from '@hooks/useLogout'
+import { useMediaQuery } from '@hooks/useMediaQuery'
 import { useFilesFilters } from './hooks/useFilesFilters'
 import { useFilesData } from './hooks/useFilesData'
 import { useUploadFileModal } from './hooks/useUploadFileModal'
@@ -56,6 +57,10 @@ export default function FilesPage() {
     const filters = useFilesFilters()
     const isFilesTab = filters.activeSection === 'files'
 
+    const isCompact = useMediaQuery('(max-width: 1280px)')
+    const isNarrow = useMediaQuery('(max-width: 1024px)')
+    const isMobile = useMediaQuery('(max-width: 768px)')
+
     const { files, pagination, roleOptions, rolesForSelect, fetchFiles, buildParams } = useFilesData({
         debouncedSearch: filters.debouncedSearch,
         selectedRole: filters.selectedRole,
@@ -72,14 +77,23 @@ export default function FilesPage() {
         isActive: !isFilesTab,
     })
 
-    const columns = getFileColumns({
-        onOpen: actions.handleOpen,
-        onDownload: actions.handleDownload,
-        onVectorize: actions.openVectorize,
-        onDevectorize: actions.openDevectorize,
-        onEdit: editModal.open,
-        onDelete: actions.openDelete,
-    })
+    const columns = getFileColumns(
+        {
+            onOpen: actions.handleOpen,
+            onDownload: actions.handleDownload,
+            onVectorize: actions.openVectorize,
+            onDevectorize: actions.openDevectorize,
+            onEdit: editModal.open,
+            onDelete: actions.openDelete,
+        },
+        { hideSecondary: isCompact, hideTertiary: isNarrow, hideRoles: isMobile }
+    )
+
+    // Минимальная ширина таблицы считается по видимым колонкам: иначе при
+    // скрытии части колонок остаётся лишний горизонтальный скролл
+    const tableMinWidth = columns
+        .filter((column) => !column.actions)
+        .reduce((sum, column) => sum + (column.width ?? column.minWidth ?? 150), 0)
 
     const confirmConfig = actions.confirm.type ? CONFIRM_CONFIG[actions.confirm.type] : null
 
@@ -120,6 +134,8 @@ export default function FilesPage() {
                         />
 
                         <Table
+                            layout="fixed"
+                            minWidth={tableMinWidth}
                             columns={columns}
                             data={files}
                             page={pagination.current}

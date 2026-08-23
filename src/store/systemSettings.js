@@ -3,8 +3,10 @@ import { systemSettingsService } from '@services/systemSettings'
 import { handleError } from '../utils/handleError'
 import useSuccessStore from './success'
 
-const useSystemSettingsStore = create((set) => ({
+const useSystemSettingsStore = create((set, get) => ({
     settings: [],
+    // Значения, зашитые в бэкенде: модель эмбеддингов и размерность векторов
+    fixed: { embeddingModel: '', embeddingDimensions: null },
     models: [],
     isLoadingFetchSettings: false,
     isLoadingUpdateSettings: false,
@@ -20,7 +22,7 @@ const useSystemSettingsStore = create((set) => ({
             const { success, message, data } = await systemSettingsService.getAll()
             if (!success) throw new Error(message)
 
-            set({ settings: data.settings ?? [] })
+            set({ settings: data.settings ?? [], fixed: data.fixed ?? get().fixed })
             return data.settings
         } catch (err) {
             const errorMessage = handleError(err)
@@ -39,7 +41,7 @@ const useSystemSettingsStore = create((set) => ({
 
             // Секреты сервер не возвращает — перечитываем состояние целиком
             const { data } = await systemSettingsService.getAll()
-            set({ settings: data.settings ?? [] })
+            set({ settings: data.settings ?? [], fixed: data.fixed ?? get().fixed })
 
             useSuccessStore.getState().notify('Настройки системы', 'Настройки сохранены')
         } catch (err) {

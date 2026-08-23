@@ -13,6 +13,7 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
     const modelsError = useSystemSettingsStore((s) => s.modelsError)
     const recreateCollection = useSystemSettingsStore((s) => s.recreateCollection)
     const isRecreating = useSystemSettingsStore((s) => s.isLoadingRecreate)
+    const fixed = useSystemSettingsStore((s) => s.fixed)
 
     const [isRecreateOpen, setIsRecreateOpen] = useState(false)
 
@@ -34,23 +35,59 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
 
     return (
         <div className="settings-section">
-            {SECTION_FIELDS.ai.map((key) => (
-                <SettingField
-                    key={key}
-                    setting={byKey[key]}
-                    value={valueOf(key)}
-                    onChange={(value) => setValue(key, value)}
-                />
-            ))}
+            <div className="settings-section__fields">
+                {SECTION_FIELDS.ai.map((key) => (
+                    <SettingField
+                        key={key}
+                        setting={byKey[key]}
+                        value={valueOf(key)}
+                        onChange={(value) => setValue(key, value)}
+                    />
+                ))}
 
-            {modelsError
-                ? <p className="settings-section__error">Список моделей недоступен: {modelsError}</p>
-                : <p className="settings-section__note">Доступно моделей по текущему ключу: {models.length}</p>}
+                <div className="settings-callout">
+                    <div className="settings-callout__text">
+                        <span className="settings-callout__title">Проверка подключения</span>
+                        <span className="settings-callout__desc">
+                            {modelsError
+                                ? `Список моделей недоступен: ${modelsError}`
+                                : `Доступно моделей по текущему ключу: ${models.length}`}
+                        </span>
+                    </div>
+                    <Button size="interface" variant="secondary" onClick={handleTest} isLoading={isTesting}>
+                        Проверить
+                    </Button>
+                </div>
+
+                <div className="settings-field">
+                    <span className="settings-field__label">Модель эмбеддингов</span>
+                    <p className="settings-field__readonly">
+                        <code>{fixed.embeddingModel || '—'}</code>
+                        {fixed.embeddingDimensions ? ` · ${fixed.embeddingDimensions} измерений` : ''}
+                    </p>
+                    <span className="settings-field__hint">
+                        Модель зафиксирована: вся векторная база лежит в её пространстве, и смена
+                        модели потребовала бы пересоздания коллекции и повторной векторизации всего.
+                        Она принимает документы, изображения, аудио и видео напрямую — отдельный
+                        сервис разбора документов не нужен.
+                    </span>
+                </div>
+
+                <div className="settings-callout settings-callout--danger">
+                    <div className="settings-callout__text">
+                        <span className="settings-callout__title">Пересоздать векторную коллекцию</span>
+                        <span className="settings-callout__desc">
+                            Нужно один раз, если коллекция Qdrant была создана под другую размерность —
+                            иначе векторизация падает с ошибкой размерности вектора.
+                        </span>
+                    </div>
+                    <Button size="interface" variant="secondary" onClick={() => setIsRecreateOpen(true)}>
+                        Пересоздать
+                    </Button>
+                </div>
+            </div>
 
             <div className="settings-section__actions">
-                <Button size="interface" variant="secondary" onClick={handleTest} isLoading={isTesting}>
-                    Проверить подключение
-                </Button>
                 <Button
                     size="interface"
                     variant="primary"
@@ -61,22 +98,6 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
                     Сохранить
                 </Button>
             </div>
-
-            <div className="settings-connection">
-                <div className="settings-connection__state">
-                    <span className="settings-connection__label">
-                        Пересоздать векторную коллекцию под текущую размерность
-                    </span>
-                </div>
-                <Button size="interface" variant="secondary" onClick={() => setIsRecreateOpen(true)}>
-                    Пересоздать
-                </Button>
-            </div>
-
-            <p className="settings-section__note">
-                Размерность вектора задаётся моделью эмбеддингов. После смены модели коллекцию
-                нужно пересоздать — иначе векторизация будет падать с ошибкой размерности.
-            </p>
 
             <ConfirmModal
                 isOpen={isRecreateOpen}

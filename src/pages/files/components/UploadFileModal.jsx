@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Modal from '@layout/Modal/Modal'
 import Input from '@ui/Input/Input'
 import Button from '@ui/Button/Button'
@@ -13,6 +13,20 @@ export function UploadFileModal({
     onConfirm, onClose,
 }) {
     const inputRef = useRef(null)
+    const [isDragging, setIsDragging] = useState(false)
+
+    const pick = () => inputRef.current?.click()
+
+    const handleDrop = (event) => {
+        event.preventDefault()
+        setIsDragging(false)
+        if (isUploading) return
+
+        const dropped = event.dataTransfer.files?.[0]
+        if (dropped) onFileChange(dropped)
+    }
+
+    const hasError = touched.file && !file
 
     return (
         <Modal
@@ -30,19 +44,58 @@ export function UploadFileModal({
                     onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
                 />
 
-                <div className="files-modal__dropzone">
-                    <Button size="modal" variant="secondary" onClick={() => inputRef.current?.click()}>
-                        Выбрать файл
-                    </Button>
-                    <span className="files-modal__dropzone-hint">
-                        {file
-                            ? `${file.name} · ${formatFileSize(file.size)}`
-                            : 'Файл загружается напрямую в хранилище, минуя сервер'}
-                    </span>
+                <div
+                    className={[
+                        'files-dropzone',
+                        isDragging && 'files-dropzone--dragging',
+                        hasError && 'files-dropzone--error',
+                    ].filter(Boolean).join(' ')}
+                    onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
+                    onDragLeave={() => setIsDragging(false)}
+                    onDrop={handleDrop}
+                    onClick={file ? undefined : pick}
+                    role={file ? undefined : 'button'}
+                    tabIndex={file ? undefined : 0}
+                    onKeyDown={(e) => {
+                        if (!file && (e.key === 'Enter' || e.key === ' ')) pick()
+                    }}
+                >
+                    {file ? (
+                        <div className="files-dropzone__file">
+                            <div className="files-dropzone__file-info">
+                                <span className="files-dropzone__file-name" title={file.name}>{file.name}</span>
+                                <span className="files-dropzone__file-size">{formatFileSize(file.size)}</span>
+                            </div>
+                            <Button
+                                size="small"
+                                variant="secondary"
+                                onClick={pick}
+                                disabled={isUploading}
+                            >
+                                Заменить
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="files-dropzone__empty">
+                            <span className="files-dropzone__hint">
+                                Перетащите файл сюда или <span className="files-dropzone__link">выберите на диске</span>
+                            </span>
+                            <span className="files-dropzone__note">
+                                Файл загружается напрямую в хранилище, минуя сервер — размер не ограничен
+                            </span>
+                        </div>
+                    )}
                 </div>
 
-                {touched.file && !file && (
-                    <span className="files-modal__error">Выберите файл для загрузки</span>
+                {hasError && <span className="files-modal__error">Выберите файл для загрузки</span>}
+
+                {isUploading && (
+                    <div className="files-modal__progress">
+                        <div className="files-modal__progress-track">
+                            <div className="files-modal__progress-bar" style={{ width: `${progress}%` }} />
+                        </div>
+                        <span className="files-modal__progress-label">Загружено {progress}%</span>
+                    </div>
                 )}
 
                 <Input
@@ -50,6 +103,7 @@ export function UploadFileModal({
                     required
                     placeholder="Название файла в базе знаний"
                     value={name}
+                    disabled={isUploading}
                     onChange={(e) => onNameChange(e.target.value)}
                     error={touched.name && !name.trim() ? 'Название обязательно' : undefined}
                 />
@@ -60,17 +114,11 @@ export function UploadFileModal({
                     options={roleOptions}
                     value={roles}
                     onChange={onRolesChange}
+                    disabled={isUploading}
                 />
                 <span className="files-modal__hint">
                     Роли можно задать позже — векторизация станет доступна после выбора хотя бы одной.
                 </span>
-
-                {isUploading && (
-                    <div className="files-modal__progress">
-                        <div className="files-modal__progress-bar" style={{ width: `${progress}%` }} />
-                        <span className="files-modal__progress-label">{progress}%</span>
-                    </div>
-                )}
             </div>
         </Modal>
     )

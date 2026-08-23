@@ -8,6 +8,10 @@ import Catalogue from '@assets/icons/catalogue-16.svg'
 
 export { NAV_LINKS } from '@/constants/navLinks'
 
+// Сколько тегов ролей показываем в ячейке до сворачивания в «+N»:
+// так строки таблицы держат одинаковую высоту
+const VISIBLE_ROLES = 2
+
 const STATUS_LABELS = {
     uploaded: 'Не векторизован',
     indexing: 'Векторизуется',
@@ -44,6 +48,15 @@ export const formatDate = (iso) => {
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
+    })
+}
+
+const formatDateShort = (iso) => {
+    if (!iso) return '—'
+    return new Date(iso).toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
     })
 }
 
@@ -90,15 +103,49 @@ const getFileActions = ({ onOpen, onDownload, onVectorize, onDevectorize, onEdit
     },
 ]
 
-export const getFileColumns = (handlers) => [
+const RolesCell = ({ roles }) => {
+    if (!roles?.length) return <span className="files-page__cell-muted">—</span>
+
+    const visible = roles.slice(0, VISIBLE_ROLES)
+    const hidden = roles.length - visible.length
+
+    return (
+        <div className="files-page__roles" title={roles.map((r) => r.name).join(', ')}>
+            {visible.map((role) => (
+                <span key={role._id} className="files-page__role-tag">{role.name}</span>
+            ))}
+            {hidden > 0 && (
+                <span className="files-page__role-tag files-page__role-tag--more">+{hidden}</span>
+            )}
+        </div>
+    )
+}
+
+/**
+ * Колонки таблицы файлов. На узких экранах часть колонок скрывается —
+ * иначе таблица уезжает в горизонтальный скролл и обрезается по краю.
+ *
+ * @param {Object} handlers — обработчики действий над строкой
+ * @param {{ hideSecondary?: boolean, hideTertiary?: boolean, hideRoles?: boolean }} [viewport]
+ */
+export const getFileColumns = (
+    handlers,
+    { hideSecondary = false, hideTertiary = false, hideRoles = false } = {}
+) => [
     {
         key: 'name',
         label: 'Название',
+        minWidth: hideRoles ? 168 : 240,
         render: (value, row) => (
-            <button className="files-page__table-name" onClick={() => handlers.onOpen(row)}>
-                {value}
+            <button
+                className="files-page__name"
+                onClick={() => handlers.onOpen(row)}
+                title={value}
+                type="button"
+            >
+                <span className="files-page__name-title">{value}</span>
                 {row.vectorData?.error && (
-                    <span className="files-page__table-error" title={row.vectorData.error}>
+                    <span className="files-page__name-error" title={row.vectorData.error}>
                         {row.vectorData.error}
                     </span>
                 )}
@@ -108,41 +155,49 @@ export const getFileColumns = (handlers) => [
     {
         key: 'status',
         label: 'Статус',
+        width: hideRoles ? 140 : 156,
         render: (value) => (
             <span className="files-page__status">
                 <span className={`files-page__status-dot files-page__status-dot--${value}`} />
-                {STATUS_LABELS[value] ?? value}
+                <span className="files-page__cell-text">{STATUS_LABELS[value] ?? value}</span>
             </span>
         ),
     },
     {
         key: 'source',
         label: 'Источник',
-        render: (value) => SOURCE_LABELS[value] ?? value,
+        width: 132,
+        hidden: hideTertiary,
+        render: (value) => <span className="files-page__cell-text">{SOURCE_LABELS[value] ?? value}</span>,
     },
     {
         key: 'size',
         label: 'Размер',
-        render: (_, row) => formatFileSize(row.storage?.size ?? row.google?.size ?? null),
+        width: 96,
+        hidden: hideSecondary,
+        render: (_, row) => (
+            <span className="files-page__cell-text">
+                {formatFileSize(row.storage?.size ?? row.google?.size ?? null)}
+            </span>
+        ),
     },
     {
         key: 'accessibleByRoles',
         label: 'Роли',
-        render: (value) =>
-            value?.length ? (
-                <div className="files-page__table-roles">
-                    {value.map((role) => (
-                        <span key={role._id} className="files-page__table-role-tag">{role.name}</span>
-                    ))}
-                </div>
-            ) : (
-                '—'
-            ),
+        width: 224,
+        hidden: hideRoles,
+        render: (value) => <RolesCell roles={value} />,
     },
     {
         key: 'createdAt',
         label: 'Загружен',
-        render: (value) => formatDate(value),
+        width: 108,
+        hidden: hideSecondary,
+        render: (value) => (
+            <span className="files-page__cell-text" title={formatDate(value)}>
+                {formatDateShort(value)}
+            </span>
+        ),
     },
     {
         key: '_id',
@@ -150,4 +205,4 @@ export const getFileColumns = (handlers) => [
         actions: true,
         render: (_, row) => <DropdownActions actions={getFileActions(handlers, row)} />,
     },
-]
+].filter((column) => !column.hidden)

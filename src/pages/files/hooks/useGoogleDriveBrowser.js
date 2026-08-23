@@ -19,7 +19,7 @@ export function useGoogleDriveBrowser({ search, isActive }) {
     const isImporting = useFileStore((s) => s.isLoadingCreateFile)
     const isVectorizing = useFileStore((s) => s.isLoadingVectorize)
 
-    const canVectorize = useProfileStore((s) => s.checkPermission)('files.vectorize')
+    const canVectorize = useProfileStore((s) => s.permissions).includes('files.vectorize')
 
     const [folderId, setFolderId] = useState('root')
     const [importTarget, setImportTarget] = useState(null)

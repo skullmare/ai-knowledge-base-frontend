@@ -7,7 +7,7 @@ export const SETTINGS_SECTIONS = [
         label: 'RouterAI',
         permission: 'system_settings.ai_provider',
         title: 'Подключение RouterAI',
-        description: 'Ключ доступа и адрес API, а также модель, которой векторизуется база знаний.',
+        description: 'Ключ доступа и адрес API. Модель эмбеддингов зафиксирована и не настраивается.',
     },
     {
         id: 'google_drive',
@@ -34,14 +34,13 @@ export const TEXTAREA_KEYS = new Set([
 ])
 
 export const NUMBER_KEYS = new Set([
-    'ai_embedding_dimensions',
     'agent_search_limit',
     'logs_ttl_days',
 ])
 
 // Порядок полей внутри вкладок
 export const SECTION_FIELDS = {
-    ai: ['ai_api_key', 'ai_base_url', 'ai_embedding_model', 'ai_embedding_dimensions'],
+    ai: ['ai_api_key', 'ai_base_url'],
     google_drive: ['google_drive_client_id', 'google_drive_client_secret', 'google_drive_redirect_uri'],
     agent: [
         'ai_chat_model',

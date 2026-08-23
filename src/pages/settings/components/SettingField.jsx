@@ -2,7 +2,7 @@ import Input from '@ui/Input/Input'
 import { TEXTAREA_KEYS, NUMBER_KEYS } from '../Settings.constants'
 
 /** Поле настройки: секрет, число, длинный промпт или обычная строка. */
-export function SettingField({ setting, value, onChange, disabled }) {
+export function SettingField({ setting, value, onChange, disabled, action }) {
     if (!setting) return null
 
     const { key, name, description, isSecret, hasValue } = setting
@@ -15,7 +15,7 @@ export function SettingField({ setting, value, onChange, disabled }) {
                     id={key}
                     className="settings-field__textarea"
                     value={value}
-                    rows={6}
+                    rows={5}
                     disabled={disabled}
                     onChange={(e) => onChange(e.target.value)}
                 />
@@ -24,11 +24,13 @@ export function SettingField({ setting, value, onChange, disabled }) {
         )
     }
 
+    const isNumber = NUMBER_KEYS.has(key)
+
     return (
-        <div className="settings-field">
+        <div className={`settings-field${isNumber ? ' settings-field--narrow' : ''}`}>
             <Input
                 label={name}
-                type={isSecret ? 'password' : NUMBER_KEYS.has(key) ? 'number' : 'text'}
+                type={isSecret ? 'password' : isNumber ? 'number' : 'text'}
                 showPasswordToggle={isSecret}
                 placeholder={isSecret && hasValue ? '•••••••• (сохранён)' : undefined}
                 value={value}
@@ -36,6 +38,11 @@ export function SettingField({ setting, value, onChange, disabled }) {
                 onChange={(e) => onChange(e.target.value)}
                 info={isSecret && hasValue ? 'Оставьте пустым, чтобы не менять сохранённое значение' : description}
             />
+            {action && (
+                <button className="settings-field__action" onClick={action.onClick} type="button">
+                    {action.label}
+                </button>
+            )}
         </div>
     )
 }

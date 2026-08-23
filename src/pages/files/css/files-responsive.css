@@ -1,39 +1,49 @@
 /* files-responsive.css — адаптив страницы файлов */
 
+@media (max-width: 1200px) {
+    .drive-row {
+        grid-template-columns: minmax(0, 1fr) 88px 152px 190px;
+    }
+
+    /* Дата уходит первой: она наименее важна при выборе файла */
+    .drive-row__date {
+        display: none;
+    }
+}
+
 @media (max-width: 1000px) {
-    .files-page__toolbar {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .files-page__controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
     .files-page__controls-filter,
-    .files-page__controls-search {
+    .files-page__controls-search,
+    .files-page__controls-btn {
+        flex: 1 1 100%;
         min-width: 0;
     }
 
-    .drive-browser__item {
+    .drive-row {
+        grid-template-columns: minmax(0, 1fr);
         align-items: flex-start;
-        flex-direction: column;
         gap: var(--spacing-sm);
+        padding: var(--spacing-md);
     }
 
-    .drive-browser__item-main {
-        width: 100%;
-        flex-wrap: wrap;
+    .drive-row__size,
+    .drive-row__state {
+        font-size: var(--text-xs);
     }
 
-    .drive-browser__actions {
-        width: 100%;
-        flex-wrap: wrap;
+    .drive-row__actions {
+        justify-content: flex-start;
     }
 
     .file-preview {
         width: 96vw;
         height: 92vh;
+    }
+}
+
+@media (max-width: 600px) {
+    .files-dropzone__file {
+        align-items: flex-start;
+        flex-direction: column;
     }
 }
