@@ -6,18 +6,15 @@ export const useAutosave = (id, currentTopic, updateTopic) => {
   const [name, setName] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectedRoles, setSelectedRoles] = useState([])
-  const [syncedTopicId, setSyncedTopicId] = useState(null)
   const autosaveTimerRef = useRef(null)
 
-  // Форма подхватывает данные только при смене темы. Раньше синхронизация
-  // шла на любое изменение currentTopic, и ответ автосохранения затирал
-  // то, что пользователь печатал в этот момент.
-  if (currentTopic && currentTopic._id !== syncedTopicId) {
-    setSyncedTopicId(currentTopic._id)
-    setName(currentTopic.name ?? '')
-    setSelectedCategory(currentTopic.metadata?.category?._id ?? null)
-    setSelectedRoles(currentTopic.metadata?.accessibleByRoles?.map((role) => role._id) ?? [])
-  }
+  useEffect(() => {
+    if (currentTopic) {
+      setName(currentTopic.name ?? '')
+      setSelectedCategory(currentTopic.metadata?.category?._id ?? null)
+      setSelectedRoles(currentTopic.metadata?.accessibleByRoles?.map((r) => r._id) ?? [])
+    }
+  }, [currentTopic])
 
   const scheduleAutosave = useCallback((overrides = {}) => {
     clearTimeout(autosaveTimerRef.current)

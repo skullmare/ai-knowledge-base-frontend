@@ -1,33 +1,33 @@
-import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
-
-// __dirname в ESM-конфиге не существует — путь берётся из import.meta.url.
-const resolve = (path) => fileURLToPath(new URL(path, import.meta.url));
+import path from 'path'
 
 export default defineConfig({
   plugins: [
     react(),
     svgr({
-      svgrOptions: { icon: true },
+      svgrOptions: {
+        icon: true,
+      },
       include: '**/*.svg',
     }),
   ],
   resolve: {
     alias: {
-      '@': resolve('./src'),
-      '@components': resolve('./src/components'),
-      '@services': resolve('./src/services'),
-      '@store': resolve('./src/store'),
-      '@router': resolve('./src/router'),
-      '@utils': resolve('./src/utils'),
-      '@hooks': resolve('./src/hooks'),
-      '@pages': resolve('./src/pages'),
-      '@assets': resolve('./src/assets'),
-      '@ui': resolve('./src/components/ui'),
-      '@layout': resolve('./src/components/layout'),
-      '@guards': resolve('./src/components/guards'),
-    },
-  },
+      '@': path.resolve(__dirname, './src'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@services': path.resolve(__dirname, './src/services'),
+      '@store': path.resolve(__dirname, './src/store'),
+      '@router': path.resolve(__dirname, './src/router'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@api': path.resolve(__dirname, './src/api'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@pages': path.resolve(__dirname, './src/pages'),
+      '@assets': path.resolve(__dirname, './src/assets'),
+      '@ui': path.resolve(__dirname, './src/components/ui'),
+      '@layout': path.resolve(__dirname, './src/components/layout'),
+      '@guards': path.resolve(__dirname, './src/components/guards'),
+    }
+  }
 });

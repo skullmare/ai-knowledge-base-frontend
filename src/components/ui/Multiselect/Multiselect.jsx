@@ -23,6 +23,7 @@ export default function Multiselect({
     const containerRef = useRef(null)
 
     const allSelected = value.length === options.length
+    const someSelected = value.length > 0 && !allSelected
 
     useEffect(() => {
         const handler = (e) => {

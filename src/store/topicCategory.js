@@ -5,7 +5,7 @@ import { handleError } from '../utils/handleError';
 import { syncEntityUpdate } from '../utils/syncStores';
 import useSuccessStore from './success';
 
-const useTopicCategoryStore = create((set) => ({
+const useTopicCategoryStore = create((set, get) => ({
     categories: [],
     currentCategory: null,
     isLoadingFetchCategories: false,
@@ -23,9 +23,7 @@ const useTopicCategoryStore = create((set) => ({
             const { success, message, data } = response;
 
             if (success) {
-                // Нормализуем форму один раз в сторе, чтобы компоненты
-                // не пересобирали массив на каждом рендере.
-                set({ categories: Array.isArray(data) ? data : (data?.categories ?? []) })
+                set({ categories: data.categories ?? data })
             } else {
                 set({ error: message });
                 throw new Error(message);

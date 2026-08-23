@@ -1,4 +1,5 @@
 import { useLocation, useParams, useNavigate } from 'react-router-dom'
+import { useCallback, useMemo } from 'react'
 import useProfileStore from '@store/profile'
 import useAuthStore from '@store/auth'
 import Header from '@layout/Header/Header'
@@ -68,6 +69,7 @@ export default function TopicPage() {
   }, forceSync)
 
   const isSaving = isTopicSaving
+  const isApproved = currentTopic?.status === 'approved'
 
   const { fields: navbarFields, footer: navbarFooter } = TopicSidebar({
     name,
@@ -104,6 +106,7 @@ export default function TopicPage() {
               onDelete={deleteTopicHook.openModal}
               isLoadingApprove={approveTopicHook.isLoading}
               isLoadingDelete={deleteTopicHook.isLoading}
+              isApproved={isApproved}
             />
             <div className="topic-page__editor" style={{ position: 'relative' }}>
               {!isSynced && (

@@ -52,6 +52,7 @@ export default function TopicsPage() {
         updateCategory,
         deleteCategory,
         fetchTopics,
+        fetchCategories,
         buildParams,
         categories,
     } = useTopicsData({
@@ -62,7 +63,7 @@ export default function TopicsPage() {
     })
 
     const categoryModal = useCreateCategoryModal(createCategory)
-    const editModal = useEditCategoryModal(updateCategory)
+    const editModal = useEditCategoryModal(updateCategory, fetchTopics, buildParams, fetchCategories)
     const topicModal = useCreateTopicModal(createTopic)
 
     const {
@@ -127,7 +128,11 @@ export default function TopicsPage() {
                 />
 
                 {filters.viewMode === 'catalogue' ? (
-                    <TopicsCatalogue groupedTopics={groupedTopics} />
+                    <TopicsCatalogue
+                        groupedTopics={groupedTopics}
+                        categories={categories}
+                        onEditCategory={editModal.open}
+                    />
                 ) : (
                     <Table
                         columns={topicColumns}

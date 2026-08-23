@@ -1,6 +1,6 @@
 import Button from '@ui/Button/Button'
 import Input from '@ui/Input/Input'
-import HasPermission from '@guards/HasPermission'
+import Protected from '@guards/Protected'
 import Plus from '@assets/icons/plus-16.svg'
 
 export function UsersToolbar({
@@ -34,51 +34,51 @@ export function UsersToolbar({
 
                 {isPlatform && (
                     <>
-                        <HasPermission permission="platformRoles.create" mode="some">
+                        <Protected permission="platformRoles.create" mode="some">
                             <div className="users-page__controls-btn">
                                 <Button size="interface" variant="secondary" onClick={onCreatePlatformRole}>
                                     <Plus />Создать роль
                                 </Button>
                             </div>
-                        </HasPermission>
-                        <HasPermission permission="platformUsers.create" mode="some">
+                        </Protected>
+                        <Protected permission="platformUsers.create" mode="some">
                             <div className="users-page__controls-btn">
                                 <Button size="interface" variant="primary" onClick={onCreatePlatformUser}>
                                     <Plus />Создать сотрудника
                                 </Button>
                             </div>
-                        </HasPermission>
+                        </Protected>
                     </>
                 )}
 
                 {activeSection === 'agent' && (
-                    <HasPermission permission="agentRoles.create" mode="some">
+                    <Protected permission="agentRoles.create" mode="some">
                         <div className="users-page__controls-btn">
                             <Button size="interface" variant="secondary" onClick={onCreateAgentRole}>
                                 <Plus />Создать роль
                             </Button>
                         </div>
-                    </HasPermission>
+                    </Protected>
                 )}
 
                 {isPlatformRoles && (
-                    <HasPermission permission="platformRoles.create" mode="some">
+                    <Protected permission="platformRoles.create" mode="some">
                         <div className="users-page__controls-btn">
                             <Button size="interface" variant="primary" onClick={onCreatePlatformRole}>
                                 <Plus />Создать роль
                             </Button>
                         </div>
-                    </HasPermission>
+                    </Protected>
                 )}
 
                 {isAgentRoles && (
-                    <HasPermission permission="agentRoles.create" mode="some">
+                    <Protected permission="agentRoles.create" mode="some">
                         <div className="users-page__controls-btn">
                             <Button size="interface" variant="primary" onClick={onCreateAgentRole}>
                                 <Plus />Создать роль
                             </Button>
                         </div>
-                    </HasPermission>
+                    </Protected>
                 )}
             </div>
         </div>
