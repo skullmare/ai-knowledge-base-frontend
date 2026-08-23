@@ -40,17 +40,21 @@ export function useSettingsForm() {
             if (!(key in draft)) continue
 
             const raw = draft[key]
-            // Пустой секрет — это «оставить как есть», а не «стереть ключ»
-            if (byKey[key]?.isSecret && raw === '') continue
+            const trimmed = typeof raw === 'string' ? raw.trim() : raw
+
+            // Пустой секрет — это «оставить как есть», а не «стереть ключ».
+            // Сравниваем после обрезки: ключ из пробелов уходит в провайдера
+            // пустым заголовком авторизации
+            if (byKey[key]?.isSecret && trimmed === '') continue
 
             if (NUMBER_KEYS.has(key)) {
                 // Пустое числовое поле не отправляем — иначе уедет ноль
-                if (raw === '' || raw === null) continue
-                payload[key] = Number(raw)
+                if (trimmed === '' || trimmed === null) continue
+                payload[key] = Number(trimmed)
                 continue
             }
 
-            payload[key] = raw
+            payload[key] = trimmed
         }
 
         if (!Object.keys(payload).length) return

@@ -22,9 +22,13 @@ export function AiSettings({ byKey, valueOf, setValue, onSave, isSaving, isDirty
     }, [fetchModels])
 
     const handleTest = () => {
-        const apiKey = valueOf('ai_api_key')
+        // Обрезаем так же, как при сохранении: ключ из пробелов уходит
+        // в провайдера пустым заголовком авторизации
+        const apiKey = valueOf('ai_api_key').trim()
+        const baseURL = valueOf('ai_base_url').trim()
+
         // Пустое поле — проверяем уже сохранённый ключ
-        testConnection(apiKey ? { apiKey, baseURL: valueOf('ai_base_url') } : {}).catch(() => {})
+        testConnection(apiKey ? { apiKey, baseURL } : {}).catch(() => {})
     }
 
     const handleRecreate = () => {
