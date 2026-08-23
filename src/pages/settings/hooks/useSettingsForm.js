@@ -43,7 +43,14 @@ export function useSettingsForm() {
             // Пустой секрет — это «оставить как есть», а не «стереть ключ»
             if (byKey[key]?.isSecret && raw === '') continue
 
-            payload[key] = NUMBER_KEYS.has(key) ? Number(raw) : raw
+            if (NUMBER_KEYS.has(key)) {
+                // Пустое числовое поле не отправляем — иначе уедет ноль
+                if (raw === '' || raw === null) continue
+                payload[key] = Number(raw)
+                continue
+            }
+
+            payload[key] = raw
         }
 
         if (!Object.keys(payload).length) return
