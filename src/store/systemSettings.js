@@ -78,7 +78,7 @@ const useSystemSettingsStore = create((set, get) => ({
 
             useSuccessStore.getState().notify(
                 'RouterAI',
-                `Подключение работает, доступно моделей: ${data.modelsCount}`
+                `Подключение работает: моделей ${data.modelsCount}, эмбеддинги отвечают (${data.embeddingDimensions})`
             )
             set({ models: data.models ?? [], modelsError: null })
             return data
