@@ -30,6 +30,7 @@ export const TEXTAREA_KEYS = new Set([
     'agent_system_prompt',
     'agent_empty_context_prompt',
     'agent_link_rules_prompt',
+    'agent_source_rules_prompt',
     'agent_rewrite_prompt',
 ])
 
@@ -48,6 +49,7 @@ export const SECTION_FIELDS = {
         'agent_system_prompt',
         'agent_empty_context_prompt',
         'agent_link_rules_prompt',
+        'agent_source_rules_prompt',
         'agent_rewrite_prompt',
     ],
 }
